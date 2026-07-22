@@ -1,0 +1,59 @@
+{
+	"extends": "@vue/tsconfig/tsconfig.dom.json",
+	"include": ["*.ts", "src/**/*.ts", "src/**/*.vue"],
+	"exclude": ["src/assets", "src/lib/*/"],
+	"compilerOptions": {
+		// Type Checking
+		"strict": true,
+		"noFallthroughCasesInSwitch": true,
+		"noUncheckedIndexedAccess": true,
+		"noImplicitOverride": true,
+		"noUnusedLocals": true,
+		"noUnusedParameters": true,
+		"noPropertyAccessFromIndexSignature": false,
+
+		// Modules
+		"module": "Preserve",
+		"allowImportingTsExtensions": true,
+		"moduleResolution": "bundler",
+
+		// Emit
+		"noEmit": true,
+
+		// JavaScript Support
+		"allowJs": true,
+
+		// Interop Constraints
+		"verbatimModuleSyntax": true,
+
+		// Language and Environment
+		"lib": ["ESNext", "dom"],
+		"target": "ESNext",
+		"moduleDetection": "force",
+
+		// Projects
+		"tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
+
+		// Completeness
+		"skipLibCheck": true,
+
+		"types": ["unplugin-fonts/client", "vite/client"],
+		"paths": {
+			"@assets*": ["./src/assets*"],
+			"@components*": ["./src/components*"],
+			"@composables*": ["./src/composables*"],
+			"@compunents*": ["./src/components/computer*"],
+			"@lib/*": ["./src/lib/*"],
+			"@os-gui": ["./src/components/computer/os-gui/index.ts"],
+			"@router": ["./src/router/router.ts"],
+			"@rsbuild/core": ["./src/lib/noclip/node_modules/@rsbuild/core/dist-types/index.d.ts"],
+			"@scripts*": ["./src/scripts*"],
+			"@store*": ["./src/store*"],
+			"@typings*": ["./src/types*"],
+			"@views*": ["./src/views*"],
+			"App.vue": ["./src/App.vue"],
+			"shaders/vue": ["./src/lib/shaders.ts"],
+			"shaders": ["./node_modules/shaders/dist/vue/index.d.ts"]
+		}
+	}
+}

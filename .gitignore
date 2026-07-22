@@ -1,0 +1,12 @@
+*.code-workspace
+*.tgz
+.wrangler/
+/.dev.vars
+/.env
+/.husky/_/
+/.pnpm-store/
+/.vite/
+/artifacts/
+/dist/
+/node_modules/
+/src/types/wrangler.d.ts

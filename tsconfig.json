@@ -1,5 +1,5 @@
 {
-	"extends": "@vue/tsconfig/tsconfig.dom.json",
+	"extends": ["@vue/tsconfig/tsconfig.dom.json", "agents/tsconfig"],
 	"include": ["*.ts", "src/**/*.ts", "src/**/*.vue"],
 	"exclude": ["src/assets", "src/lib/*/"],
 	"compilerOptions": {
@@ -37,23 +37,10 @@
 		// Completeness
 		"skipLibCheck": true,
 
-		"types": ["unplugin-fonts/client", "vite/client"],
+		"types": ["unplugin-fonts/client", "vite/client", "vite-plugin-pwa/vue"],
 		"paths": {
-			"@assets*": ["./src/assets*"],
-			"@components*": ["./src/components*"],
-			"@composables*": ["./src/composables*"],
-			"@compunents*": ["./src/components/computer*"],
-			"@lib/*": ["./src/lib/*"],
-			"@os-gui": ["./src/components/computer/os-gui/index.ts"],
-			"@router": ["./src/router/router.ts"],
-			"@rsbuild/core": ["./src/lib/noclip/node_modules/@rsbuild/core/dist-types/index.d.ts"],
-			"@scripts*": ["./src/scripts*"],
-			"@store*": ["./src/store*"],
-			"@typings*": ["./src/types*"],
-			"@views*": ["./src/views*"],
-			"App.vue": ["./src/App.vue"],
-			"shaders/vue": ["./src/lib/shaders.ts"],
-			"shaders": ["./node_modules/shaders/dist/vue/index.d.ts"]
+			"@/*": ["./src/*"],
+			"@osmo/*": ["./src/assets/images/osmo/*"]
 		}
 	}
 }

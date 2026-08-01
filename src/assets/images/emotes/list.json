@@ -2257,9 +2257,51 @@
 			"ext": ".avif"
 		},
 		{
-			"name": "ViolinTime",
-			"id": "01FR8YZ0C0000E6Q4NYF8KGYSK",
-			"url": "https://cdn.7tv.app/emote/01FR8YZ0C0000E6Q4NYF8KGYSK/4x.avif",
+			"name": "veryCat",
+			"id": "01GMAH9MB000066S7TTNVB1TGD",
+			"url": "https://cdn.7tv.app/emote/01GMAH9MB000066S7TTNVB1TGD/4x.avif",
+			"ext": ".avif"
+		},
+		{
+			"name": "Yeat",
+			"id": "01FWD01XH8000EFCFJ99X9MWWS",
+			"url": "https://cdn.7tv.app/emote/01FWD01XH8000EFCFJ99X9MWWS/4x.avif",
+			"ext": ".avif"
+		},
+		{
+			"name": "diddyJAM",
+			"id": "01FGPCBJ7000021TQRJX35NEM7",
+			"url": "https://cdn.7tv.app/emote/01FGPCBJ7000021TQRJX35NEM7/4x.avif",
+			"ext": ".avif"
+		},
+		{
+			"name": "WTFF",
+			"id": "01F6M8R11R000B5V5G2M2GAG6J",
+			"url": "https://cdn.7tv.app/emote/01F6M8R11R000B5V5G2M2GAG6J/4x.avif",
+			"ext": ".avif"
+		},
+		{
+			"name": "picardAAH",
+			"id": "01GHS49KTR0005179NBHVT9CPW",
+			"url": "https://cdn.7tv.app/emote/01GHS49KTR0005179NBHVT9CPW/4x.avif",
+			"ext": ".avif"
+		},
+		{
+			"name": "muh",
+			"id": "01GWSGBQ7R0008X0SB6ANMACKG",
+			"url": "https://cdn.7tv.app/emote/01GWSGBQ7R0008X0SB6ANMACKG/4x.avif",
+			"ext": ".avif"
+		},
+		{
+			"name": "wuh",
+			"id": "01GV56F8QR0006FW5TVZVMFVWE",
+			"url": "https://cdn.7tv.app/emote/01GV56F8QR0006FW5TVZVMFVWE/4x.avif",
+			"ext": ".avif"
+		},
+		{
+			"name": "PepeChill",
+			"id": "01F7R21K60000D5VSVGPQFPVMW",
+			"url": "https://cdn.7tv.app/emote/01F7R21K60000D5VSVGPQFPVMW/4x.avif",
 			"ext": ".avif"
 		}
 	],

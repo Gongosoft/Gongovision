@@ -1,0 +1,13 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1/" xmlns:moz="http://www.mozilla.org/2006/browser/search/">
+	<Description>Gongo is a 2D side-scrolling platformer where the player goes through levels killing enemies and saving the princess. Each level has amazing hand-picked worlds. On each of the levels, a princess is hidden, which must be rescued and delivered to your castle, cleaning up enemies along the way.</Description>
+	<Developer>Bergbok</Developer>
+	<Image width="32" height="32" type="image/webp">https://gongo.bergbok.workers.dev/opensearch.webp</Image>
+	<InputEncoding>UTF-8</InputEncoding>
+	<Language>en-us</Language>
+	<Query role='example' searchTerms='( ͡° ͜ʖ ͡°)' />
+	<ShortName>Sphynx Bluesky</ShortName>
+	<Url type="application/opensearchdescription+xml" rel="self" template="https://gongo.bergbok.workers.dev/opensearch.xml" />
+	<Url type="application/x-suggestions+json" template="https://www.startpage.com/osuggestions?q={searchTerms}" />
+	<Url type="text/html" template="https://bsky.app/search?author=greatsphynx.bsky.social&amp;q={searchTerms}" />
+</OpenSearchDescription>

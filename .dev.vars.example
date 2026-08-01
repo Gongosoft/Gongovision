@@ -1,0 +1,8 @@
+# https://secure.backblaze.com/app_keys.htm
+B2_APPLICATION_KEY=''
+# https://proton.me/support/smtp-submission
+SMTP_PASSWORD=''
+# https://dev.twitch.tv/docs/authentication/register-app
+TWITCH_CLIENT_SECRET=''
+# bun web-push generate-vapid-keys
+VAPID_PRIVATE_KEY=''

@@ -39,9 +39,8 @@ enabled = true
 [durable_objects]
 bindings = [{ name = 'CALLOFTHEGONGO', class_name = 'Notifications' }]
 
-[[migrations]]
-tag = 'v1'
-new_sqlite_classes = ['Notifications']
+[exports]
+Notifications = { type = 'durable-object', storage = 'sqlite' }
 
 [[kv_namespaces]]
 binding = 'CONFIG'

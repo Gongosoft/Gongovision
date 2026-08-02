@@ -80,7 +80,7 @@
 		"vite-plugin-pwa": "^1.3.0",
 		"vite-plugin-vue-devtools": "^8.1.5",
 		"vue-tsc": "^3.3.7",
-		"wrangler": "^4.113.0"
+		"wrangler": "^4.116.0"
 	},
 	"lint-staged": {
 		"*": "oxfmt --no-error-on-unmatched-pattern",

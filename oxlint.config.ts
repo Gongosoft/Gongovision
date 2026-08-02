@@ -40,9 +40,9 @@ export default defineConfig({
 			}
 		},
 		{
-			files: ['src/components/Emails.vue'],
+			files: ['src/components/Emails.vue', 'src/components/WebPush.vue'],
 			rules: {
-				'eslint-disable no-alert': 'off'
+				'eslint/no-alert': 'off'
 			}
 		},
 		{

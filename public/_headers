@@ -1,0 +1,8 @@
+/*
+	Access-Control-Allow-Origin: *
+
+/notification/icon
+	Content-Type: image/avif
+
+/notification/badge
+	Content-Type: image/avif

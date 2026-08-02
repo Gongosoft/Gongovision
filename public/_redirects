@@ -1,0 +1,14 @@
+/bergbok https://bergbok.computer 308
+/deltasleep /b2/music/Sleep%20Convention/03%20Delta%20Sleep.flac 308
+/emotes /r2/emotes.zip 308
+/emotes.zip /r2/emotes.zip 308
+/favicon /favicon/favicon.webp 308
+/favicon.ico /favicon/favicon.webp 308
+/rss /rss/html 308
+/rss/ /rss/html 308
+/vods/ /vods 308
+/vods/latest /b2/vods/%5B2025-03-28%5D%20glingo.mp4 308
+/webcal /schedule.ics 308
+/i/* / 308
+/vods/download/* /b2/vods/:splat 308
+/music/* /b2/music/:splat 308

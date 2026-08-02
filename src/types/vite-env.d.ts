@@ -1,6 +1,6 @@
 /// <reference types="vite/client" />
 
-import type { NotificationPayload } from '@/types/notification';
+import type { NotificationPayload } from '@/types/notification.d.ts';
 
 declare global {
 	const ANGELTHUMP: {

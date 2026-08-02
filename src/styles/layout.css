@@ -1,0 +1,32 @@
+/* shared layout: sticky header/footer, flex main, no page scroll */
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+	height: 100dvh;
+	overflow: hidden;
+}
+
+body {
+	display: flex;
+	flex-direction: column;
+}
+
+header {
+	position: relative;
+	height: 4rem;
+	flex-shrink: 0;
+}
+
+main {
+	flex: 1;
+	position: relative;
+	overflow: hidden;
+}
+
+footer {
+	position: relative;
+	height: 5rem;
+	flex-shrink: 0;
+}

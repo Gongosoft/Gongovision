@@ -1,0 +1,203 @@
+@keyframes backgroundShift {
+	1% {
+		background-color: #4e85ff;
+	}
+	5% {
+		background-color: #52cd3e;
+	}
+	10% {
+		background-color: #5451e6;
+	}
+	15% {
+		background-color: #4effb7;
+	}
+	20% {
+		background-color: #e28616;
+	}
+	25% {
+		background-color: #d83d5c;
+	}
+	30% {
+		background-color: #613dd3;
+	}
+	40% {
+		background-color: #176c5b;
+	}
+	45% {
+		background-color: #28ff15;
+	}
+	50% {
+		background-color: #18b44a;
+	}
+	55% {
+		background-color: #98ff17;
+	}
+	60% {
+		background-color: #dd007a;
+	}
+	65% {
+		background-color: #54c4e8;
+	}
+	70% {
+		background-color: #f17d06;
+	}
+	75% {
+		background-color: #982346;
+	}
+	80% {
+		background-color: #fcf60b;
+	}
+	85% {
+		background-color: #654000;
+	}
+	90% {
+		background-color: #ec218c;
+	}
+	95% {
+		background-color: #d30039;
+	}
+	100% {
+		background-color: #4e85ff;
+	}
+}
+
+@keyframes borderShift {
+	1% {
+		border-color: #4e85ff;
+	}
+	5% {
+		border-color: #52cd3e;
+	}
+	10% {
+		border-color: #5451e6;
+	}
+	15% {
+		border-color: #4effb7;
+	}
+	20% {
+		border-color: #e28616;
+	}
+	25% {
+		border-color: #d83d5c;
+	}
+	30% {
+		border-color: #613dd3;
+	}
+	40% {
+		border-color: #176c5b;
+	}
+	45% {
+		border-color: #28ff15;
+	}
+	50% {
+		border-color: #18b44a;
+	}
+	55% {
+		border-color: #98ff17;
+	}
+	60% {
+		border-color: #dd007a;
+	}
+	65% {
+		border-color: #54c4e8;
+	}
+	70% {
+		border-color: #f17d06;
+	}
+	75% {
+		border-color: #982346;
+	}
+	80% {
+		border-color: #fcf60b;
+	}
+	85% {
+		border-color: #654000;
+	}
+	90% {
+		border-color: #ec218c;
+	}
+	95% {
+		border-color: #d30039;
+	}
+	100% {
+		border-color: #4e85ff;
+	}
+}
+
+@keyframes fillShift {
+	1% {
+		fill: #4e85ff;
+	}
+	5% {
+		fill: #52cd3e;
+	}
+	10% {
+		fill: #5451e6;
+	}
+	15% {
+		fill: #4effb7;
+	}
+	20% {
+		fill: #e28616;
+	}
+	25% {
+		fill: #d83d5c;
+	}
+	30% {
+		fill: #613dd3;
+	}
+	40% {
+		fill: #176c5b;
+	}
+	45% {
+		fill: #28ff15;
+	}
+	50% {
+		fill: #18b44a;
+	}
+	55% {
+		fill: #98ff17;
+	}
+	60% {
+		fill: #dd007a;
+	}
+	65% {
+		fill: #54c4e8;
+	}
+	70% {
+		fill: #f17d06;
+	}
+	75% {
+		fill: #982346;
+	}
+	80% {
+		fill: #fcf60b;
+	}
+	85% {
+		fill: #654000;
+	}
+	90% {
+		fill: #ec218c;
+	}
+	95% {
+		fill: #d30039;
+	}
+	100% {
+		fill: #4e85ff;
+	}
+}
+.icon-animated svg {
+	animation: fillShift 30s linear infinite;
+	animation-play-state: paused;
+	display: block;
+	fill: var(--icon-fill, var(--color-text));
+	transition: fill 1s ease-in-out;
+
+	& * {
+		fill: inherit;
+	}
+
+	&:hover {
+		animation-play-state: running;
+	}
+}

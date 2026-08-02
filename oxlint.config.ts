@@ -40,6 +40,12 @@ export default defineConfig({
 			}
 		},
 		{
+			files: ['src/components/Emails.vue'],
+			rules: {
+				'eslint-disable no-alert': 'off'
+			}
+		},
+		{
 			files: ['src/router/router.ts'],
 			rules: {
 				'typescript/explicit-function-return-type': 'off'

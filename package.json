@@ -56,7 +56,7 @@
 	"devDependencies": {
 		"@bergbok/prettier-config": "^1.1.0",
 		"@cloudflare/playwright": "^1.3.3",
-		"@cloudflare/vite-plugin": "^1.46.0",
+		"@cloudflare/vite-plugin": "^1.49.0",
 		"@tweakpane/core": "^2.0.5",
 		"@types/bun": "^1.3.14",
 		"@types/howler": "^2.2.13",

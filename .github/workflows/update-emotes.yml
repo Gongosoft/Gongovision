@@ -1,0 +1,62 @@
+name: Update emotes
+
+on:
+  schedule:
+    - cron: '20 4 * * *'
+  workflow_dispatch:
+  workflow_run:
+    workflows: [Build and deploy]
+    branches: [main]
+    types:
+      - completed
+
+concurrency:
+  group: emotes
+  cancel-in-progress: true
+
+jobs:
+  update-emotes:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    if: ${{ github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6.0.2
+
+      - name: Install Bun
+        uses: oven-sh/setup-bun@v2.2.0
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Generate types
+        run: bun run typegen
+
+      - name: Sync emotes
+        run: |
+          bun src/scripts/syncEmotes.ts
+          bun run build
+
+      - name: Deploy
+        uses: cloudflare/wrangler-action@v4.0.0
+        with:
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+          wranglerVersion: latest
+          command: r2 object put gongo/emotes.zip --file=dist/client/emotes.zip --remote
+
+      - name: Stage
+        run: git add src/assets/images/emotes
+
+      - name: Commit
+        uses: qoomon/actions--create-commit@v1.2.4
+        with:
+          message: 'chore: sync emotes'
+          skip-empty: true
+
+      - name: Push
+        run: git push

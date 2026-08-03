@@ -13,13 +13,6 @@
 - [M3U](https://gongo.bergbok.workers.dev/stream/m3u) / [M3U8](https://gongo.bergbok.workers.dev/stream/m3u8) / [XMLTV](https://gongo.bergbok.workers.dev/stream/xmltv)
 - [Webcal](webcal://gongo.bergbok.workers.dev/schedule.ics)
 
-<div align='center'>
-	<picture>
-		<img width="228" src="https://cdn.bergbok.computer/images/gongoVision.avif" />
-	</picture>
-	<p>work in progress</p>
-</div>
-
 ### Running Locally
 
 ```bash

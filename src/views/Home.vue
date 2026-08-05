@@ -63,9 +63,9 @@ useEventListener(iconRowRef, 'mouseover', (e) => {
 		<a title="Bluesky Feed" href="https://bsky.app/profile/bergbok.computer/feed/gongo" target="_blank" @click.stop>
 			<span class="icon icon-animated" :style="{ '--icon-fill': '#1185fe' }" v-html="blueskySVG" />
 		</a>
-		<RouterLink title="RSS" to="/rss" @click.stop>
+		<a title="RSS" href="/rss" @click.stop>
 			<span class="icon icon-animated" :style="{ '--icon-fill': '#fc8900' }" v-html="rssSVG" />
-		</RouterLink>
+		</a>
 		<a title="Discord" href="https://discord.gg/yRahnWpyDa" target="_blank" @click.stop>
 			<span class="icon icon-animated" :style="{ '--icon-fill': '#5865f2' }" v-html="discordSVG" />
 		</a>

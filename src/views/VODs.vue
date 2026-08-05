@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import '@/styles/status.css';
+import backSVG from '@/assets/images/arrow-left.svg?raw';
 import shuffleSVG from '@/assets/images/shuffle.svg?raw';
 import fallbackThumb from '@/assets/images/thumbnail-fallback.avif';
 import { ref, watch } from 'vue';
@@ -36,9 +37,14 @@ watch(vods, (list) => {
 </script>
 
 <template>
-	<button title="Shuffle" class="shuffle-button" @click="shuffle">
-		<span class="icon icon-animated" v-html="shuffleSVG" />
-	</button>
+	<div class="top-row">
+		<RouterLink title="Back" to="/">
+			<span class="icon icon-animated" v-html="backSVG" />
+		</RouterLink>
+		<button title="Shuffle" class="shuffle-button" @click="shuffle">
+			<span class="icon icon-animated" v-html="shuffleSVG" />
+		</button>
+	</div>
 	<div class="vods-page">
 		<div v-if="loading"></div>
 		<div v-else-if="errorMessage" class="status status-fill status-muted">
@@ -68,18 +74,29 @@ watch(vods, (list) => {
 </template>
 
 <style scoped>
-.shuffle-button {
-	all: unset;
-	cursor: pointer;
+.top-row {
+	align-items: center;
+	display: flex;
+	gap: 1.5rem;
+	left: 50%;
 	position: fixed;
 	top: 1rem;
-	left: 50%;
 	transform: translateX(-50%);
 	z-index: 100;
 
 	& :deep(.icon svg) {
 		width: 2rem;
 		height: 2rem;
+	}
+
+	& .shuffle-button {
+		all: unset;
+		cursor: pointer;
+
+		& :deep(.icon svg) {
+			width: 2.42rem;
+			height: 2.42rem;
+		}
 	}
 }
 

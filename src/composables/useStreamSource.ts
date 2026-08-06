@@ -10,7 +10,16 @@ interface LivestreamsResponse {
 const wsLive = ref<boolean | null>(null);
 const pollLive = ref<boolean | null>(null);
 
-const { data, error, isFetching, execute } = useFetch('/livestreams').get().json<LivestreamsResponse>();
+const { data, error, isFetching, execute } = useFetch('/livestreams', {
+	onFetchError(ctx) {
+		if (ctx.error instanceof DOMException && ctx.error.name === 'AbortError') {
+			ctx.error = null;
+		}
+		return ctx;
+	}
+})
+	.get()
+	.json<LivestreamsResponse>();
 
 const {
 	status: wsStatus,

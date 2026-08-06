@@ -41,12 +41,6 @@ watch(wsData, (raw) => {
 	}
 });
 
-watch(wsStatus, (status) => {
-	if (status === 'CLOSED') {
-		wsLive.value = null;
-	}
-});
-
 const isGreatSphynxLive = computed<boolean>(() => {
 	let isLive = get(wsLive);
 	if (isLive !== null) {
@@ -78,6 +72,14 @@ const { pause, resume } = useIntervalFn(
 	30_000,
 	{ immediate: true, immediateCallback: true }
 );
+
+watch(wsStatus, (status) => {
+	if (status === 'CLOSED') {
+		wsLive.value = null;
+		pollLive.value = null;
+		resume();
+	}
+});
 
 watch(isGreatSphynxLive, (live) => {
 	if (live) {

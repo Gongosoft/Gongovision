@@ -171,27 +171,27 @@ onMounted(async () => {
 	all: unset;
 	cursor: pointer;
 	display: flex;
-}
 
-.icon-button:disabled {
-	opacity: 0.4;
-	cursor: not-allowed;
-}
+	& :deep(.icon svg) {
+		width: 2.5rem;
+		height: 2.5rem;
+		display: block;
+		fill: currentColor;
+		transition: fill 0.15s;
 
-.icon-button :deep(.icon svg) {
-	width: 2.5rem;
-	height: 2.5rem;
-	display: block;
-	fill: currentColor;
-	transition: fill 0.15s;
+		& * {
+			fill: inherit;
+		}
 
-	& * {
-		fill: inherit;
+		@media (max-width: 480px) {
+			width: 2rem;
+			height: 2rem;
+		}
 	}
 
-	@media (max-width: 480px) {
-		width: 2rem;
-		height: 2rem;
+	&:disabled {
+		opacity: 0.4;
+		cursor: not-allowed;
 	}
 }
 </style>

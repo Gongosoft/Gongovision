@@ -7,26 +7,26 @@ defineEmits<{
 </script>
 
 <template>
-	<div id="stoptape-container">
-		<img :src="STOPTAPE" alt="Offline" id="stoptape-image" @click="$emit('refresh')" />
+	<div id="STOPTAPE">
+		<img :src="STOPTAPE" alt="Offline" @click="$emit('refresh')" />
 	</div>
 </template>
 
 <style scoped>
-#stoptape-container {
+#STOPTAPE {
 	flex: 1;
-	width: 100%;
 	min-height: 0;
-	position: relative;
 	overflow: hidden;
-}
-
-#stoptape-image {
-	position: absolute;
-	inset: 0;
+	position: relative;
 	width: 100%;
-	height: 100%;
-	object-fit: contain;
-	cursor: pointer;
+
+	& img {
+		cursor: pointer;
+		height: 100%;
+		inset: 0;
+		object-fit: contain;
+		position: absolute;
+		width: 100%;
+	}
 }
 </style>

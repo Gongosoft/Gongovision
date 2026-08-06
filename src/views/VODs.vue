@@ -4,6 +4,7 @@ import backSVG from '@/assets/images/arrow-left.svg?raw';
 import shuffleSVG from '@/assets/images/shuffle.svg?raw';
 import fallbackThumb from '@/assets/images/thumbnail-fallback.avif';
 import { ref, watch } from 'vue';
+import { get } from '@vueuse/core';
 import { useHead } from '@unhead/vue';
 import { RouterLink, useRouter } from 'vue-router';
 import { stripVODExtension, stripVODPrefix, useVODs } from '@/composables/useVODs.ts';
@@ -21,7 +22,7 @@ const formatSize = (bytes: number): string =>
 const formatTitle = (vod: VOD): string => stripVODExtension(decodeURIComponent(stripVODPrefix(vod.title)));
 
 function shuffle(): void {
-	const list = vods.value;
+	const list = get(vods);
 	if (list.length === 0) {
 		return;
 	}

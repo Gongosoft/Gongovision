@@ -1,5 +1,5 @@
 import { computed, ref, watch } from 'vue';
-import { useFetch, useIntervalFn, useWebSocket } from '@vueuse/core';
+import { get, useFetch, useIntervalFn, useWebSocket } from '@vueuse/core';
 import type { Ref } from 'vue';
 
 interface LivestreamsResponse {
@@ -48,13 +48,15 @@ watch(wsStatus, (status) => {
 });
 
 const isGreatSphynxLive = computed<boolean>(() => {
-	if (wsLive.value !== null) {
-		return wsLive.value;
+	let isLive = get(wsLive);
+	if (isLive !== null) {
+		return isLive;
 	}
-	if (pollLive.value !== null) {
-		return pollLive.value;
+	isLive = get(pollLive);
+	if (isLive !== null) {
+		return isLive;
 	}
-	return (data.value?.angelthump ?? []).includes('GreatSphynx');
+	return (get(data)?.angelthump ?? []).includes('GreatSphynx');
 });
 
 const { pause, resume } = useIntervalFn(
@@ -63,7 +65,7 @@ const { pause, resume } = useIntervalFn(
 			const res = await fetch('/notification/live');
 			if (res.ok) {
 				const { isLive } = (await res.json()) as { isLive: boolean };
-				const wasLive = isGreatSphynxLive.value;
+				const wasLive = get(isGreatSphynxLive);
 				pollLive.value = isLive;
 				if (isLive && !wasLive) {
 					await execute();
@@ -94,9 +96,12 @@ export function useStreamSource(): {
 } {
 	return {
 		isGreatSphynxLive,
-		twitchChannels: computed(() => data.value?.twitch ?? []),
+		twitchChannels: computed(() => get(data)?.twitch ?? []),
 		loading: isFetching,
-		errorMessage: computed(() => (error.value ? String(error.value) : null)),
+		errorMessage: computed(() => {
+			const fetchError = get(error);
+			return fetchError ? String(fetchError) : null;
+		}),
 		refresh: execute
 	};
 }

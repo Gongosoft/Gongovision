@@ -1,5 +1,5 @@
 import { computed, ref } from 'vue';
-import { useMediaQuery, useStorage, useWindowSize } from '@vueuse/core';
+import { get, useMediaQuery, useStorage, useWindowSize } from '@vueuse/core';
 import type { ComputedRef, Ref } from 'vue';
 
 const CHAT_MAX = 0.85;
@@ -38,7 +38,7 @@ export function useSplitPane(): UseSplitPaneReturn {
 		if (typeof window === 'undefined') {
 			return 0.25;
 		}
-		const ideal = chatRatioFor16ᱺ9(window.innerWidth, window.innerHeight, isMobile.value);
+		const ideal = chatRatioFor16ᱺ9(window.innerWidth, window.innerHeight, get(isMobile));
 		return ideal >= CHAT_MIN ? ideal : 0.25;
 	})();
 	const chatRatio = useStorage('chatpct', initial);
@@ -46,21 +46,23 @@ export function useSplitPane(): UseSplitPaneReturn {
 	const hidden = ref(false);
 	const dragging = ref(false);
 
-	const side = computed<'start' | 'end'>(() => (isMobile.value ? mobileSide.value : desktopSide.value));
-	const ideal = computed(() => chatRatioFor16ᱺ9(viewW.value, viewH.value, isMobile.value));
-	const ceiling = computed(() => (ideal.value >= CHAT_MIN ? ideal.value : CHAT_MAX));
+	const side = computed<'start' | 'end'>(() =>
+		get(isMobile) ? get<'start' | 'end'>(mobileSide) : get<'start' | 'end'>(desktopSide)
+	);
+	const ideal = computed(() => chatRatioFor16ᱺ9(get(viewW), get(viewH), get(isMobile)));
+	const ceiling = computed(() => (get(ideal) >= CHAT_MIN ? get(ideal) : CHAT_MAX));
 
-	const chatStyle = computed(() => ({ flexBasis: `${chatRatio.value * 100}%` }));
+	const chatStyle = computed(() => ({ flexBasis: `${get<number>(chatRatio) * 100}%` }));
 
 	const divStyle = computed(() => {
-		const pct = chatRatio.value * 100;
+		const pct = get<number>(chatRatio) * 100;
 		const offset = `calc(${pct}% - 6px)`;
 		const style: Record<string, string> = {};
 		let key = '';
-		if (isMobile.value) {
-			key = side.value === 'start' ? 'top' : 'bottom';
+		if (get(isMobile)) {
+			key = get(side) === 'start' ? 'top' : 'bottom';
 		} else {
-			key = side.value === 'start' ? 'left' : 'right';
+			key = get(side) === 'start' ? 'left' : 'right';
 		}
 		style[key] = offset;
 		return style;
@@ -77,12 +79,12 @@ export function useSplitPane(): UseSplitPaneReturn {
 	}
 
 	function onPointerMove(e: PointerEvent): void {
-		if (!dragging.value) {
+		if (!get(dragging)) {
 			return;
 		}
 
-		let position = isMobile.value ? e.clientY / viewH.value : e.clientX / viewW.value;
-		if (side.value !== 'start') {
+		let position = get(isMobile) ? e.clientY / get(viewH) : e.clientX / get(viewW);
+		if (get(side) !== 'start') {
 			position = 1 - position;
 		}
 
@@ -92,12 +94,12 @@ export function useSplitPane(): UseSplitPaneReturn {
 			return;
 		}
 
-		const limit = isMobile.value ? ceiling.value : CHAT_MAX;
+		const limit = get(isMobile) ? get(ceiling) : CHAT_MAX;
 
 		if (position > limit + FLIP_EDGE) {
-			const flipSide: 'start' | 'end' = side.value === 'start' ? 'end' : 'start';
-			(isMobile.value ? mobileSide : desktopSide).value = flipSide;
-			chatRatio.value = Math.max(CHAT_MIN, chatRatioFor16ᱺ9(viewW.value, viewH.value, isMobile.value));
+			const flipSide: 'start' | 'end' = get(side) === 'start' ? 'end' : 'start';
+			(get(isMobile) ? mobileSide : desktopSide).value = flipSide;
+			chatRatio.value = Math.max(CHAT_MIN, chatRatioFor16ᱺ9(get(viewW), get(viewH), get(isMobile)));
 			dragging.value = false;
 			return;
 		}
@@ -106,22 +108,22 @@ export function useSplitPane(): UseSplitPaneReturn {
 	}
 
 	function showEdge(sideName: 'start' | 'end'): void {
-		if (!hidden.value) {
+		if (!get(hidden)) {
 			return;
 		}
-		(isMobile.value ? mobileSide : desktopSide).value = sideName;
-		chatRatio.value = ideal.value >= CHAT_MIN ? ideal.value : 0.33;
+		(get(isMobile) ? mobileSide : desktopSide).value = sideName;
+		chatRatio.value = get(ideal) >= CHAT_MIN ? get(ideal) : 0.33;
 		hidden.value = false;
 	}
 
 	function snapTo16by9(): void {
-		chatRatio.value = Math.max(CHAT_MIN, chatRatioFor16ᱺ9(viewW.value, viewH.value, isMobile.value));
+		chatRatio.value = Math.max(CHAT_MIN, chatRatioFor16ᱺ9(get(viewW), get(viewH), get(isMobile)));
 		hidden.value = false;
 	}
 
 	function flip(): void {
-		const newSide: 'start' | 'end' = side.value === 'start' ? 'end' : 'start';
-		(isMobile.value ? mobileSide : desktopSide).value = newSide;
+		const newSide: 'start' | 'end' = get(side) === 'start' ? 'end' : 'start';
+		(get(isMobile) ? mobileSide : desktopSide).value = newSide;
 		snapTo16by9();
 	}
 

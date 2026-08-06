@@ -1,5 +1,5 @@
 import { computed } from 'vue';
-import { useFetch } from '@vueuse/core';
+import { get, useFetch } from '@vueuse/core';
 import type { Ref } from 'vue';
 
 export interface VOD {
@@ -26,9 +26,9 @@ export function useVODs(): {
 	const { data, error, isFetching, execute } = useFetch('/vods/list').get().json<VOD[]>();
 
 	return {
-		vods: computed(() => (data.value ?? []).toSorted((a, b) => b.title.localeCompare(a.title))),
+		vods: computed(() => (get(data) ?? []).toSorted((a, b) => b.title.localeCompare(a.title))),
 		loading: isFetching,
-		errorMessage: computed(() => (error.value ? String(error.value) : null)),
+		errorMessage: computed(() => (get(error) ? String(get(error)) : null)),
 		refresh: execute
 	};
 }

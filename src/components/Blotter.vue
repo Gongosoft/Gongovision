@@ -147,7 +147,7 @@ function loadMaterial(kind: MaterialKind): void {
 		return;
 	}
 
-	if (controller.status.value === 'loaded') {
+	if (get(controller.status) === 'loaded') {
 		loadedKinds.add(kind);
 		setup();
 		return;
@@ -161,7 +161,7 @@ function loadMaterial(kind: MaterialKind): void {
 		{ key: `blotter-${kind}` }
 	);
 
-	if (controller.status.value === 'awaitingLoad') {
+	if (get(controller.status) === 'awaitingLoad') {
 		void controller.load();
 	}
 }

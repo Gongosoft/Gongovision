@@ -27,7 +27,7 @@ const isLoading = ref(false);
 const isHovered = ref(false);
 
 const currentSVG = computed(() => {
-	if (!isSubscribed.value) {
+	if (!get(isSubscribed)) {
 		return exclaimSVG;
 	}
 	if (get(isHovered)) {
@@ -38,7 +38,7 @@ const currentSVG = computed(() => {
 
 const iconFill = computed(() => {
 	if (get(isHovered)) {
-		if (isSubscribed.value) {
+		if (get(isSubscribed)) {
 			return 'var(--color-error)';
 		}
 		return 'var(--color-accent)';
@@ -47,13 +47,13 @@ const iconFill = computed(() => {
 });
 
 const iconTitle = computed(() => {
-	if (permissionState.value === 'unsupported') {
+	if (get(permissionState) === 'unsupported') {
 		return 'Notifications unsupported.';
 	}
-	if (permissionState.value === 'denied') {
+	if (get(permissionState) === 'denied') {
 		return 'Notifications blocked.';
 	}
-	if (!isSubscribed.value) {
+	if (!get(isSubscribed)) {
 		return 'Click to enable push notifications.';
 	}
 	if (get(isHovered)) {
@@ -137,7 +137,7 @@ async function unsubscribe(): Promise<void> {
 }
 
 function onClick(): void {
-	if (isSubscribed.value) {
+	if (get(isSubscribed)) {
 		unsubscribe();
 	} else {
 		subscribe();

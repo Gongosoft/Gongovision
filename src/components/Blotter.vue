@@ -2,7 +2,7 @@
 import blotterᱹjs from 'blotter.js/build/blotter.min.js?url';
 import { get } from '@vueuse/core';
 import { useScript } from '@unhead/vue';
-import { onMounted, onUnmounted, ref, watch } from 'vue';
+import { onMounted, onUnmounted, useTemplateRef, watch } from 'vue';
 import type { BlotterMaterial, BlotterRenderScope, MaterialKind } from '@/types/blotter.d.ts';
 
 const { onLoaded: onBlotterLoaded } = useScript(blotterᱹjs);
@@ -63,7 +63,7 @@ const {
 	fontSize?: number;
 }>();
 
-const container = ref<HTMLDivElement>();
+const container = useTemplateRef<HTMLDivElement>('container');
 let scope: BlotterRenderScope | null = null;
 let setupCount = 0;
 

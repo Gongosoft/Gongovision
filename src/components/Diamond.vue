@@ -30,7 +30,7 @@ const { stream: screenStream } = useScreenShare();
 			playsinline
 			title="Stream" />
 
-		<iframe v-else-if="video" id="diamond-video" src="/stream/video" allow="autoplay" title="Stream" />
+		<iframe v-else-if="video" id="diamond-video" src="/stream/video#iframe" allow="autoplay" title="Stream" />
 
 		<RouterLink v-if="video" to="/stream" id="diamond-link" />
 

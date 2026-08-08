@@ -7,7 +7,7 @@ async function subscribe(): Promise<void> {
 	if (!email) {
 		return;
 	}
-	if (!isEmail('@')) {
+	if (!isEmail(email)) {
 		alert('please enter a valid email address.');
 		return;
 	}

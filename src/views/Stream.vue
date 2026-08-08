@@ -3,12 +3,11 @@ import '@/styles/status.css';
 import Chat from '@/components/TwitchChat.vue';
 import STOPTAPE from '@/components/STOPTAPE.vue';
 import TwitchEmbed from '@/components/TwitchEmbed.vue';
+import AngelThumpPlayer from '@/components/AngelThumpPlayer.vue';
 import { computed, ref } from 'vue';
 import { get, usePointerSwipe } from '@vueuse/core';
 import { useSplitPane } from '@/composables/useSplitPane.ts';
 import { useStreamSource } from '@/composables/useStreamSource.ts';
-
-const { CHANNEL: SPHYNX, PLAYER } = ANGELTHUMP;
 
 const { isGreatSphynxLive, twitchChannels, loading, errorMessage, refresh } = useStreamSource();
 const fallback = computed(() => get(twitchChannels)[0] ?? null);
@@ -54,12 +53,7 @@ usePointerSwipe(edgeEndEl, { onSwipeEnd: () => showEdge('end') });
 
 		<template v-else>
 			<div class="video">
-				<iframe
-					v-if="isGreatSphynxLive"
-					class="player-frame"
-					:src="`${PLAYER}/?channel=${SPHYNX}`"
-					allow="autoplay; fullscreen"
-					allowfullscreen />
+				<AngelThumpPlayer v-if="isGreatSphynxLive" />
 				<TwitchEmbed v-else-if="fallback && !errorMessage" :channel="fallback" />
 				<STOPTAPE v-else @refresh="refresh" />
 				<div v-if="errorMessage" class="error-overlay">
@@ -227,12 +221,5 @@ usePointerSwipe(edgeEndEl, { onSwipeEnd: () => showEdge('end') });
 	&:hover {
 		background: var(--color-edge-hover);
 	}
-}
-
-.player-frame {
-	flex: 1;
-	width: 100%;
-	border: none;
-	min-height: 0;
 }
 </style>

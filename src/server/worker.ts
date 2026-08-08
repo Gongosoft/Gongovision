@@ -30,7 +30,7 @@ export default {
 			);
 
 			let angelthump: string[] = [];
-			if (await checkLiveStatus('greatsphynx')) {
+			if (await checkLiveStatus()) {
 				angelthump = ['GreatSphynx'];
 			}
 
@@ -66,7 +66,7 @@ export default {
 		}
 
 		if (pathname.startsWith('/stream/')) {
-			const streamResponse = await handleStreamRequest(pathname);
+			const streamResponse = await handleStreamRequest(pathname, request);
 			if (streamResponse) {
 				return streamResponse;
 			}

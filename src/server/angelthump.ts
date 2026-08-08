@@ -1,14 +1,15 @@
 import { env } from 'cloudflare:workers';
 import { writeXmltv } from '@iptv/xmltv';
 import type { Xmltv, XmltvProgramme } from '@iptv/xmltv';
+import type { AngelThumpStreamResponse, AngelThumpVigorResponse } from '@/types/angelthump.d.ts';
 
 interface AngelThumpStream {
 	type?: string;
 }
 
-export async function checkLiveStatus(channel: string): Promise<boolean> {
+export async function checkLiveStatus(): Promise<boolean> {
 	try {
-		const res = await fetch(`${ANGELTHUMP.API}/streams?username=${encodeURIComponent(channel)}`);
+		const res = await fetch(`${ANGELTHUMP.API}/streams?username=${encodeURIComponent(ANGELTHUMP.CHANNEL)}`);
 		if (!res.ok) {
 			return false;
 		}
@@ -19,14 +20,7 @@ export async function checkLiveStatus(channel: string): Promise<boolean> {
 	}
 }
 
-export async function getToken(): Promise<{ token: string; expiresAt: number } | null> {
-	const cached = await env.CONFIG.get('angelthump-token', 'json');
-	const parsed = cached as { token: string; expiresAt: number } | null;
-
-	if (parsed?.token && parsed?.expiresAt && Date.now() < parsed.expiresAt - 60_000) {
-		return parsed;
-	}
-
+export async function getToken(): Promise<AngelThumpVigorResponse | null> {
 	const res = await fetch(`${ANGELTHUMP.VIGOR}/${ANGELTHUMP.CHANNEL}/token`, {
 		method: 'POST',
 		headers: { 'Content-Type': 'application/json', 'Identifier': ANGELTHUMP.IDENTIFIER }
@@ -36,25 +30,72 @@ export async function getToken(): Promise<{ token: string; expiresAt: number } |
 		return null;
 	}
 
-	const data = await res.json<{ token?: string; expiresIn?: number }>();
+	const data = await res.json<AngelThumpVigorResponse>();
 	if (!data.token) {
 		return null;
 	}
 
-	const expiresAt = data.expiresIn ?? Date.now() + 86_400_000;
-	const ttl = Math.max(60, Math.floor((expiresAt - Date.now()) / 1000) - 60);
-
-	await env.CONFIG.put('angelthump-token', JSON.stringify({ token: data.token, expiresAt }), { expirationTtl: ttl });
-
-	return { token: data.token, expiresAt };
+	return data;
 }
 
 export function getHLS(token: string): string {
 	return `${ANGELTHUMP.VIGOR}/hls/${ANGELTHUMP.CHANNEL}.m3u8?token=${encodeURIComponent(token)}`;
 }
 
-export async function getM3U8(token: string): Promise<Response> {
-	return await fetch(getHLS(token));
+export async function getM3U8(request: Request): Promise<Response> {
+	const tokenResult = await getToken();
+	const token = tokenResult?.token;
+	if (!token) {
+		return new Response(null, { status: 502 });
+	}
+
+	const headers = new Headers();
+	const ip = request.headers.get('CF-Connecting-IP');
+	if (ip) {
+		headers.set('X-Forwarded-For', ip);
+	}
+
+	const res = await fetch(getHLS(token), { headers });
+
+	if (!res.ok) {
+		return new Response(null, { status: 502 });
+	}
+
+	const text = await res.text();
+	if (!text.trimStart().startsWith('#EXTM3U')) {
+		console.error('getM3U8: response does not start with #EXTM3U', text.slice(0, 200));
+		return new Response(null, { status: 502 });
+	}
+
+	return new Response(text, {
+		status: res.status,
+		headers: { 'Content-Type': 'application/vnd.apple.mpegurl' }
+	});
+}
+
+async function getStreamInfo(): Promise<Response> {
+	const cacheKey = `${ANGELTHUMP.CHANNEL}-stream-info`;
+	const cached = await env.CONFIG.get(cacheKey, 'json');
+	const parsed = cached as AngelThumpStreamResponse | null;
+	if (parsed?.createdAt) {
+		return Response.json(parsed);
+	}
+
+	try {
+		const res = await fetch(`${ANGELTHUMP.API}/streams?username=${encodeURIComponent(ANGELTHUMP.CHANNEL)}`);
+		if (!res.ok) {
+			return new Response(null, { status: 502 });
+		}
+		const [stream] = await res.json<AngelThumpStreamResponse[]>();
+		if (!stream || stream.type !== 'live') {
+			return new Response(null, { status: 502 });
+		}
+
+		await env.CONFIG.put(cacheKey, JSON.stringify(stream), { expirationTtl: 300 });
+		return Response.json(stream);
+	} catch {
+		return new Response(null, { status: 502 });
+	}
 }
 
 export function getXMLTV(): string {
@@ -101,62 +142,54 @@ export function getXMLTV(): string {
 	return writeXmltv(xmltv);
 }
 
-export async function handleStreamRequest(pathname: string): Promise<Response | null> {
-	if (pathname === '/stream/direct') {
-		const result = await getToken();
-		if (!result) {
-			return new Response(null, { status: 502 });
+export async function handleStreamRequest(pathname: string, request: Request): Promise<Response | null> {
+	switch (pathname) {
+		case '/stream/direct': {
+			const result = await getToken();
+			if (!result?.token) {
+				return new Response(null, { status: 502 });
+			}
+			return new Response(null, {
+				status: 307,
+				headers: {
+					Location: getHLS(result.token)
+				}
+			});
 		}
-		const maxAge = Math.max(0, Math.floor((result.expiresAt - Date.now()) / 1000) - 3600);
-		return new Response(null, {
-			status: 307,
-			headers: {
-				'Location': getHLS(result.token),
-				'Cache-Control': `public, max-age=${maxAge}`
-			}
-		});
-	}
-
-	if (pathname === '/stream/m3u') {
-		const result = await getToken();
-		if (!result) {
-			return new Response(null, { status: 502 });
+		case '/stream/info': {
+			return getStreamInfo();
 		}
-		const hlsUrl = getHLS(result.token);
-		const maxAge = Math.max(0, Math.floor((result.expiresAt - Date.now()) / 1000) - 3600);
-		const body = `#EXTM3U\n#EXTINF:-1, GreatSphynx\n${hlsUrl}`;
-		return new Response(body, {
-			headers: {
-				'Content-Type': 'application/vnd.apple.mpegurl',
-				'Cache-Control': `public, max-age=${maxAge}`
+		case '/stream/m3u': {
+			const result = await getToken();
+			if (!result?.token) {
+				return new Response(null, { status: 502 });
 			}
-		});
-	}
-
-	if (pathname === '/stream/m3u8') {
-		const result = await getToken();
-		if (!result) {
-			return new Response(null, { status: 502 });
+			const body = `#EXTM3U\n#EXTINF:-1, GreatSphynx\n${getHLS(result.token)}`;
+			return new Response(body, {
+				headers: {
+					'Content-Type': 'application/vnd.apple.mpegurl'
+				}
+			});
 		}
-		const upstream = await getM3U8(result.token);
-		const maxAge = Math.max(0, Math.floor((result.expiresAt - Date.now()) / 1000) - 3600);
-		return new Response(upstream.body, {
-			status: upstream.status,
-			headers: {
-				'Content-Type': 'application/vnd.apple.mpegurl',
-				'Cache-Control': `public, max-age=${maxAge}`
-			}
-		});
+		case '/stream/m3u8': {
+			const upstream = await getM3U8(request);
+			return new Response(upstream.body, {
+				status: upstream.status,
+				headers: {
+					'Content-Type': 'application/vnd.apple.mpegurl'
+				}
+			});
+		}
+		case '/stream/xmltv': {
+			return new Response(getXMLTV(), {
+				headers: {
+					'Content-Type': 'application/xml; charset=utf-8',
+					'Cache-Control': 'public, max-age=86400'
+				}
+			});
+		}
+		default: {
+			return null;
+		}
 	}
-
-	if (pathname === '/stream/xmltv') {
-		return new Response(getXMLTV(), {
-			headers: {
-				'Content-Type': 'application/xml; charset=utf-8',
-				'Cache-Control': 'public, max-age=86400'
-			}
-		});
-	}
-
-	return null;
 }

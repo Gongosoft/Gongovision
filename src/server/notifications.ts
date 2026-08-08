@@ -36,7 +36,7 @@ export class Notifications extends Agent<Env, NotificationState> {
 
 	public override async onStart(): Promise<void> {
 		initPush();
-		const live = await checkLiveStatus(ANGELTHUMP.CHANNEL);
+		const live = await checkLiveStatus();
 		await this.onLiveChange(live, 'poll');
 		this.openWebSocket();
 		await this.scheduleEvery(60, 'pollAngelthump');
@@ -96,7 +96,7 @@ export class Notifications extends Agent<Env, NotificationState> {
 	}
 
 	public async pollAngelthump(): Promise<void> {
-		const live = await checkLiveStatus(ANGELTHUMP.CHANNEL);
+		const live = await checkLiveStatus();
 		await this.onLiveChange(live, 'poll');
 	}
 

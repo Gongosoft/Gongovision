@@ -5,12 +5,18 @@ import STOPTAPE from '@/components/STOPTAPE.vue';
 import TwitchEmbed from '@/components/TwitchEmbed.vue';
 import AngelThumpPlayer from '@/components/AngelThumpPlayer.vue';
 import { computed } from 'vue';
+import { useRouteHash } from '@vueuse/router';
 import { get, usePointerSwipe } from '@vueuse/core';
 import { useSplitPane } from '@/composables/useSplitPane.ts';
 import { useStreamSource } from '@/composables/useStreamSource.ts';
 
 const { isGreatSphynxLive, twitchChannels, loading, errorMessage, refresh } = useStreamSource();
 const fallback = computed(() => get(twitchChannels)[0] ?? null);
+
+const hash = useRouteHash();
+const renderIFrame = computed(() => get(hash) === '#iframe');
+
+const { PLAYER, CHANNEL: SPHYNX } = ANGELTHUMP;
 
 const chatChannel = computed(() => {
 	if (get(isGreatSphynxLive)) {
@@ -53,7 +59,13 @@ usePointerSwipe(edgeEndEl, { onSwipeEnd: () => showEdge('end') });
 
 		<template v-else>
 			<div class="video">
-				<AngelThumpPlayer v-if="isGreatSphynxLive" />
+				<iframe
+					v-if="isGreatSphynxLive && renderIFrame"
+					class="frame"
+					:src="`${PLAYER}/?channel=${SPHYNX}`"
+					allow="autoplay; fullscreen"
+					allowfullscreen />
+				<AngelThumpPlayer v-else-if="isGreatSphynxLive" />
 				<TwitchEmbed v-else-if="fallback && !errorMessage" :channel="fallback" />
 				<STOPTAPE v-else @refresh="refresh" />
 				<div v-if="errorMessage" class="error-overlay">
@@ -171,6 +183,12 @@ usePointerSwipe(edgeEndEl, { onSwipeEnd: () => showEdge('end') });
 	flex-direction: column;
 	position: relative;
 	overflow: hidden;
+}
+
+.frame {
+	border: none;
+	flex: 1;
+	min-height: 0;
 }
 
 .error-overlay {

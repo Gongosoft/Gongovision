@@ -336,6 +336,11 @@ export default defineConfig({
 		vue({
 			features: {
 				optionsAPI: false
+			},
+			template: {
+				compilerOptions: {
+					isCustomElement: (tag) => tag.includes('-')
+				}
 			}
 		}),
 		vueDevTools()

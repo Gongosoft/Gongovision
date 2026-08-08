@@ -1,12 +1,11 @@
 <script setup lang="ts">
 import '@/styles/scene.css';
 import '@/styles/status.css';
-import '@/styles/video-js.css';
+import '@videojs/html/video';
 import { get } from '@vueuse/core';
 import { useRoute } from 'vue-router';
 import { useHead } from '@unhead/vue';
 import { computed, ref, watchEffect } from 'vue';
-import { VideoPlayer } from '@videojs-player/vue';
 import { stripVODExtension, stripVODPrefix, useVODs } from '@/composables/useVODs.ts';
 
 const { vods, loading } = useVODs();
@@ -30,14 +29,11 @@ useHead({ title: computed(() => stripVODExtension(stripVODPrefix(get(title)))) }
 			<a v-if="!loading" href="/vods" class="status-retry">back to VODs</a>
 		</div>
 		<div v-else class="aspect-fit aspect-16-9 vod-wrapper">
-			<VideoPlayer
-				v-if="vod.videoURL"
-				:src="vod.videoURL"
-				:poster="vod.thumbnailURL || undefined"
-				:autoplay="true"
-				:volume="0.5"
-				aspect-ratio="16:9"
-				controls />
+			<video-player v-if="vod.videoURL">
+				<video-skin>
+					<video :src="vod.videoURL" :poster="vod.thumbnailURL || undefined" autoplay playsinline />
+				</video-skin>
+			</video-player>
 		</div>
 	</div>
 </template>

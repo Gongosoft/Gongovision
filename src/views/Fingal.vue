@@ -1,10 +1,9 @@
 <script setup lang="ts">
 import '@/styles/scene.css';
-import '@/styles/video-js.css';
+import '@videojs/html/video';
 import src from '@/assets/video/fingal.webm';
 import favicon from '@/assets/images/emotes/bttv/FinGasm.webp';
 import { useFavicon } from '@vueuse/core';
-import { VideoPlayer } from '@videojs-player/vue';
 import { useHead, useSeoMeta } from '@unhead/vue';
 
 const type = 'video/webm';
@@ -30,13 +29,11 @@ useSeoMeta({
 <template>
 	<div class="scene">
 		<div class="aspect-fit aspect-4-3">
-			<VideoPlayer
-				aspect-ratio="4:3"
-				autoplay="any"
-				:controls="true"
-				:loop="true"
-				:sources="[{ src, type }]"
-				:volume="0.8" />
+			<video-player>
+				<video-skin>
+					<video :src="src" autoplay loop playsinline />
+				</video-skin>
+			</video-player>
 		</div>
 	</div>
 </template>

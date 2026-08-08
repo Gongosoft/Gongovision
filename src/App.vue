@@ -137,4 +137,10 @@ body {
 	background-color: var(--color-bg);
 	font-family: 'Gohu';
 }
+
+video-player,
+live-video-player {
+	--media-border-radius: 0;
+	--media-video-border-radius: 0;
+}
 </style>

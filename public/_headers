@@ -1,8 +1,20 @@
 /*
 	Access-Control-Allow-Origin: *
 
-/notification/icon
-	Content-Type: image/avif
+/
+	Cache-Control: no-cache
+
+/index.html
+	Cache-Control: no-cache
+
+/manifest.webmanifest
+	Cache-Control: no-cache
 
 /notification/badge
 	Content-Type: image/avif
+
+/notification/icon
+	Content-Type: image/avif
+
+/sw.js
+	Cache-Control: no-cache

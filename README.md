@@ -1,17 +1,17 @@
 ### Features
 
 - [Bluesky feed](https://github.com/Gongosoft/Gongsky)
-- [Emotes](https://gongo.bergbok.workers.dev/emotes) via [R2](https://www.cloudflare.com/products/r2)
-- [Fingal](https://gongo.bergbok.workers.dev/fingal)
-- [Gongo](https://gongo.bergbok.workers.dev/gongo)
-- [Holomatch](https://gongo.bergbok.workers.dev/holomatch)
-- [Notifications](https://gongo.bergbok.workers.dev/notifications) (via browser and email)
-- [Osmo](https://gongo.bergbok.workers.dev/osmo)
+- [Emotes](https://gongo.tv/emotes) via [R2](https://www.cloudflare.com/products/r2)
+- [Fingal](https://gongo.tv/fingal)
+- [Gongo](https://gongo.tv/gongo)
+- [Holomatch](https://gongo.tv/holomatch)
+- [Notifications](https://gongo.tv/notifications) (via browser and email)
+- [Osmo](https://gongo.tv/osmo)
 - [PWA](https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps) support
-- [VODs](https://gongo.bergbok.workers.dev/vods) via [B2](https://backblaze.com/cloud-storage)
-- RSS ([HTML](https://gongo.bergbok.workers.dev/rss/html) / [OPML](https://gongo.bergbok.workers.dev/rss/opml) / [XML](https://gongo.bergbok.workers.dev/rss/xml))
-- [M3U](https://gongo.bergbok.workers.dev/stream/m3u) / [M3U8](https://gongo.bergbok.workers.dev/stream/m3u8) / [XMLTV](https://gongo.bergbok.workers.dev/stream/xmltv)
-- [Webcal](webcal://gongo.bergbok.workers.dev/schedule.ics)
+- [VODs](https://gongo.tv/vods) via [B2](https://backblaze.com/cloud-storage)
+- RSS ([HTML](https://gongo.tv/rss/html) / [OPML](https://gongo.tv/rss/opml) / [XML](https://gongo.tv/rss/xml))
+- [M3U](https://gongo.tv/stream/m3u) / [M3U8](https://gongo.tv/stream/m3u8) / [XMLTV](https://gongo.tv/stream/xmltv)
+- [Webcal](webcal://gongo.tv/schedule.ics)
 
 ### Running Locally
 

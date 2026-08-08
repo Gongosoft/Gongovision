@@ -46,7 +46,7 @@ useEventListener(iconRowRef, 'mouseover', (e) => {
 		<a title="GitHub" href="https://github.com/Gongosoft/Gongovision" target="_blank" @click.stop>
 			<span class="icon icon-animated" v-html="githubSVG" />
 		</a>
-		<a title="Contact" href="mailto:sphynxiscool@gmail.com" @click.stop>
+		<a title="Contact" href="mailto:contact@gongo.tv" @click.stop>
 			<span class="icon icon-animated" v-html="atSVG" />
 		</a>
 		<a

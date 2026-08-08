@@ -29,7 +29,7 @@ export default defineConfig({
 			VIGOR: 'https://vigor.angelthump.com',
 			WS: 'wss://uws.angelthump.com/ws'
 		}),
-		BASE_URL: JSON.stringify('https://gongo.bergbok.workers.dev'),
+		BASE_URL: JSON.stringify('https://gongo.tv'),
 		LIVE_NOTIFICATION: JSON.stringify({
 			title: 'the pull of the gongo compels you',
 			body: 'GreatSphynx started streaming',

@@ -2,9 +2,9 @@ name = 'gongo'
 main = 'src/server/worker.ts'
 compatibility_date = '2026-07-17'
 compatibility_flags = ['nodejs_compat']
-workers_dev = true
+workers_dev = false
 preview_urls = false
-# routes = [{ pattern = 'gongo.live', custom_domain = true }]
+routes = [{ pattern = 'gongo.tv', custom_domain = true }]
 
 [assets]
 binding = 'ASSETS'
@@ -30,7 +30,7 @@ run_worker_first = [
 ]
 
 [browser]
-binding = 'ANGELTHUMP'
+binding = 'BROWSER'
 remote = true
 
 [cache]
@@ -44,11 +44,11 @@ Notifications = { type = 'durable-object', storage = 'sqlite' }
 
 [[kv_namespaces]]
 binding = 'CONFIG'
-id = '3ac23e7ab2624152bb0e5ac19a031d21'
+id = '4e0458fae76f460f88bee380c18be69d'
 
 [[kv_namespaces]]
 binding = 'THUMBNAILS'
-id = 'bf592eb0c8ad4e31b6ee107d791d3f73'
+id = '364658ec89a6473fb2bbe76bdb507bf0'
 remote = true
 
 [observability]
@@ -65,30 +65,25 @@ remote = true
 [secrets]
 required = ['B2_APPLICATION_KEY', 'SMTP_PASSWORD', 'TWITCH_CLIENT_SECRET', 'VAPID_PRIVATE_KEY']
 
-[[services]]
-binding = 'COMPUTER'
-service = 'computer'
-remote = true
-
 [vars]
 B2_APPLICATION_KEY_ID = '00348459c62c8d40000000007'
 B2_ENDPOINT = 's3.eu-central-003.backblazeb2.com'
 B2_BUCKET_NAME = 'gongos'
 FRESHRSS_USERNAME = 'root'
 FRESHRSS_QUERY_TOKEN = '3I0QvV6LCOaYmkf8WKgFpr'
-SMTP_USERNAME = 'notifications@bergbok.computer'
+SMTP_USERNAME = 'notifications@gongo.tv'
 SMTP_SERVER = 'smtp.protonmail.ch'
 SMTP_PORT = 587
 TWITCH_CLIENT_ID = '1ao3j6d7bndjeovhkrfgb6tdkcwg62'
 VAPID_PUBLIC_KEY = 'BIs_XyzFXw8YdSbwrUY2AyxboSm7dUsWf3__WIFNR0OYX_SBsHmQQr75ujLdm2577i_2YcIovKOlsPXq-kT_WL0'
-VAPID_SUBJECT = 'https://gongo.bergbok.workers.dev/stream'
+VAPID_SUBJECT = 'https://gongo.tv/stream'
 
 [[vpc_services]]
 binding = 'FRESHRSS'
-service_id = '019f89b1-9d93-7231-8a64-dc2543d7cfcf'
+service_id = '019fe31d-5e26-7be2-b585-7916cb15fcda'
 remote = true
 
 [[vpc_services]]
 binding = 'GONGSKY'
-service_id = '019f8e3c-e209-7740-921b-9694f1f21383'
+service_id = '019fe31c-a67a-7180-96d2-8d4e1d1d4905'
 remote = true

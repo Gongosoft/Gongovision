@@ -2,7 +2,7 @@
 	"name": "gongo",
 	"private": true,
 	"description": "Gongo is a 2D side-scrolling platformer where the player goes through levels killing enemies and saving the princess. Each level has amazing hand-picked worlds. On each of the levels, a princess is hidden, which must be rescued and delivered to your castle, cleaning up enemies along the way.",
-	"homepage": "https://gongo.bergbok.workers.dev",
+	"homepage": "https://gongo.tv",
 	"bugs": "https://github.com/Gongosoft/Gongovision/issues",
 	"license": "ISC",
 	"repository": "github.com:Gongosoft/Gongovision",

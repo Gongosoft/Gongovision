@@ -4,7 +4,7 @@ import Chat from '@/components/TwitchChat.vue';
 import STOPTAPE from '@/components/STOPTAPE.vue';
 import TwitchEmbed from '@/components/TwitchEmbed.vue';
 import AngelThumpPlayer from '@/components/AngelThumpPlayer.vue';
-import { computed, ref } from 'vue';
+import { computed } from 'vue';
 import { get, usePointerSwipe } from '@vueuse/core';
 import { useSplitPane } from '@/composables/useSplitPane.ts';
 import { useStreamSource } from '@/composables/useStreamSource.ts';
@@ -29,17 +29,17 @@ const {
 	hidden,
 	dragging,
 	chatStyle,
-	divStyle,
+	dividerStyle,
+	edgeStartEl,
+	edgeEndEl,
 	onPointerDown,
 	onPointerUp,
 	onPointerMove,
 	showEdge,
-	snapTo16by9,
+	snapTo16ᱺ9,
 	flip
 } = useSplitPane();
 
-const edgeStartEl = ref<HTMLElement | null>(null);
-const edgeEndEl = ref<HTMLElement | null>(null);
 usePointerSwipe(edgeStartEl, { onSwipeEnd: () => showEdge('start') });
 usePointerSwipe(edgeEndEl, { onSwipeEnd: () => showEdge('end') });
 </script>
@@ -66,12 +66,12 @@ usePointerSwipe(edgeEndEl, { onSwipeEnd: () => showEdge('end') });
 				v-if="!hidden"
 				class="divider"
 				:class="{ active: dragging }"
-				:style="divStyle"
+				:style="dividerStyle"
 				@pointerdown="onPointerDown"
 				@pointermove="onPointerMove"
 				@pointerup="onPointerUp"
 				@pointercancel="onPointerUp"
-				@click.ctrl="snapTo16by9"
+				@click.ctrl="snapTo16ᱺ9"
 				@dblclick="flip" />
 
 			<div v-if="!hidden" class="chat" :style="chatStyle"><Chat :channel="chatChannel" /></div>

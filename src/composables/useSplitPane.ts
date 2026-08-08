@@ -1,6 +1,7 @@
-import { computed, ref } from 'vue';
-import { get, useMediaQuery, useStorage, useWindowSize } from '@vueuse/core';
-import type { ComputedRef, Ref } from 'vue';
+import { clamp } from '@vueuse/shared';
+import { computed, ref, useTemplateRef } from 'vue';
+import { get, useLocalStorage, useMediaQuery, useWindowSize } from '@vueuse/core';
+import type { ComputedRef, Ref, StyleValue } from 'vue';
 
 const CHAT_MAX = 0.85;
 const CHAT_MIN = 0.12;
@@ -18,53 +19,62 @@ export interface UseSplitPaneReturn {
 	hidden: Ref<boolean>;
 	dragging: Ref<boolean>;
 	chatStyle: ComputedRef<{ flexBasis: string }>;
-	divStyle: ComputedRef<Record<string, string>>;
+	dividerStyle: ComputedRef<StyleValue>;
+	edgeStartEl: Ref<HTMLElement | null>;
+	edgeEndEl: Ref<HTMLElement | null>;
 	onPointerDown: (e: PointerEvent) => void;
 	onPointerUp: () => void;
 	onPointerMove: (e: PointerEvent) => void;
 	showEdge: (sideName: 'start' | 'end') => void;
 	flip: () => void;
-	snapTo16by9: () => void;
+	snapTo16ᱺ9: () => void;
 }
 
 export function useSplitPane(): UseSplitPaneReturn {
 	const isMobile = useMediaQuery('(max-width: 767px)');
 	const { width: viewW, height: viewH } = useWindowSize();
 
-	const desktopSide = useStorage<'start' | 'end'>('chatdesk', 'end');
-	const mobileSide = useStorage<'start' | 'end'>('chatmob', 'end');
+	const desktopSide = useLocalStorage<'start' | 'end'>('chat:desktop', 'end');
+	const mobileSide = useLocalStorage<'start' | 'end'>('chat:mobile', 'end');
 
-	const initial = ((): number => {
-		if (typeof window === 'undefined') {
-			return 0.25;
+	const storedRatio = useLocalStorage<number | null>('chat:size', null);
+
+	function currentSide(): Ref<'start' | 'end'> {
+		return get(isMobile) ? mobileSide : desktopSide;
+	}
+
+	const chatRatio = computed({
+		get: (): number => {
+			const stored = get(storedRatio);
+			if (typeof stored === 'number' && stored >= CHAT_MIN && stored <= CHAT_MAX) {
+				return stored;
+			}
+			const ideal = chatRatioFor16ᱺ9(get(viewW), get(viewH), get(isMobile));
+			return ideal >= CHAT_MIN ? ideal : 0.25;
+		},
+		set: (value: number): void => {
+			storedRatio.value = value;
 		}
-		const ideal = chatRatioFor16ᱺ9(window.innerWidth, window.innerHeight, get(isMobile));
-		return ideal >= CHAT_MIN ? ideal : 0.25;
-	})();
-	const chatRatio = useStorage('chatpct', initial);
+	});
 
 	const hidden = ref(false);
 	const dragging = ref(false);
 
-	const side = computed<'start' | 'end'>(() =>
-		get(isMobile) ? get<'start' | 'end'>(mobileSide) : get<'start' | 'end'>(desktopSide)
-	);
+	const side = computed<'start' | 'end'>(() => get(currentSide()));
 	const ideal = computed(() => chatRatioFor16ᱺ9(get(viewW), get(viewH), get(isMobile)));
 	const ceiling = computed(() => (get(ideal) >= CHAT_MIN ? get(ideal) : CHAT_MAX));
 
-	const chatStyle = computed(() => ({ flexBasis: `${get<number>(chatRatio) * 100}%` }));
+	const chatStyle = computed(() => ({ flexBasis: `${get(chatRatio) * 100}%` }));
 
-	const divStyle = computed(() => {
-		const pct = get<number>(chatRatio) * 100;
-		const offset = `calc(${pct}% - 6px)`;
+	const dividerStyle = computed(() => {
+		const percentage = get(chatRatio) * 100;
+		const offset = `calc(${percentage}% - 6px)`;
 		const style: Record<string, string> = {};
-		let key = '';
 		if (get(isMobile)) {
-			key = get(side) === 'start' ? 'top' : 'bottom';
+			style[get(side) === 'start' ? 'top' : 'bottom'] = offset;
 		} else {
-			key = get(side) === 'start' ? 'left' : 'right';
+			style[get(side) === 'start' ? 'left' : 'right'] = offset;
 		}
-		style[key] = offset;
 		return style;
 	});
 
@@ -98,33 +108,36 @@ export function useSplitPane(): UseSplitPaneReturn {
 
 		if (position > limit + FLIP_EDGE) {
 			const flipSide: 'start' | 'end' = get(side) === 'start' ? 'end' : 'start';
-			(get(isMobile) ? mobileSide : desktopSide).value = flipSide;
-			chatRatio.value = Math.max(CHAT_MIN, chatRatioFor16ᱺ9(get(viewW), get(viewH), get(isMobile)));
+			currentSide().value = flipSide;
+			chatRatio.value = clamp(chatRatioFor16ᱺ9(get(viewW), get(viewH), get(isMobile)), CHAT_MIN, limit);
 			dragging.value = false;
 			return;
 		}
 
-		chatRatio.value = Math.min(Math.max(position, CHAT_MIN), limit);
+		chatRatio.value = clamp(position, CHAT_MIN, limit);
 	}
 
 	function showEdge(sideName: 'start' | 'end'): void {
 		if (!get(hidden)) {
 			return;
 		}
-		(get(isMobile) ? mobileSide : desktopSide).value = sideName;
+		currentSide().value = sideName;
 		chatRatio.value = get(ideal) >= CHAT_MIN ? get(ideal) : 0.33;
 		hidden.value = false;
 	}
 
-	function snapTo16by9(): void {
-		chatRatio.value = Math.max(CHAT_MIN, chatRatioFor16ᱺ9(get(viewW), get(viewH), get(isMobile)));
+	const edgeStartEl = useTemplateRef<HTMLElement>('edgeStartEl');
+	const edgeEndEl = useTemplateRef<HTMLElement>('edgeEndEl');
+
+	function snapTo16ᱺ9(): void {
+		chatRatio.value = clamp(chatRatioFor16ᱺ9(get(viewW), get(viewH), get(isMobile)), CHAT_MIN, 1);
 		hidden.value = false;
 	}
 
 	function flip(): void {
 		const newSide: 'start' | 'end' = get(side) === 'start' ? 'end' : 'start';
-		(get(isMobile) ? mobileSide : desktopSide).value = newSide;
-		snapTo16by9();
+		currentSide().value = newSide;
+		snapTo16ᱺ9();
 	}
 
 	return {
@@ -133,12 +146,14 @@ export function useSplitPane(): UseSplitPaneReturn {
 		hidden,
 		dragging,
 		chatStyle,
-		divStyle,
+		dividerStyle,
+		edgeStartEl,
+		edgeEndEl,
 		onPointerDown,
 		onPointerUp,
 		onPointerMove,
 		showEdge,
-		snapTo16by9,
+		snapTo16ᱺ9,
 		flip
 	};
 }

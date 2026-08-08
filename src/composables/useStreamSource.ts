@@ -59,6 +59,9 @@ const isGreatSphynxLive = computed<boolean>(() => {
 	if (isLive !== null) {
 		return isLive;
 	}
+	if (get(error)) {
+		return true;
+	}
 	return (get(data)?.angelthump ?? []).includes('GreatSphynx');
 });
 

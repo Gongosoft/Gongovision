@@ -183,6 +183,6 @@ onUnmounted(() => {
 	right: 12px;
 	top: 50%;
 	transform: translateY(-50%);
-	z-index: 1;
+	z-index: 2;
 }
 </style>

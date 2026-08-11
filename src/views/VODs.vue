@@ -3,10 +3,10 @@ import '@/styles/status.css';
 import backSVG from '@/assets/images/arrow-left.svg?raw';
 import shuffleSVG from '@/assets/images/shuffle.svg?raw';
 import fallbackThumb from '@/assets/images/thumbnails/fallback.avif';
-import { ref, watch } from 'vue';
-import { get } from '@vueuse/core';
+import { useTemplateRef } from 'vue';
 import { useHead } from '@unhead/vue';
 import { RouterLink, useRouter } from 'vue-router';
+import { get, useEventListener } from '@vueuse/core';
 import { stripVODExtension, stripVODPrefix, useVODs } from '@/composables/useVODs.ts';
 import type { VOD } from '@/composables/useVODs.ts';
 
@@ -30,10 +30,15 @@ function shuffle(): void {
 	router.push(formatPath(pick));
 }
 
-const delays = ref<number[]>([]);
+const randomized = new WeakSet<Element>();
+const gridRef = useTemplateRef<HTMLElement>('gridRef');
 
-watch(vods, (list) => {
-	delays.value = list.map(() => Math.random() * 30);
+useEventListener(gridRef, 'mouseover', (e) => {
+	const card = (e.target as Element).closest?.('.card');
+	if (card instanceof HTMLElement && !randomized.has(card)) {
+		randomized.add(card);
+		card.style.setProperty('--delay', `-${Math.random() * 30}s`);
+	}
 });
 </script>
 
@@ -55,13 +60,8 @@ watch(vods, (list) => {
 		<div v-else-if="vods.length === 0" class="status status-fill status-muted">
 			<span>no VODs available.</span>
 		</div>
-		<div v-else class="grid">
-			<RouterLink
-				v-for="(vod, i) in vods"
-				:key="vod.title"
-				:to="formatPath(vod)"
-				class="card"
-				:style="{ animationDelay: `-${delays[i] ?? 0}s` }">
+		<div v-else ref="gridRef" class="grid">
+			<RouterLink v-for="vod in vods" :key="vod.title" :to="formatPath(vod)" class="card">
 				<div class="thumbnail">
 					<img :src="vod.thumbnailURL ?? fallbackThumb" :alt="formatTitle(vod)" loading="lazy" />
 				</div>
@@ -104,33 +104,38 @@ watch(vods, (list) => {
 .vods-page {
 	position: fixed;
 	inset: 0;
-	z-index: 0;
 	overflow-y: auto;
-	padding: 5rem 2rem 6rem 2rem;
-	display: flex;
-	flex-direction: column;
+	padding: 5rem 2rem 6rem;
 
 	& .grid {
-		flex: 1;
 		display: grid;
 		grid-template-columns: repeat(auto-fit, minmax(18rem, 20rem));
 		gap: 1.5rem;
 		justify-content: center;
 		align-content: center;
+		min-height: 100%;
 	}
 
 	& .card {
+		animation: borderShift 30s linear infinite;
+		animation-delay: var(--delay);
+		animation-play-state: paused;
+		background: var(--color-surface);
+		border-radius: 6px;
+		border: 1px solid var(--color-border);
+		color: inherit;
 		display: flex;
 		flex-direction: column;
-		border: 1px solid var(--color-border);
-		border-radius: 6px;
 		overflow: hidden;
-		background: var(--color-surface);
 		text-decoration: none;
-		color: inherit;
 
 		&:hover {
-			animation: borderShift 30s linear infinite;
+			animation-play-state: running;
+
+			& .vod-title,
+			& .vod-size {
+				animation-play-state: running;
+			}
 		}
 	}
 
@@ -156,19 +161,25 @@ watch(vods, (list) => {
 	}
 
 	& .vod-title {
-		font-size: 0.85rem;
+		animation: colorShift 30s linear infinite;
+		animation-play-state: paused;
+		animation-delay: var(--delay);
 		color: var(--color-text-secondary);
+		flex: 1;
+		font-size: 0.85rem;
+		min-width: 0;
 		overflow: hidden;
 		text-overflow: ellipsis;
 		white-space: nowrap;
-		flex: 1;
-		min-width: 0;
 	}
 
 	& .vod-size {
-		font-size: 0.7rem;
+		animation: colorShift 30s linear infinite;
+		animation-play-state: paused;
+		animation-delay: var(--delay);
 		color: var(--color-text-muted);
 		flex-shrink: 0;
+		font-size: 0.7rem;
 	}
 }
 </style>

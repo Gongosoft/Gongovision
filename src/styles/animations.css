@@ -124,6 +124,69 @@
 	}
 }
 
+@keyframes colorShift {
+	1% {
+		fill: #4e85ff;
+	}
+	5% {
+		color: #52cd3e;
+	}
+	10% {
+		color: #5451e6;
+	}
+	15% {
+		color: #4effb7;
+	}
+	20% {
+		color: #e28616;
+	}
+	25% {
+		color: #d83d5c;
+	}
+	30% {
+		color: #613dd3;
+	}
+	40% {
+		color: #176c5b;
+	}
+	45% {
+		color: #28ff15;
+	}
+	50% {
+		color: #18b44a;
+	}
+	55% {
+		color: #98ff17;
+	}
+	60% {
+		color: #dd007a;
+	}
+	65% {
+		color: #54c4e8;
+	}
+	70% {
+		color: #f17d06;
+	}
+	75% {
+		color: #982346;
+	}
+	80% {
+		color: #fcf60b;
+	}
+	85% {
+		color: #654000;
+	}
+	90% {
+		color: #ec218c;
+	}
+	95% {
+		color: #d30039;
+	}
+	100% {
+		fill: #4e85ff;
+	}
+}
+
 @keyframes fillShift {
 	1% {
 		fill: #4e85ff;

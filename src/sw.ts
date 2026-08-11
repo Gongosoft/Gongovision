@@ -1,7 +1,9 @@
 /// <reference lib="webworker" />
 
 import { clientsClaim } from 'workbox-core';
+import { NetworkFirst } from 'workbox-strategies';
 import { precacheAndRoute } from 'workbox-precaching';
+import { NavigationRoute, registerRoute } from 'workbox-routing';
 import type { PrecacheEntry } from 'workbox-precaching';
 
 declare const self: ServiceWorkerGlobalScope & {
@@ -13,6 +15,8 @@ interface ExtendedNotificationOptions extends NotificationOptions {
 }
 
 clientsClaim();
+
+registerRoute(new NavigationRoute(new NetworkFirst({ networkTimeoutSeconds: 8 })));
 precacheAndRoute(self.__WB_MANIFEST);
 
 self.addEventListener('install', () => {
@@ -46,7 +50,7 @@ self.addEventListener('push', (event: PushEvent) => {
 self.addEventListener('notificationclick', (event: NotificationEvent) => {
 	event.notification.close();
 
-	const urlToOpen = (event.notification.data as Record<string, string> | undefined)?.url ?? '/stream';
+	const location = (event.notification.data as Record<string, string> | undefined)?.url ?? '/stream';
 
 	const handleClick = async (): Promise<void> => {
 		const windowClients = await self.clients.matchAll({
@@ -54,13 +58,13 @@ self.addEventListener('notificationclick', (event: NotificationEvent) => {
 			includeUncontrolled: true
 		});
 		for (const client of windowClients) {
-			if (client.url.includes(urlToOpen) && 'focus' in client) {
+			if (client.url.includes(location) && 'focus' in client) {
 				await client.focus();
 				return;
 			}
 		}
 		if (self.clients.openWindow) {
-			await self.clients.openWindow(urlToOpen);
+			await self.clients.openWindow(location);
 		}
 	};
 

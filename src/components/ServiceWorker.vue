@@ -15,9 +15,11 @@ useRegisterSW({
 				if (!get(online)) {
 					return;
 				}
-				const response = await fetch(swURL, { cache: 'no-store' });
-				if (response.status === 200) {
+				try {
+					await fetch(swURL, { cache: 'no-store' });
 					await registration.update();
+				} catch {
+					/*_*/
 				}
 			},
 			60 * 60 * 1000

@@ -175,6 +175,7 @@ usePointerSwipe(edgeEndEl, { onSwipeEnd: () => showEdge('end') });
 	overflow: hidden;
 	min-width: 0;
 	min-height: 0;
+	z-index: 1;
 }
 
 .divider {

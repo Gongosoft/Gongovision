@@ -15,7 +15,7 @@ import frame1 from '@/assets/images/background.avif';
 	display: grid;
 	inset: 0;
 	position: fixed;
-	z-index: -1;
+	z-index: 0;
 
 	& > * {
 		grid-area: 1 / 1;

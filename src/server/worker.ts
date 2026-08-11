@@ -1,4 +1,3 @@
-import mime from 'mime/lite';
 import { env } from 'cloudflare:workers';
 import { routeAgentRequest } from 'agents';
 import { handleRssRequest } from '@/server/rss.ts';
@@ -60,18 +59,6 @@ export default {
 
 		if (pathname === '/vods/list') {
 			return listVODs();
-		}
-
-		if (pathname.startsWith('/vods/thumbnail/')) {
-			const thumbKey = decodeURIComponent(pathname.replace('/vods/thumbnail/', ''));
-			const object = await env.THUMBNAILS.get(thumbKey, { type: 'arrayBuffer' });
-			if (!object) {
-				return new Response(null, { status: 404 });
-			}
-			const ext = thumbKey.split('.').pop()?.toLowerCase() ?? '';
-			return new Response(object, {
-				headers: { 'Content-Type': mime.getType(ext) ?? 'application/octet-stream' }
-			});
 		}
 
 		if (pathname === '/.well-known/did.json' || pathname.startsWith('/xrpc/')) {

@@ -2,7 +2,7 @@
 import '@/styles/status.css';
 import backSVG from '@/assets/images/arrow-left.svg?raw';
 import shuffleSVG from '@/assets/images/shuffle.svg?raw';
-import fallbackThumb from '@/assets/images/thumbnail-fallback.avif';
+import fallbackThumb from '@/assets/images/thumbnails/fallback.avif';
 import { ref, watch } from 'vue';
 import { get } from '@vueuse/core';
 import { useHead } from '@unhead/vue';

@@ -21,7 +21,6 @@ run_worker_first = [
 	'/stream/m3u8',
 	'/stream/xmltv',
 	'/vods/list',
-	'/vods/thumbnail/*',
 	'/.well-known/did.json',
 	'/xrpc/app.bsky.feed.describeFeedGenerator',
 	'/xrpc/app.bsky.feed.getFeedSkeleton'
@@ -43,11 +42,6 @@ Notifications = { type = 'durable-object', storage = 'sqlite' }
 [[kv_namespaces]]
 binding = 'CONFIG'
 id = '4e0458fae76f460f88bee380c18be69d'
-
-[[kv_namespaces]]
-binding = 'THUMBNAILS'
-id = '364658ec89a6473fb2bbe76bdb507bf0'
-remote = true
 
 [observability]
 logs = { enabled = true }

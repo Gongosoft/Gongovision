@@ -1,5 +1,7 @@
-import { env } from 'cloudflare:workers';
 import { AwsClient } from 'aws4fetch';
+import { env } from 'cloudflare:workers';
+import { XMLParser } from 'fast-xml-parser';
+import type { B2ListResponse } from '@/types/b2.d.ts';
 
 const FORWARD_HEADERS = ['range', 'if-range', 'if-match', 'if-none-match', 'if-modified-since', 'if-unmodified-since'];
 
@@ -69,37 +71,19 @@ export async function listVODs(): Promise<Response> {
 	}
 
 	const xml = await res.text();
-	const keys: string[] = [];
-	const sizes: number[] = [];
-
-	for (const m of xml.matchAll(/<Key>vods\/(?<key>.+?)<\/Key>/g)) {
-		if (m.groups?.key && !m.groups.key.endsWith('/')) {
-			keys.push(m.groups.key);
-		}
-	}
-	for (const m of xml.matchAll(/<Size>(?<size>\d+)<\/Size>/g)) {
-		if (m.groups?.size) {
-			sizes.push(Number(m.groups.size));
-		}
-	}
-
-	const thumbList = await env.THUMBNAILS.list({ prefix: '' });
-	const thumbKeys = new Set(thumbList.keys.map((k) => k.name));
-
-	const vods = keys.map((key, i) => {
-		const title = decodeURIComponent(key);
-		const baseName = title.replace(/\.[^.]+$/, '');
-
-		let thumbnailURL: string | null = null;
-		for (const tKey of thumbKeys) {
-			if (tKey.replace(/\.[^.]+$/, '') === baseName) {
-				thumbnailURL = `/vods/thumbnail/${encodeURIComponent(tKey)}`;
-				break;
-			}
-		}
-
-		return { title, videoURL: `/b2/vods/${encodeURIComponent(key)}`, thumbnailURL, size: sizes[i] ?? 0 };
+	const parser = new XMLParser({
+		isArray: (tag: string): boolean => tag === 'Contents'
 	});
+	const parsed: B2ListResponse = parser.parse(xml);
+
+	const contents = parsed.ListBucketResult.Contents ?? [];
+	const vods = contents
+		.filter((item) => item.Key && !item.Key.endsWith('/'))
+		.map((item) => ({
+			title: item.Key,
+			videoURL: `/b2/vods/${encodeURIComponent(item.Key.replace(/^vods\//, ''))}`,
+			size: item.Size || 0
+		}));
 
 	return Response.json(vods);
 }

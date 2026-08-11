@@ -69,19 +69,23 @@ useEventListener(iconRowRef, 'mouseover', (e) => {
 		<a title="Discord" href="https://discord.gg/yRahnWpyDa" target="_blank" @click.stop>
 			<span class="icon icon-animated" :style="{ '--icon-fill': '#5865f2' }" v-html="discordSVG" />
 		</a>
-		<a title="YouTube" href="https://www.youtube.com/@GongoLive" target="_blank" @click.stop>
+		<a
+			title="YouTube"
+			href="https://youtube.com/playlist?list=PL28y8g5R15Wp60snlRsQkCcEGzu7eDJU5"
+			target="_blank"
+			@click.stop>
 			<span class="icon icon-animated" :style="{ '--icon-fill': '#ff0033' }" v-html="youtubeSVG" />
 		</a>
 
 		<RouterLink title="Notifications" to="/notifications" @click.stop>
 			<span class="icon icon-animated" v-html="notificationSVG" />
 		</RouterLink>
-		<a title="Schedule" :href="webcal" @click.stop>
-			<span class="icon icon-animated" v-html="calendarSVG" />
-		</a>
 		<RouterLink title="VODs" to="/vods" @click.stop>
 			<span class="icon icon-animated" v-html="folderSVG" />
 		</RouterLink>
+		<a title="Schedule" :href="webcal" @click.stop>
+			<span class="icon icon-animated" v-html="calendarSVG" />
+		</a>
 		<button type="button" title="Start streaming!" class="icon-button" @click.stop="onCameraClick">
 			<span class="icon icon-animated" v-html="cameraSVG" />
 		</button>

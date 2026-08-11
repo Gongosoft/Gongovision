@@ -2,6 +2,9 @@
 import Blotter from '@/components/Blotter.vue';
 import { RouterLink } from 'vue-router';
 import { useScreenShare } from '@/composables/useScreenShare.ts';
+import { useStreamSource } from '@/composables/useStreamSource.ts';
+
+const { isGreatSphynxLive } = useStreamSource();
 
 const {
 	video = true,
@@ -38,15 +41,15 @@ const { stream: screenStream } = useScreenShare();
 	</div>
 
 	<Blotter
-		text="SOON"
+		:text="isGreatSphynxLive ? 'LIVE' : 'OFFLINE'"
 		material="liquidDistort"
-		font-family="Gohu"
+		font-family="VCR OSD"
 		:font-size="69"
 		:material-uniforms="{
 			uSpeed: 0.16,
 			uVolatility: 0.02
 		}"
-		id="blotter-soon" />
+		id="blotter-header" />
 </template>
 
 <style scoped>
@@ -101,10 +104,8 @@ const { stream: screenStream } = useScreenShare();
 		left: 42%;
 	}
 }
-</style>
 
-<style scoped>
-#blotter-soon {
+#blotter-header {
 	position: fixed;
 	top: 50%;
 	left: 50%;
@@ -112,6 +113,14 @@ const { stream: screenStream } = useScreenShare();
 	margin-top: -18dvh;
 	z-index: 5;
 	pointer-events: none;
+
+	@media (max-width: 580px) {
+		margin-top: -16dvh;
+	}
+
+	@media (max-width: 520px) {
+		margin-top: -14dvh;
+	}
 
 	@media (max-width: 480px) {
 		margin-top: -12dvh;

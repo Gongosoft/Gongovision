@@ -9,7 +9,6 @@ import Diamond from '@/components/Diamond.vue';
 import OSMO from '@/assets/audio/OSMO.opus?url';
 import Gohu from '@/assets/fonts/gohu.woff2?url';
 import Background from '@/components/Background.vue';
-import Connection from '@/components/Connection.vue';
 import Gongoverlay from '@/components/Gongoverlay.vue';
 import ServiceWorker from '@/components/ServiceWorker.vue';
 import VCROSD from '@/assets/fonts/vcr-osd-mono.woff2?url';
@@ -122,7 +121,6 @@ useKonamiCode({
 	<template v-if="!isFullscreen">
 		<header>
 			<Gongoverlay position="top" />
-			<Connection />
 			<ServiceWorker />
 		</header>
 		<main>

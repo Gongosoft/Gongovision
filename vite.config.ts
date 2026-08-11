@@ -350,6 +350,9 @@ export default defineConfig({
 		}),
 		vueDevTools()
 	],
+	preview: {
+		allowedHosts: ['.trycloudflare.com']
+	},
 	resolve: {
 		alias: {
 			'@': fileURLToPath(new URL('/src', import.meta.url)),

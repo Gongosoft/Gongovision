@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import '@/styles/scene.css';
 import '@/styles/status.css';
-import '@videojs/html/video';
+import '@videojs/html/video/skin';
+import '@videojs/html/video/player';
 import { get } from '@vueuse/core';
 import { useRoute } from 'vue-router';
 import { useHead } from '@unhead/vue';

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import '@/styles/scene.css';
-import '@videojs/html/video';
+import '@videojs/html/video/skin';
+import '@videojs/html/video/player';
 import src from '@/assets/video/fingal.webm';
 import favicon from '@/assets/images/emotes/bttv/FinGasm.webp';
 import { useFavicon } from '@vueuse/core';

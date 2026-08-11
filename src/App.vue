@@ -12,6 +12,7 @@ import Background from '@/components/Background.vue';
 import Connection from '@/components/Connection.vue';
 import Gongoverlay from '@/components/Gongoverlay.vue';
 import ServiceWorker from '@/components/ServiceWorker.vue';
+import VCROSD from '@/assets/fonts/vcr-osd-mono.woff2?url';
 import { Howl } from 'howler';
 import { computed } from 'vue';
 import { RouterView, useRoute } from 'vue-router';
@@ -72,6 +73,13 @@ useHead({
 			as: 'font',
 			type: 'font/woff2',
 			href: Gohu,
+			crossorigin: 'anonymous'
+		},
+		{
+			rel: 'preload',
+			as: 'font',
+			type: 'font/woff2',
+			href: VCROSD,
 			crossorigin: 'anonymous'
 		},
 		{

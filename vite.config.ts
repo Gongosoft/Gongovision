@@ -87,11 +87,6 @@ export default defineConfig({
 				preload: false,
 				families: [
 					{
-						name: 'Heavy Data',
-						local: 'HeavyData Nerd Font',
-						src: './src/assets/fonts/heavy-data.woff2'
-					},
-					{
 						name: 'Gohu',
 						local: 'GohuFont 14 Nerd Font',
 						src: './src/assets/fonts/gohu.woff2',
@@ -99,6 +94,16 @@ export default defineConfig({
 							font.weight = 500;
 							return font;
 						}
+					},
+					{
+						name: 'Heavy Data',
+						local: 'HeavyData Nerd Font',
+						src: './src/assets/fonts/heavy-data.woff2'
+					},
+					{
+						name: 'VCR OSD',
+						local: 'VCR OSD Mono',
+						src: './src/assets/fonts/vcr-osd-mono.woff2'
 					},
 					{
 						name: 'RuneScape',

@@ -1,25 +1,9 @@
 import { computed, ref, watch } from 'vue';
-import { get, useFetch, useIntervalFn, useWebSocket } from '@vueuse/core';
+import { get, useIntervalFn, useWebSocket } from '@vueuse/core';
 import type { Ref } from 'vue';
-
-interface LivestreamsResponse {
-	twitch: string[];
-	angelthump: string[];
-}
 
 const wsLive = ref<boolean | null>(null);
 const pollLive = ref<boolean | null>(null);
-
-const { data, error, isFetching, execute } = useFetch('/livestreams', {
-	onFetchError(ctx) {
-		if (ctx.error instanceof DOMException && ctx.error.name === 'AbortError') {
-			ctx.error = null;
-		}
-		return ctx;
-	}
-})
-	.get()
-	.json<LivestreamsResponse>();
 
 const {
 	status: wsStatus,
@@ -51,31 +35,24 @@ watch(wsData, (raw) => {
 });
 
 const isGreatSphynxLive = computed<boolean>(() => {
-	let isLive = get(wsLive);
-	if (isLive !== null) {
-		return isLive;
+	const ws = get(wsLive);
+	if (ws !== null) {
+		return ws;
 	}
-	isLive = get(pollLive);
-	if (isLive !== null) {
-		return isLive;
+	const poll = get(pollLive);
+	if (poll !== null) {
+		return poll;
 	}
-	if (get(error)) {
-		return true;
-	}
-	return (get(data)?.angelthump ?? []).includes('GreatSphynx');
+	return true;
 });
 
-const { pause, resume } = useIntervalFn(
+const { pause: pausePolling, resume: resumePolling } = useIntervalFn(
 	async () => {
 		try {
 			const res = await fetch('/notification/live');
 			if (res.ok) {
-				const { isLive } = (await res.json()) as { isLive: boolean };
-				const wasLive = get(isGreatSphynxLive);
-				pollLive.value = isLive;
-				if (isLive && !wasLive) {
-					await execute();
-				}
+				const data: { isLive: boolean } = await res.json();
+				pollLive.value = data.isLive;
 			}
 		} catch {
 			/*_*/
@@ -86,36 +63,20 @@ const { pause, resume } = useIntervalFn(
 );
 
 watch(wsStatus, (status) => {
-	if (status === 'CLOSED') {
+	if (status === 'OPEN') {
+		pausePolling();
+	} else if (status === 'CLOSED') {
 		wsLive.value = null;
-		pollLive.value = null;
-		resume();
-	}
-});
-
-watch(isGreatSphynxLive, (live) => {
-	if (live) {
-		pause();
-	} else {
-		resume();
+		resumePolling();
 	}
 });
 
 export function useStreamSource(): {
 	isGreatSphynxLive: Ref<boolean>;
-	twitchChannels: Ref<string[]>;
-	loading: Ref<boolean>;
-	errorMessage: Ref<string | null>;
-	refresh: () => Promise<void>;
+	refresh: () => void;
 } {
 	return {
 		isGreatSphynxLive,
-		twitchChannels: computed(() => get(data)?.twitch ?? []),
-		loading: isFetching,
-		errorMessage: computed(() => {
-			const fetchError = get(error);
-			return fetchError ? String(fetchError) : null;
-		}),
-		refresh: execute
+		refresh: () => location.reload()
 	};
 }

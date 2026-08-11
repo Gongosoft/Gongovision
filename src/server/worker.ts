@@ -2,9 +2,8 @@ import mime from 'mime/lite';
 import { env } from 'cloudflare:workers';
 import { routeAgentRequest } from 'agents';
 import { handleRssRequest } from '@/server/rss.ts';
-import { getTwitchLiveChannels } from '@/server/twitch.ts';
 import { handleB2Request, listVODs } from '@/server/b2.ts';
-import { checkLiveStatus, handleStreamRequest } from '@/server/angelthump.ts';
+import { handleStreamRequest } from '@/server/angelthump.ts';
 
 export { Notifications } from '@/server/notifications.ts';
 
@@ -18,23 +17,10 @@ const osmos = Object.values(
 
 export default {
 	async fetch(request: Request): Promise<Response> {
-		const { pathname, searchParams } = new URL(request.url);
+		const { pathname } = new URL(request.url);
 
 		if (pathname.startsWith('/b2/')) {
 			return handleB2Request(request);
-		}
-
-		if (pathname === '/livestreams') {
-			const twitch = await getTwitchLiveChannels(
-				(searchParams.get('channels') || (await env.CONFIG.get('twitch')))?.split(',').filter(Boolean) ?? []
-			);
-
-			let angelthump: string[] = [];
-			if (await checkLiveStatus()) {
-				angelthump = ['GreatSphynx'];
-			}
-
-			return Response.json({ twitch, angelthump });
 		}
 
 		if (pathname.startsWith('/notification/')) {

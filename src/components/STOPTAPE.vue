@@ -1,14 +1,15 @@
 <script setup lang="ts">
-import STOPTAPE from '@/assets/images/emotes/7tv/STOPTAPE.avif';
+import src from '@/assets/images/offline.avif';
+import Background from '@/components/Background.vue';
+import { useStreamSource } from '@/composables/useStreamSource.ts';
 
-defineEmits<{
-	refresh: [];
-}>();
+const { refresh } = useStreamSource();
 </script>
 
 <template>
 	<div id="STOPTAPE">
-		<img :src="STOPTAPE" alt="Offline" @click="$emit('refresh')" />
+		<Background />
+		<img :src alt="Offline" @click="refresh" />
 	</div>
 </template>
 

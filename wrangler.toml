@@ -10,9 +10,7 @@ routes = [{ pattern = 'gongo.tv', custom_domain = true }]
 binding = 'ASSETS'
 not_found_handling = 'single-page-application'
 run_worker_first = [
-	'/api/*',
 	'/b2/*',
-	'/livestreams',
 	'/notification/*',
 	'/osmo',
 	'/r2/*',

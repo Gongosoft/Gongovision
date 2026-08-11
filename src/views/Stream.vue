@@ -2,7 +2,6 @@
 import '@/styles/status.css';
 import Chat from '@/components/TwitchChat.vue';
 import STOPTAPE from '@/components/STOPTAPE.vue';
-import TwitchEmbed from '@/components/TwitchEmbed.vue';
 import AngelThumpPlayer from '@/components/AngelThumpPlayer.vue';
 import { computed } from 'vue';
 import { useRouteHash } from '@vueuse/router';
@@ -10,24 +9,12 @@ import { get, usePointerSwipe } from '@vueuse/core';
 import { useSplitPane } from '@/composables/useSplitPane.ts';
 import { useStreamSource } from '@/composables/useStreamSource.ts';
 
-const { isGreatSphynxLive, twitchChannels, loading, errorMessage, refresh } = useStreamSource();
-const fallback = computed(() => get(twitchChannels)[0] ?? null);
+const { isGreatSphynxLive } = useStreamSource();
 
 const hash = useRouteHash();
 const renderIFrame = computed(() => get(hash) === '#iframe');
 
 const { PLAYER, CHANNEL: SPHYNX } = ANGELTHUMP;
-
-const chatChannel = computed(() => {
-	if (get(isGreatSphynxLive)) {
-		return TWITCH_CHANNEL;
-	}
-	const fallbackValue = get(fallback);
-	if (fallbackValue) {
-		return fallbackValue;
-	}
-	return TWITCH_CHANNEL;
-});
 
 const {
 	isMobile,
@@ -55,39 +42,30 @@ usePointerSwipe(edgeEndEl, { onSwipeEnd: () => showEdge('end') });
 		<div v-if="hidden" class="edge edge-start" ref="edgeStartEl" @click="showEdge('start')" />
 		<div v-if="hidden" class="edge edge-end" ref="edgeEndEl" @click="showEdge('end')" />
 
-		<div v-if="loading" class="status"></div>
+		<div class="video">
+			<iframe
+				v-if="isGreatSphynxLive && renderIFrame"
+				class="frame"
+				:src="`${PLAYER}/?channel=${SPHYNX}`"
+				allow="autoplay; fullscreen"
+				allowfullscreen />
+			<AngelThumpPlayer v-else-if="isGreatSphynxLive" />
+			<STOPTAPE v-else />
+		</div>
 
-		<template v-else>
-			<div class="video">
-				<iframe
-					v-if="isGreatSphynxLive && renderIFrame"
-					class="frame"
-					:src="`${PLAYER}/?channel=${SPHYNX}`"
-					allow="autoplay; fullscreen"
-					allowfullscreen />
-				<AngelThumpPlayer v-else-if="isGreatSphynxLive" />
-				<TwitchEmbed v-else-if="fallback && !errorMessage" :channel="fallback" />
-				<STOPTAPE v-else @refresh="refresh" />
-				<div v-if="errorMessage" class="error-overlay">
-					<span class="status-error">{{ errorMessage }}</span>
-					<button class="status-retry" @click="refresh">retry</button>
-				</div>
-			</div>
+		<div
+			v-if="!hidden"
+			class="divider"
+			:class="{ active: dragging }"
+			:style="dividerStyle"
+			@pointerdown="onPointerDown"
+			@pointermove="onPointerMove"
+			@pointerup="onPointerUp"
+			@pointercancel="onPointerUp"
+			@click.ctrl="snapTo16ᱺ9"
+			@dblclick="flip" />
 
-			<div
-				v-if="!hidden"
-				class="divider"
-				:class="{ active: dragging }"
-				:style="dividerStyle"
-				@pointerdown="onPointerDown"
-				@pointermove="onPointerMove"
-				@pointerup="onPointerUp"
-				@pointercancel="onPointerUp"
-				@click.ctrl="snapTo16ᱺ9"
-				@dblclick="flip" />
-
-			<div v-if="!hidden" class="chat" :style="chatStyle"><Chat :channel="chatChannel" /></div>
-		</template>
+		<div v-if="!hidden" class="chat" :style="chatStyle"><Chat /></div>
 	</div>
 </template>
 
@@ -183,26 +161,13 @@ usePointerSwipe(edgeEndEl, { onSwipeEnd: () => showEdge('end') });
 	flex-direction: column;
 	position: relative;
 	overflow: hidden;
+	user-select: none;
 }
 
 .frame {
 	border: none;
 	flex: 1;
 	min-height: 0;
-}
-
-.error-overlay {
-	position: absolute;
-	inset: 0;
-	z-index: 2;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	justify-content: center;
-	gap: 1rem;
-	background: var(--color-overlay);
-	color: var(--color-text-muted);
-	font-size: 1rem;
 }
 
 .chat {

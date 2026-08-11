@@ -17,12 +17,14 @@ export function stripVODPrefix(filename: string): string {
 	return filename.replace(/^vods\//, '');
 }
 
-export function useVODs(): {
+interface UseVODsReturn {
 	vods: Ref<VOD[]>;
 	loading: Ref<boolean>;
 	errorMessage: Ref<string | null>;
 	refresh: () => Promise<void>;
-} {
+}
+
+export function useVODs(): UseVODsReturn {
 	const { data, error, isFetching, execute } = useFetch('/vods/list').get().json<VOD[]>();
 
 	return {

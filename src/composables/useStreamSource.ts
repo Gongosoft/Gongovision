@@ -71,10 +71,12 @@ watch(wsStatus, (status) => {
 	}
 });
 
-export function useStreamSource(): {
+interface UseStreamSourceReturn {
 	isGreatSphynxLive: Ref<boolean>;
 	refresh: () => void;
-} {
+}
+
+export function useStreamSource(): UseStreamSourceReturn {
 	return {
 		isGreatSphynxLive,
 		refresh: () => location.reload()

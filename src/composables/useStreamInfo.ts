@@ -11,16 +11,18 @@ async function refresh(): Promise<void> {
 		if (!res.ok) {
 			return;
 		}
-		info.value = (await res.json()) as AngelThumpStreamResponse;
+		info.value = await res.json();
 	} catch {
 		/*_*/
 	}
 }
 
-export function useStreamInfo(): {
+interface UseStreamInfoReturn {
 	info: typeof info;
 	uptime: ComputedRef<string | null>;
-} {
+}
+
+export function useStreamInfo(): UseStreamInfoReturn {
 	if (info.value === null) {
 		void refresh();
 	}

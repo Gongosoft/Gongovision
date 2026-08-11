@@ -12,6 +12,7 @@ import Background from '@/components/Background.vue';
 import Gongoverlay from '@/components/Gongoverlay.vue';
 import ServiceWorker from '@/components/ServiceWorker.vue';
 import VCROSD from '@/assets/fonts/vcr-osd-mono.woff2?url';
+import BackgroundImage from '@/assets/images/background.avif';
 import { Howl } from 'howler';
 import { computed } from 'vue';
 import { RouterView, useRoute } from 'vue-router';
@@ -66,6 +67,12 @@ useHead({
 			rel: 'license',
 			title: 'ISC',
 			href: 'https://github.com/Gongosoft/Gongovision/blob/main/LICENSE.md'
+		},
+		{
+			rel: 'preload',
+			as: 'image',
+			type: 'image/avif',
+			href: BackgroundImage
 		},
 		{
 			rel: 'preload',

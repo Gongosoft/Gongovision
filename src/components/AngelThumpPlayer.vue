@@ -2,15 +2,19 @@
 import '@videojs/html/video/skin';
 import '@videojs/html/video/player';
 import '@videojs/html/media/hlsjs-video';
+import { useRouter } from 'vue-router';
 import { computed, useTemplateRef } from 'vue';
 import { useHead, useSeoMeta } from '@unhead/vue';
 import { useStreamInfo } from '@/composables/useStreamInfo.ts';
 import { get, useEventListener, useFavicon } from '@vueuse/core';
 
+const router = useRouter();
 const { info, uptime } = useStreamInfo();
 const stream = useTemplateRef<HTMLVideoElement>('stream');
 
 useEventListener(stream, 'canplay', () => get(stream)?.play(), { once: true });
+
+useEventListener(stream, 'error', () => router.replace({ hash: '#iframe' }));
 
 useFavicon(computed(() => get(info)?.user?.profile_logo_url ?? null));
 

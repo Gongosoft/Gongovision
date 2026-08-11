@@ -3,17 +3,13 @@ import { writeXmltv } from '@iptv/xmltv';
 import type { Xmltv, XmltvProgramme } from '@iptv/xmltv';
 import type { AngelThumpStreamResponse, AngelThumpVigorResponse } from '@/types/angelthump.d.ts';
 
-interface AngelThumpStream {
-	type?: string;
-}
-
 export async function checkLiveStatus(): Promise<boolean> {
 	try {
 		const res = await fetch(`${ANGELTHUMP.API}/streams?username=${encodeURIComponent(ANGELTHUMP.CHANNEL)}`);
 		if (!res.ok) {
 			return false;
 		}
-		const data = await res.json<AngelThumpStream[]>();
+		const data = await res.json<AngelThumpStreamResponse[]>();
 		return data.length > 0 && data[0]?.type === 'live';
 	} catch {
 		return false;
@@ -152,7 +148,8 @@ export async function handleStreamRequest(pathname: string, request: Request): P
 			return new Response(null, {
 				status: 307,
 				headers: {
-					Location: getHLS(result.token)
+					'Location': getHLS(result.token),
+					'Cache-Control': 'no-store'
 				}
 			});
 		}
@@ -167,7 +164,8 @@ export async function handleStreamRequest(pathname: string, request: Request): P
 			const body = `#EXTM3U\n#EXTINF:-1, GreatSphynx\n${getHLS(result.token)}`;
 			return new Response(body, {
 				headers: {
-					'Content-Type': 'application/vnd.apple.mpegurl'
+					'Content-Type': 'application/vnd.apple.mpegurl',
+					'Cache-Control': 'no-store'
 				}
 			});
 		}
@@ -176,7 +174,8 @@ export async function handleStreamRequest(pathname: string, request: Request): P
 			return new Response(upstream.body, {
 				status: upstream.status,
 				headers: {
-					'Content-Type': 'application/vnd.apple.mpegurl'
+					'Content-Type': 'application/vnd.apple.mpegurl',
+					'Cache-Control': 'no-store'
 				}
 			});
 		}

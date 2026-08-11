@@ -296,7 +296,9 @@ export class Notifications extends Agent<Env, NotificationState> {
 		}
 
 		if (request.method === 'GET' && path.endsWith('/live')) {
-			return Response.json(this.getLiveStatus());
+			return Response.json(this.getLiveStatus(), {
+				headers: { 'Cache-Control': 'no-store' }
+			});
 		}
 
 		if (request.method === 'GET' && path.endsWith('/stats')) {

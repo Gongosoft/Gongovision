@@ -34,16 +34,12 @@ watch(wsData, (raw) => {
 	}
 });
 
-const isGreatSphynxLive = computed<boolean>(() => {
+const isGreatSphynxLive = computed<boolean | null>(() => {
 	const ws = get(wsLive);
 	if (ws !== null) {
 		return ws;
 	}
-	const poll = get(pollLive);
-	if (poll !== null) {
-		return poll;
-	}
-	return true;
+	return get(pollLive);
 });
 
 const { pause: pausePolling, resume: resumePolling } = useIntervalFn(
@@ -72,7 +68,7 @@ watch(wsStatus, (status) => {
 });
 
 interface UseStreamSourceReturn {
-	isGreatSphynxLive: Ref<boolean>;
+	isGreatSphynxLive: Ref<boolean | null>;
 	refresh: () => void;
 }
 

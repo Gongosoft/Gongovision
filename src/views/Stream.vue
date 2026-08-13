@@ -44,12 +44,12 @@ usePointerSwipe(edgeEndEl, { onSwipeEnd: () => showEdge('end') });
 
 		<div id="gongo">
 			<iframe
-				v-if="isGreatSphynxLive && renderIFrame"
+				v-if="isGreatSphynxLive !== false && renderIFrame"
 				class="frame"
 				:src="`${PLAYER}/?channel=${SPHYNX}`"
 				allow="autoplay; fullscreen"
 				allowfullscreen />
-			<AngelThumpPlayer v-else-if="isGreatSphynxLive" />
+			<AngelThumpPlayer v-else-if="isGreatSphynxLive !== false" />
 			<STOPTAPE v-else />
 		</div>
 

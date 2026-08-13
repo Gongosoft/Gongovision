@@ -41,6 +41,7 @@ const { stream: screenStream } = useScreenShare();
 	</div>
 
 	<Blotter
+		v-if="isGreatSphynxLive !== null"
 		:text="isGreatSphynxLive ? 'LIVE' : 'OFFLINE'"
 		material="liquidDistort"
 		font-family="VCR OSD"

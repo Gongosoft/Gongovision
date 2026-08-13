@@ -5,7 +5,7 @@ import exclaimSVG from '@/assets/images/bell-exclaimation.svg?raw';
 import { computed, onMounted, ref } from 'vue';
 import { get, usePermission, useWebNotification } from '@vueuse/core';
 
-const { isLive } = defineProps<{ isLive: boolean }>();
+const { isLive } = defineProps<{ isLive: boolean | null }>();
 
 const { isSupported } = useWebNotification();
 const permission = usePermission('notifications');

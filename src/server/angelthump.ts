@@ -38,7 +38,7 @@ export function getHLS(token: string): string {
 	return `${ANGELTHUMP.VIGOR}/hls/${ANGELTHUMP.CHANNEL}.m3u8?token=${encodeURIComponent(token)}`;
 }
 
-export async function getM3U8(request: Request): Promise<Response> {
+export async function getM3U8(request: Request, region?: string | null): Promise<Response> {
 	const tokenResult = await getToken();
 	const token = tokenResult?.token;
 	if (!token) {
@@ -63,7 +63,12 @@ export async function getM3U8(request: Request): Promise<Response> {
 		return new Response(null, { status: 502 });
 	}
 
-	return new Response(text, {
+	const cdn = region ? ANGELTHUMP.CDN[region as keyof typeof ANGELTHUMP.CDN] : undefined;
+	const manifest = cdn
+		? text.replace(/https?:\/\/[^/\s]+\.angelthump\.com\//g, `https://${cdn.subdomain}.angelthump.com/`)
+		: text;
+
+	return new Response(manifest, {
 		status: res.status,
 		headers: { 'Content-Type': 'application/vnd.apple.mpegurl' }
 	});
@@ -170,7 +175,8 @@ export async function handleStreamRequest(pathname: string, request: Request): P
 			});
 		}
 		case '/stream/m3u8': {
-			const upstream = await getM3U8(request);
+			const region = new URL(request.url).searchParams.get('region');
+			const upstream = await getM3U8(request, region);
 			return new Response(upstream.body, {
 				status: upstream.status,
 				headers: {

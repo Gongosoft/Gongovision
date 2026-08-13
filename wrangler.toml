@@ -19,7 +19,7 @@ run_worker_first = [
 	'/stream/direct',
 	'/stream/info',
 	'/stream/m3u',
-	'/stream/m3u8',
+	'/stream/m3u8*',
 	'/stream/xmltv',
 	'/vods/list',
 	'/.well-known/did.json',

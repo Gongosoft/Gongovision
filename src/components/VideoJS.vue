@@ -1,0 +1,410 @@
+<script setup lang="ts">
+import '@/styles/videojs.css';
+import '@videojs/html/video/ui';
+import '@videojs/html/icons/element/default';
+</script>
+
+<template>
+	<video-player>
+		<media-container class="media-default-skin media-default-skin--video">
+			<slot name="media"></slot>
+
+			<media-poster>
+				<slot name="poster"></slot>
+			</media-poster>
+
+			<media-buffering-indicator class="media-buffering-indicator">
+				<media-icon name="spinner" class="media-icon"></media-icon>
+			</media-buffering-indicator>
+
+			<media-error-dialog class="media-error">
+				<div class="media-error__dialog media-surface">
+					<div class="media-error__content">
+						<media-alert-dialog-title class="media-error__title"></media-alert-dialog-title>
+						<media-alert-dialog-description
+							class="media-error__description"></media-alert-dialog-description>
+					</div>
+					<div class="media-error__actions">
+						<media-alert-dialog-close class="media-button media-button--primary"></media-alert-dialog-close>
+					</div>
+				</div>
+			</media-error-dialog>
+
+			<media-controls class="media-surface media-controls media-controls--root">
+				<media-tooltip-group>
+					<div class="media-surface media-controls media-controls--primary">
+						<div class="media-button-group">
+							<media-play-button
+								commandfor="play-tooltip"
+								class="media-button media-button--subtle media-button--icon media-button--play">
+								<media-icon name="restart" class="media-icon media-icon--restart"></media-icon>
+								<media-icon name="play" class="media-icon media-icon--play"></media-icon>
+								<media-icon name="pause" class="media-icon media-icon--pause"></media-icon>
+							</media-play-button>
+							<media-tooltip id="play-tooltip" side="top" class="media-surface media-tooltip">
+								<media-tooltip-label></media-tooltip-label>
+								<media-tooltip-shortcut class="media-tooltip__kbd"></media-tooltip-shortcut>
+							</media-tooltip>
+
+							<media-mute-button
+								commandfor="video-volume-popover"
+								class="media-button media-button--subtle media-button--icon media-button--mute">
+								<media-icon name="volume-off" class="media-icon media-icon--volume-off"></media-icon>
+								<media-icon name="volume-low" class="media-icon media-icon--volume-low"></media-icon>
+								<media-icon name="volume-high" class="media-icon media-icon--volume-high"></media-icon>
+							</media-mute-button>
+
+							<media-popover
+								id="video-volume-popover"
+								open-on-hover
+								delay="200"
+								close-delay="100"
+								side="top"
+								class="media-surface media-popover media-popover--volume">
+								<media-volume-slider class="media-slider" orientation="vertical" thumb-alignment="edge">
+									<media-slider-track class="media-slider__track">
+										<media-slider-fill class="media-slider__fill"></media-slider-fill>
+									</media-slider-track>
+									<media-slider-thumb
+										class="media-slider__thumb media-slider__thumb--persistent"></media-slider-thumb>
+								</media-volume-slider>
+							</media-popover>
+						</div>
+
+						<div class="media-time-controls">
+							<media-time type="current" class="media-time"></media-time>
+							<media-time-slider class="media-slider">
+								<media-slider-track class="media-slider__track">
+									<media-slider-fill class="media-slider__fill"></media-slider-fill>
+									<media-slider-buffer class="media-slider__buffer"></media-slider-buffer>
+								</media-slider-track>
+								<media-slider-thumb class="media-slider__thumb"></media-slider-thumb>
+
+								<div class="media-surface media-thumbnail media-slider__thumbnail">
+									<media-slider-thumbnail class="media-thumbnail__image"></media-slider-thumbnail>
+									<media-slider-value
+										type="pointer"
+										class="media-time media-thumbnail__time"></media-slider-value>
+									<media-icon name="spinner" class="media-thumbnail__spinner media-icon"></media-icon>
+								</div>
+
+								<media-slider-preview class="media-slider__preview">
+									<media-slider-value
+										type="pointer"
+										class="media-slider__value media-time"></media-slider-value>
+								</media-slider-preview>
+							</media-time-slider>
+							<media-time toggle type="remaining" class="media-time"></media-time>
+						</div>
+
+						<div class="media-button-group">
+							<media-captions-button
+								commandfor="captions-tooltip"
+								class="media-button media-button--subtle media-button--icon media-button--captions">
+								<media-icon
+									name="captions-off"
+									class="media-icon media-icon--captions-off"></media-icon>
+								<media-icon name="captions-on" class="media-icon media-icon--captions-on"></media-icon>
+							</media-captions-button>
+							<media-tooltip id="captions-tooltip" side="top" class="media-surface media-tooltip">
+								<media-tooltip-label></media-tooltip-label>
+								<media-tooltip-shortcut class="media-tooltip__kbd"></media-tooltip-shortcut>
+							</media-tooltip>
+
+							<button
+								commandfor="settings-menu"
+								aria-labelledby="settings-label"
+								class="media-button media-button--subtle media-button--icon media-button--settings">
+								<media-icon name="gear" class="media-icon media-icon--settings"></media-icon>
+								<media-text token="menu.settings" id="settings-label" class="media-sr-only"
+									>Settings</media-text
+								>
+							</button>
+							<media-menu
+								id="settings-menu"
+								side="top"
+								align="center"
+								class="media-surface media-popover media-menu media-menu--settings">
+								<media-menu-view class="media-menu__panel">
+									<div class="media-menu__group">
+										<slot name="settings"></slot>
+										<media-menu-item
+											commandfor="settings-quality-menu"
+											type="quality"
+											data-setting="quality"
+											class="media-menu__item media-menu__item--submenu">
+											<media-icon name="switches" class="media-icon"></media-icon>
+											<media-text token="menu.quality">Quality</media-text>
+											<span class="media-menu__hint">
+												<media-menu-item-value
+													class="media-menu__hint-label"></media-menu-item-value>
+												<media-icon
+													name="chevron"
+													class="media-icon media-menu__chevron"></media-icon>
+											</span>
+										</media-menu-item>
+										<media-menu-item
+											commandfor="settings-audio-menu"
+											type="audio-track"
+											data-setting="audio-track"
+											class="media-menu__item media-menu__item--submenu">
+											<media-icon name="speech" class="media-icon"></media-icon>
+											<media-text token="menu.audio">Audio</media-text>
+											<span class="media-menu__hint">
+												<media-menu-item-value
+													class="media-menu__hint-label"></media-menu-item-value>
+												<media-icon
+													name="chevron"
+													class="media-icon media-menu__chevron"></media-icon>
+											</span>
+										</media-menu-item>
+										<media-menu-item
+											commandfor="settings-speed-menu"
+											type="playback-rate"
+											data-setting="playback-rate"
+											class="media-menu__item media-menu__item--submenu">
+											<media-icon name="speed" class="media-icon"></media-icon>
+											<media-text token="menu.speed">Speed</media-text>
+											<span class="media-menu__hint">
+												<media-menu-item-value
+													class="media-menu__hint-label"></media-menu-item-value>
+												<media-icon
+													name="chevron"
+													class="media-icon media-menu__chevron"></media-icon>
+											</span>
+										</media-menu-item>
+										<media-menu-item
+											commandfor="settings-captions-menu"
+											type="captions"
+											data-setting="captions"
+											class="media-menu__item media-menu__item--submenu">
+											<media-icon name="captions-off" class="media-icon"></media-icon>
+											<media-text token="menu.captions">Captions</media-text>
+											<span class="media-menu__hint">
+												<media-menu-item-value
+													class="media-menu__hint-label"></media-menu-item-value>
+												<media-icon
+													name="chevron"
+													class="media-icon media-menu__chevron"></media-icon>
+											</span>
+										</media-menu-item>
+									</div>
+								</media-menu-view>
+								<slot name="settings-menu"></slot>
+
+								<media-menu id="settings-quality-menu" class="media-menu__panel">
+									<media-menu-back class="media-menu__back">
+										<media-icon
+											name="chevron"
+											class="media-icon media-menu__chevron media-icon--flipped"></media-icon>
+										<media-text token="menu.quality">Quality</media-text>
+									</media-menu-back>
+									<div class="media-menu__separator"></div>
+									<media-quality-radio-group class="media-menu__group">
+										<template>
+											<media-menu-radio-item class="media-menu__item">
+												<span>
+													<span data-part="label"></span>
+													<sup data-part="tier" class="media-menu__tier"></sup>
+												</span>
+												<span data-part="badge" class="media-badge"></span>
+												<media-menu-item-indicator force-mount class="media-menu__indicator">
+													<media-icon name="check" class="media-icon"></media-icon>
+												</media-menu-item-indicator>
+											</media-menu-radio-item>
+										</template>
+									</media-quality-radio-group>
+								</media-menu>
+
+								<media-menu id="settings-audio-menu" class="media-menu__panel">
+									<media-menu-back class="media-menu__back">
+										<media-icon
+											name="chevron"
+											class="media-icon media-menu__chevron media-icon--flipped"></media-icon>
+										<media-text token="menu.audio">Audio</media-text>
+									</media-menu-back>
+									<div class="media-menu__separator"></div>
+									<media-audio-track-radio-group class="media-menu__group">
+										<template>
+											<media-menu-radio-item class="media-menu__item">
+												<span data-part="label"></span>
+												<media-menu-item-indicator force-mount class="media-menu__indicator">
+													<media-icon name="check" class="media-icon"></media-icon>
+												</media-menu-item-indicator>
+											</media-menu-radio-item>
+										</template>
+									</media-audio-track-radio-group>
+								</media-menu>
+
+								<media-menu id="settings-speed-menu" class="media-menu__panel">
+									<media-menu-back class="media-menu__back">
+										<media-icon
+											name="chevron"
+											class="media-icon media-menu__chevron media-icon--flipped"></media-icon>
+										<media-text token="menu.speed">Speed</media-text>
+									</media-menu-back>
+									<div class="media-menu__separator"></div>
+									<media-playback-rate-radio-group class="media-menu__group">
+										<template>
+											<media-menu-radio-item class="media-menu__item">
+												<span data-part="label"></span>
+												<media-menu-item-indicator force-mount class="media-menu__indicator">
+													<media-icon name="check" class="media-icon"></media-icon>
+												</media-menu-item-indicator>
+											</media-menu-radio-item>
+										</template>
+									</media-playback-rate-radio-group>
+								</media-menu>
+
+								<media-menu id="settings-captions-menu" class="media-menu__panel">
+									<media-menu-back class="media-menu__back">
+										<media-icon
+											name="chevron"
+											class="media-icon media-menu__chevron media-icon--flipped"></media-icon>
+										<media-text token="menu.captions">Captions</media-text>
+									</media-menu-back>
+									<div class="media-menu__separator"></div>
+									<media-captions-radio-group class="media-menu__group">
+										<template>
+											<media-menu-radio-item class="media-menu__item">
+												<span data-part="label"></span>
+												<media-menu-item-indicator force-mount class="media-menu__indicator">
+													<media-icon name="check" class="media-icon"></media-icon>
+												</media-menu-item-indicator>
+											</media-menu-radio-item>
+										</template>
+									</media-captions-radio-group>
+								</media-menu>
+							</media-menu>
+						</div>
+					</div>
+
+					<div class="media-surface media-controls media-controls--secondary">
+						<div class="media-button-group">
+							<media-cast-button
+								commandfor="cast-tooltip"
+								class="media-button media-button--subtle media-button--icon media-button--cast">
+								<media-icon name="cast-enter" class="media-icon media-icon--cast-enter"></media-icon>
+								<media-icon name="cast-exit" class="media-icon media-icon--cast-exit"></media-icon>
+							</media-cast-button>
+							<media-tooltip id="cast-tooltip" side="top" class="media-surface media-tooltip">
+								<media-tooltip-label></media-tooltip-label>
+								<media-tooltip-shortcut class="media-tooltip__kbd"></media-tooltip-shortcut>
+							</media-tooltip>
+
+							<media-airplay-button
+								commandfor="airplay-tooltip"
+								class="media-button media-button--subtle media-button--icon media-button--airplay">
+								<media-icon
+									name="airplay-enter"
+									class="media-icon media-icon--airplay-enter"></media-icon>
+								<media-icon
+									name="airplay-exit"
+									class="media-icon media-icon--airplay-exit"></media-icon>
+							</media-airplay-button>
+							<media-tooltip id="airplay-tooltip" side="top" class="media-surface media-tooltip">
+								<media-tooltip-label></media-tooltip-label>
+								<media-tooltip-shortcut class="media-tooltip__kbd"></media-tooltip-shortcut>
+							</media-tooltip>
+
+							<media-pip-button
+								commandfor="pip-tooltip"
+								class="media-button media-button--subtle media-button--icon media-button--pip">
+								<media-icon name="pip-enter" class="media-icon media-icon--pip-enter"></media-icon>
+								<media-icon name="pip-exit" class="media-icon media-icon--pip-exit"></media-icon>
+							</media-pip-button>
+							<media-tooltip id="pip-tooltip" side="top" class="media-surface media-tooltip">
+								<media-tooltip-label></media-tooltip-label>
+								<media-tooltip-shortcut class="media-tooltip__kbd"></media-tooltip-shortcut>
+							</media-tooltip>
+
+							<media-fullscreen-button
+								commandfor="fullscreen-tooltip"
+								class="media-button media-button--subtle media-button--icon media-button--fullscreen">
+								<media-icon
+									name="fullscreen-enter"
+									class="media-icon media-icon--fullscreen-enter"></media-icon>
+								<media-icon
+									name="fullscreen-exit"
+									class="media-icon media-icon--fullscreen-exit"></media-icon>
+							</media-fullscreen-button>
+							<media-tooltip id="fullscreen-tooltip" side="top" class="media-surface media-tooltip">
+								<media-tooltip-label></media-tooltip-label>
+								<media-tooltip-shortcut class="media-tooltip__kbd"></media-tooltip-shortcut>
+							</media-tooltip>
+						</div>
+					</div>
+				</media-tooltip-group>
+			</media-controls>
+
+			<div class="media-overlay"></div>
+
+			<!-- Hotkeys -->
+			<media-hotkey keys="Space" action="togglePaused"></media-hotkey>
+			<media-hotkey keys="k" action="togglePaused"></media-hotkey>
+			<media-hotkey keys="m" action="toggleMuted"></media-hotkey>
+			<media-hotkey keys="f" action="toggleFullscreen"></media-hotkey>
+			<media-hotkey keys="c" action="toggleSubtitles"></media-hotkey>
+			<media-hotkey keys="i" action="togglePictureInPicture"></media-hotkey>
+			<media-hotkey keys="ArrowRight" action="seekStep" value="5"></media-hotkey>
+			<media-hotkey keys="ArrowLeft" action="seekStep" value="-5"></media-hotkey>
+			<media-hotkey keys="l" action="seekStep" value="10"></media-hotkey>
+			<media-hotkey keys="j" action="seekStep" value="-10"></media-hotkey>
+			<media-hotkey keys="ArrowUp" action="volumeStep" value="0.05"></media-hotkey>
+			<media-hotkey keys="ArrowDown" action="volumeStep" value="-0.05"></media-hotkey>
+			<media-hotkey keys="0-9" action="seekToPercent"></media-hotkey>
+			<media-hotkey keys="Home" action="seekToPercent" value="0"></media-hotkey>
+			<media-hotkey keys="End" action="seekToPercent" value="100"></media-hotkey>
+			<media-hotkey keys=">" action="speedUp"></media-hotkey>
+			<media-hotkey keys="<" action="speedDown"></media-hotkey>
+
+			<!-- Gestures -->
+			<media-gesture type="tap" action="togglePaused" pointer="mouse" region="center"></media-gesture>
+			<media-gesture type="tap" action="toggleControls" pointer="touch"></media-gesture>
+			<media-gesture type="doubletap" action="seekStep" value="-10" region="left"></media-gesture>
+			<media-gesture type="doubletap" action="toggleFullscreen" region="center"></media-gesture>
+			<media-gesture type="doubletap" action="seekStep" value="10" region="right"></media-gesture>
+
+			<!-- Input Feedback -->
+			<media-status-announcer class="media-sr-only"></media-status-announcer>
+			<div class="media-input-feedback">
+				<media-volume-indicator
+					hidden
+					class="media-surface media-input-feedback-island media-input-feedback-island--volume">
+					<media-volume-indicator-fill class="media-input-feedback-island__content">
+						<media-icon name="volume-high" class="media-icon media-icon--volume-high"></media-icon>
+						<media-icon name="volume-low" class="media-icon media-icon--volume-low"></media-icon>
+						<media-icon name="volume-off" class="media-icon media-icon--volume-off"></media-icon>
+						<media-volume-indicator-value
+							class="media-input-feedback-island__value"></media-volume-indicator-value>
+					</media-volume-indicator-fill>
+				</media-volume-indicator>
+				<media-status-indicator
+					hidden
+					actions="toggleSubtitles toggleFullscreen togglePictureInPicture"
+					class="media-surface media-input-feedback-island media-input-feedback-island--status">
+					<div class="media-input-feedback-island__content">
+						<media-icon name="captions-on" class="media-icon media-icon--captions-on"></media-icon>
+						<media-icon name="captions-off" class="media-icon media-icon--captions-off"></media-icon>
+						<media-icon
+							name="fullscreen-enter"
+							class="media-icon media-icon--fullscreen-enter"></media-icon>
+						<media-icon name="fullscreen-exit" class="media-icon media-icon--fullscreen-exit"></media-icon>
+						<media-icon name="pip-enter" class="media-icon media-icon--pip-enter"></media-icon>
+						<media-icon name="pip-exit" class="media-icon media-icon--pip-exit"></media-icon>
+						<media-status-indicator-value
+							class="media-input-feedback-island__value"></media-status-indicator-value>
+					</div>
+				</media-status-indicator>
+				<media-seek-indicator hidden class="media-input-feedback-bubble">
+					<media-icon name="chevron" class="media-icon media-icon--seek"></media-icon>
+					<media-seek-indicator-value class="media-time"></media-seek-indicator-value>
+				</media-seek-indicator>
+				<media-status-indicator hidden actions="togglePaused" class="media-input-feedback-bubble">
+					<media-icon name="play" class="media-icon media-icon--play"></media-icon>
+					<media-icon name="pause" class="media-icon media-icon--pause"></media-icon>
+				</media-status-indicator>
+			</div>
+		</media-container>
+	</video-player>
+</template>

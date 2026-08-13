@@ -23,6 +23,13 @@ export default defineConfig({
 	define: {
 		ANGELTHUMP: JSON.stringify({
 			API: 'https://api.angelthump.com/v3',
+			CDN: {
+				amsterdam: { label: 'Amsterdam', subdomain: 'ams1' },
+				frankfurt: { label: 'Frankfurt', subdomain: 'fra1' },
+				newyork: { label: 'New York', subdomain: 'nyc1' },
+				sanfrancisco: { label: 'San Francisco', subdomain: 'sfo1' },
+				singapore: { label: 'Singapore', subdomain: 'sgp1' }
+			},
 			CHANNEL: 'greatsphynx',
 			IDENTIFIER: 'SwnpX0RnA99YdRj0SPqs',
 			PLAYER: 'https://player.angelthump.com',
@@ -356,7 +363,11 @@ export default defineConfig({
 	resolve: {
 		alias: {
 			'@': fileURLToPath(new URL('/src', import.meta.url)),
-			'@osmo': resolve(ᱻ, 'src/assets/images/osmo')
+			'@osmo': resolve(ᱻ, 'src/assets/images/osmo'),
+			'@videojs/html/icons/element/default': resolve(
+				ᱻ,
+				'node_modules/@videojs/html/dist/default/icons/element/default/index.js'
+			)
 		}
 	}
 });

@@ -5,6 +5,13 @@ import type { NotificationPayload } from '@/types/notification.d.ts';
 declare global {
 	const ANGELTHUMP: {
 		API: string;
+		CDN: {
+			amsterdam: { label: string; subdomain: string };
+			frankfurt: { label: string; subdomain: string };
+			newyork: { label: string; subdomain: string };
+			sanfrancisco: { label: string; subdomain: string };
+			singapore: { label: string; subdomain: string };
+		};
 		CHANNEL: string;
 		IDENTIFIER: string;
 		PLAYER: string;

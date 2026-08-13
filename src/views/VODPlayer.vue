@@ -29,7 +29,7 @@ useHead({ title: computed(() => stripVODExtension(stripVODPrefix(get(title)))) }
 			<span v-else class="status-error">{{ error || 'VOD not found' }}</span>
 			<a v-if="!loading" href="/vods" class="status-retry">back to VODs</a>
 		</div>
-		<div v-else class="aspect-fit aspect-16-9 vod-wrapper">
+		<div v-else id="vod">
 			<video-player v-if="vod.videoURL">
 				<video-skin>
 					<video :src="vod.videoURL" :poster="vod.thumbnailURL || undefined" autoplay playsinline />
@@ -40,8 +40,15 @@ useHead({ title: computed(() => stripVODExtension(stripVODPrefix(get(title)))) }
 </template>
 
 <style scoped>
-.vod-wrapper {
+#vod {
 	background: var(--color-black);
-	min-height: 0;
+	width: 100%;
+	height: 100%;
+
+	& video-skin {
+		display: block;
+		width: 100%;
+		height: 100%;
+	}
 }
 </style>

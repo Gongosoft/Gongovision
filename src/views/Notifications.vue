@@ -9,7 +9,7 @@ const { isGreatSphynxLive } = useStreamSource();
 </script>
 
 <template>
-	<div class="icon-row">
+	<div id="icons">
 		<RouterLink title="Back" to="/">
 			<span class="icon icon-animated" v-html="backSVG" />
 		</RouterLink>
@@ -19,7 +19,7 @@ const { isGreatSphynxLive } = useStreamSource();
 </template>
 
 <style scoped>
-.icon-row {
+#icons {
 	align-items: center;
 	display: flex;
 	gap: 2rem;
@@ -28,7 +28,7 @@ const { isGreatSphynxLive } = useStreamSource();
 	position: fixed;
 	top: 50%;
 	transform: translate(-50%, -50%);
-	z-index: 4;
+	z-index: 3;
 
 	& :deep(.icon svg) {
 		width: 2.5rem;

@@ -6,7 +6,6 @@ const { hostname } = location;
 
 <template>
 	<iframe
-		id="ohmies"
 		:src="`https://www.twitch.tv/embed/${channel}/chat?parent=${hostname}&darkpopout`"
 		height="100%"
 		width="100%">
@@ -14,9 +13,8 @@ const { hostname } = location;
 </template>
 
 <style scoped>
-#ohmies {
+iframe {
+	background: #212121;
 	border: none;
-	width: 100%;
-	height: 100%;
 }
 </style>

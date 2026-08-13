@@ -42,7 +42,7 @@ useEventListener(iconRowRef, 'mouseover', (e) => {
 </script>
 
 <template>
-	<div ref="iconRowRef" class="icon-row">
+	<div ref="iconRowRef" id="icons">
 		<a title="GitHub" href="https://github.com/Gongosoft/Gongovision" target="_blank" @click.stop>
 			<span class="icon icon-animated" v-html="githubSVG" />
 		</a>
@@ -93,7 +93,7 @@ useEventListener(iconRowRef, 'mouseover', (e) => {
 </template>
 
 <style scoped>
-.icon-row {
+#icons {
 	align-content: center;
 	display: grid;
 	gap: 1.25rem 2rem;
@@ -104,7 +104,7 @@ useEventListener(iconRowRef, 'mouseover', (e) => {
 	position: fixed;
 	top: 50%;
 	transform: translate(-50%, -50%);
-	z-index: 4;
+	z-index: 3;
 
 	@media (max-width: 480px) {
 		gap: 0.75rem 1.25rem;

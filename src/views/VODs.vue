@@ -43,7 +43,7 @@ useEventListener(gridRef, 'mouseover', (e) => {
 </script>
 
 <template>
-	<div class="top-row">
+	<div id="vods-navbar">
 		<RouterLink title="Back" to="/">
 			<span class="icon icon-animated" v-html="backSVG" />
 		</RouterLink>
@@ -51,7 +51,7 @@ useEventListener(gridRef, 'mouseover', (e) => {
 			<span class="icon icon-animated" v-html="shuffleSVG" />
 		</button>
 	</div>
-	<div class="vods-page">
+	<div id="vods">
 		<div v-if="loading"></div>
 		<div v-else-if="errorMessage" class="status status-fill status-muted">
 			<span class="status-error">{{ errorMessage }}</span>
@@ -75,7 +75,7 @@ useEventListener(gridRef, 'mouseover', (e) => {
 </template>
 
 <style scoped>
-.top-row {
+#vods-navbar {
 	align-items: center;
 	display: flex;
 	gap: 1.5rem;
@@ -83,14 +83,14 @@ useEventListener(gridRef, 'mouseover', (e) => {
 	position: fixed;
 	top: 1rem;
 	transform: translateX(-50%);
-	z-index: 100;
+	z-index: 3;
 
 	& :deep(.icon svg) {
 		width: 2rem;
 		height: 2rem;
 	}
 
-	& .shuffle-button {
+	& #shuffle-vod {
 		all: unset;
 		cursor: pointer;
 
@@ -101,15 +101,15 @@ useEventListener(gridRef, 'mouseover', (e) => {
 	}
 }
 
-.vods-page {
+#vods {
 	position: fixed;
 	inset: 0;
 	overflow-y: auto;
 	padding: 5rem 2rem 6rem;
 
 	& .grid {
-		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(18rem, 20rem));
+		display: flex;
+		flex-wrap: wrap;
 		gap: 1.5rem;
 		justify-content: center;
 		align-content: center;
@@ -125,7 +125,10 @@ useEventListener(gridRef, 'mouseover', (e) => {
 		border: 1px solid var(--color-border);
 		color: inherit;
 		display: flex;
+		flex: 0 1 20rem;
 		flex-direction: column;
+		min-width: 18rem;
+		max-width: 20rem;
 		overflow: hidden;
 		text-decoration: none;
 

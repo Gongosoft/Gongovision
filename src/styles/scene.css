@@ -38,3 +38,9 @@
 	--aspect-ratio-width: 4;
 	--aspect-ratio-height: 3;
 }
+
+.frame {
+	border: none;
+	width: 100%;
+	height: 100%;
+}

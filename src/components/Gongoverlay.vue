@@ -5,7 +5,7 @@ defineProps<{
 </script>
 
 <template>
-	<div class="container">
+	<div id="gongoverlay">
 		<template v-if="position === 'top'">
 			<a href="/gongor"
 				><img id="Gongor" alt="gongor from everquest" src="@/assets/images/emotes/7tv/Gongor.avif"
@@ -51,7 +51,7 @@ defineProps<{
 </template>
 
 <style scoped>
-.container {
+#gongoverlay {
 	inset: 0;
 	pointer-events: none;
 	position: fixed;

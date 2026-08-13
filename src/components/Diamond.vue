@@ -81,7 +81,7 @@ const { stream: screenStream } = useScreenShare();
 	}
 
 	& #diamond-link {
-		z-index: 3;
+		z-index: 2;
 	}
 
 	&.diamond-transparent {
@@ -111,8 +111,8 @@ const { stream: screenStream } = useScreenShare();
 	left: 50%;
 	transform: translate(-50%, -50%);
 	margin-top: -18dvh;
-	z-index: 5;
 	pointer-events: none;
+	z-index: 3;
 
 	@media (max-width: 580px) {
 		margin-top: -16dvh;

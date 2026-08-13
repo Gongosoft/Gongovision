@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import '@/styles/status.css';
-import Chat from '@/components/TwitchChat.vue';
 import STOPTAPE from '@/components/STOPTAPE.vue';
+import TwitchChat from '@/components/TwitchChat.vue';
 import AngelThumpPlayer from '@/components/AngelThumpPlayer.vue';
 import { computed } from 'vue';
 import { useRouteHash } from '@vueuse/router';
@@ -42,7 +42,7 @@ usePointerSwipe(edgeEndEl, { onSwipeEnd: () => showEdge('end') });
 		<div v-if="hidden" class="edge edge-start" ref="edgeStartEl" @click="showEdge('start')" />
 		<div v-if="hidden" class="edge edge-end" ref="edgeEndEl" @click="showEdge('end')" />
 
-		<div class="video">
+		<div id="gongo">
 			<iframe
 				v-if="isGreatSphynxLive && renderIFrame"
 				class="frame"
@@ -55,7 +55,7 @@ usePointerSwipe(edgeEndEl, { onSwipeEnd: () => showEdge('end') });
 
 		<div
 			v-if="!hidden"
-			class="divider"
+			id="divider"
 			:class="{ active: dragging }"
 			:style="dividerStyle"
 			@pointerdown="onPointerDown"
@@ -65,7 +65,7 @@ usePointerSwipe(edgeEndEl, { onSwipeEnd: () => showEdge('end') });
 			@click.ctrl="snapTo16ᱺ9"
 			@dblclick="flip" />
 
-		<div v-if="!hidden" class="chat" :style="chatStyle"><Chat /></div>
+		<div v-if="!hidden" id="ohmies" :style="chatStyle"><TwitchChat /></div>
 	</div>
 </template>
 
@@ -81,7 +81,7 @@ usePointerSwipe(edgeEndEl, { onSwipeEnd: () => showEdge('end') });
 	&.desktop {
 		flex-direction: row;
 
-		& .divider {
+		& #divider {
 			top: 0;
 			width: 12px;
 			height: 100%;
@@ -105,15 +105,15 @@ usePointerSwipe(edgeEndEl, { onSwipeEnd: () => showEdge('end') });
 	&.mobile {
 		flex-direction: column;
 
-		& .video {
+		& #gongo {
 			flex: 1 1 0;
 			min-height: 0;
 		}
-		& .chat {
+		& #ohmies {
 			flex: 0 0 auto;
 		}
 
-		& .divider {
+		& #divider {
 			left: 0;
 			height: 12px;
 			width: 100%;
@@ -135,25 +135,25 @@ usePointerSwipe(edgeEndEl, { onSwipeEnd: () => showEdge('end') });
 	}
 
 	&.side-start {
-		& .video {
+		& #gongo {
 			order: 1;
 		}
-		& .chat {
+		& #ohmies {
 			order: 0;
 		}
 	}
 
 	&.side-end {
-		& .video {
+		& #gongo {
 			order: 0;
 		}
-		& .chat {
+		& #ohmies {
 			order: 1;
 		}
 	}
 }
 
-.video {
+#gongo {
 	flex: 1 1 0;
 	min-width: 0;
 	min-height: 0;
@@ -162,15 +162,15 @@ usePointerSwipe(edgeEndEl, { onSwipeEnd: () => showEdge('end') });
 	position: relative;
 	overflow: hidden;
 	user-select: none;
+
+	& .frame {
+		border: none;
+		flex: 1;
+		min-height: 0;
+	}
 }
 
-.frame {
-	border: none;
-	flex: 1;
-	min-height: 0;
-}
-
-.chat {
+#ohmies {
 	flex: 0 0 25%;
 	overflow: hidden;
 	min-width: 0;
@@ -178,9 +178,9 @@ usePointerSwipe(edgeEndEl, { onSwipeEnd: () => showEdge('end') });
 	z-index: 1;
 }
 
-.divider {
+#divider {
 	position: absolute;
-	z-index: 4;
+	z-index: 2;
 	background: transparent;
 	transition: background 0.25s;
 	touch-action: none;
@@ -198,7 +198,7 @@ usePointerSwipe(edgeEndEl, { onSwipeEnd: () => showEdge('end') });
 
 .edge {
 	position: absolute;
-	z-index: 4;
+	z-index: 2;
 	cursor: pointer;
 	touch-action: none;
 

@@ -34,5 +34,6 @@
 }
 
 .status-fill {
+	align-self: stretch;
 	flex: 1;
 }

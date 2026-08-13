@@ -20,25 +20,13 @@ const { PLAYER, CHANNEL: SPHYNX } = ANGELTHUMP;
 	<div class="scene scene-dark">
 		<iframe
 			v-if="isGreatSphynxLive && renderIFrame"
-			class="frame"
 			:src="`${PLAYER}/?channel=${SPHYNX}`"
 			allow="autoplay; fullscreen"
-			allowfullscreen />
+			allowfullscreen
+			class="frame" />
 		<AngelThumpPlayer v-else-if="isGreatSphynxLive" />
 		<div v-else class="status status-fill">
 			<STOPTAPE />
 		</div>
 	</div>
 </template>
-
-<style scoped>
-.frame {
-	border: none;
-	width: 100%;
-	height: 100%;
-}
-
-.status-fill {
-	height: 100%;
-}
-</style>

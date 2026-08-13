@@ -6,6 +6,7 @@
 /favicon.ico /favicon/favicon.webp 308
 /rss /rss/html 308
 /rss/ /rss/html 308
+/stream/chat https://www.twitch.tv/popout/fakesphynx/chat 307
 /vods/ /vods 308
 /vods/latest /b2/vods/%5B2025-03-28%5D%20glingo.mp4 308
 /webcal /schedule.ics 308

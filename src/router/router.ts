@@ -31,13 +31,7 @@ const router = createRouter({
 			meta: { fullscreen: true }
 		},
 		{
-			name: 'Chat',
-			path: '/stream/chat',
-			component: async () => import('@/components/TwitchChat.vue'),
-			meta: { fullscreen: true }
-		},
-		{
-			name: 'StreamVideo',
+			name: 'Stream Video',
 			path: '/stream/video',
 			component: async () => import('@/views/StreamVideo.vue'),
 			meta: { fullscreen: true }
@@ -53,13 +47,13 @@ const router = createRouter({
 			component: async () => import('@/views/VODs.vue')
 		},
 		{
-			name: 'VODPlayer',
+			name: 'VOD Player',
 			path: '/vods/:title',
 			component: async () => import('@/views/VODPlayer.vue'),
 			meta: { fullscreen: true }
 		},
 		{
-			name: 'NotFound',
+			name: 'Not Found',
 			path: '/:pathMatch(.*)*',
 			component: async () => import('@/views/404.vue')
 		}

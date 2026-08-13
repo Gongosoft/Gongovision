@@ -67,7 +67,7 @@ export default defineConfig({
 					'Gongo is a 2D side-scrolling platformer where the player goes through levels killing enemies and saving the princess. Each level has amazing hand-picked worlds. On each of the levels, a princess is hidden, which must be rescued and delivered to your castle, cleaning up enemies along the way.',
 				theme_color: '#fffc3f',
 				background_color: '#d41212',
-				display: 'minimal-ui'
+				display: 'standalone'
 			},
 			pwaAssets: {
 				config: 'pwa-assets.config.ts'

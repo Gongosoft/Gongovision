@@ -1,8 +1,8 @@
 import { env } from 'cloudflare:workers';
 import { routeAgentRequest } from 'agents';
 import { handleRssRequest } from '@/server/rss.ts';
-import { handleB2Request, listVODs } from '@/server/b2.ts';
 import { handleStreamRequest } from '@/server/angelthump.ts';
+import { handleB2Request, listObjects } from '@/server/b2.ts';
 
 export { Notifications } from '@/server/notifications.ts';
 
@@ -20,6 +20,11 @@ export default {
 
 		if (pathname.startsWith('/b2/')) {
 			return handleB2Request(request);
+		}
+
+		if (pathname === '/clips/list') {
+			const objects = await listObjects('clips/');
+			return Response.json(objects ?? [], { status: objects ? 200 : 502 });
 		}
 
 		if (pathname.startsWith('/notification/')) {
@@ -58,7 +63,8 @@ export default {
 		}
 
 		if (pathname === '/vods/list') {
-			return listVODs();
+			const objects = await listObjects('vods/');
+			return Response.json(objects ?? [], { status: objects ? 200 : 502 });
 		}
 
 		if (pathname === '/.well-known/did.json' || pathname.startsWith('/xrpc/')) {

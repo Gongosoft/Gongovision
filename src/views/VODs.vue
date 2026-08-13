@@ -1,25 +1,22 @@
 <script setup lang="ts">
 import '@/styles/status.css';
+import heartSVG from '@/assets/images/heart.svg?raw';
 import backSVG from '@/assets/images/arrow-left.svg?raw';
 import shuffleSVG from '@/assets/images/shuffle.svg?raw';
 import fallbackThumb from '@/assets/images/thumbnails/fallback.avif';
-import { useTemplateRef } from 'vue';
 import { useHead } from '@unhead/vue';
+import { computed, useTemplateRef } from 'vue';
+import { useVODs } from '@/composables/useVODs.ts';
 import { RouterLink, useRouter } from 'vue-router';
 import { get, useEventListener } from '@vueuse/core';
-import { stripVODExtension, stripVODPrefix, useVODs } from '@/composables/useVODs.ts';
-import type { VOD } from '@/composables/useVODs.ts';
-
-useHead({ title: 'VODs' });
+import type { VOD } from '@/types/b2.d.ts';
 
 const router = useRouter();
-const { vods, loading, errorMessage, refresh } = useVODs();
+const { vods, totalSize, loading, errorMessage, refresh } = useVODs();
 
-const formatPath = (vod: VOD): string =>
-	`/vods/${encodeURIComponent(decodeURIComponent(vod.title).replace(/^vods\//, ''))}`;
+const formatPath = (vod: VOD): string => `/vods/${encodeURIComponent(vod.name)}`;
 const formatSize = (bytes: number): string =>
 	bytes ? `${bytes / 1e9 >= 0.1 ? `${(bytes / 1e9).toFixed(1)} GB` : `${(bytes / 1e6).toFixed(0)} MB`}` : '';
-const formatTitle = (vod: VOD): string => stripVODExtension(decodeURIComponent(stripVODPrefix(vod.title)));
 
 function shuffle(): void {
 	const list = get(vods);
@@ -40,6 +37,8 @@ useEventListener(gridRef, 'mouseover', (e) => {
 		card.style.setProperty('--delay', `-${Math.random() * 30}s`);
 	}
 });
+
+useHead({ title: computed(() => formatSize(get(totalSize)) || 'VODs') });
 </script>
 
 <template>
@@ -47,7 +46,10 @@ useEventListener(gridRef, 'mouseover', (e) => {
 		<RouterLink title="Back" to="/">
 			<span class="icon icon-animated" v-html="backSVG" />
 		</RouterLink>
-		<button title="Shuffle" class="shuffle-button" @click="shuffle">
+		<RouterLink title="Clips" to="/clips">
+			<span class="icon icon-animated" v-html="heartSVG" />
+		</RouterLink>
+		<button title="Shuffle" id="shuffle-vod" @click="shuffle">
 			<span class="icon icon-animated" v-html="shuffleSVG" />
 		</button>
 	</div>
@@ -61,12 +63,12 @@ useEventListener(gridRef, 'mouseover', (e) => {
 			<span>no VODs available.</span>
 		</div>
 		<div v-else ref="gridRef" class="grid">
-			<RouterLink v-for="vod in vods" :key="vod.title" :to="formatPath(vod)" class="card">
+			<RouterLink v-for="vod in vods" :key="vod.name" :to="formatPath(vod)" class="card">
 				<div class="thumbnail">
-					<img :src="vod.thumbnailURL ?? fallbackThumb" :alt="formatTitle(vod)" loading="lazy" />
+					<img :src="vod.thumbnail ?? fallbackThumb" :alt="vod.name" loading="lazy" />
 				</div>
 				<div class="card-info">
-					<span class="vod-title">{{ formatTitle(vod) }}</span>
+					<span class="vod-title">{{ vod.name }}</span>
 					<span v-if="vod.size" class="vod-size">{{ formatSize(vod.size) }}</span>
 				</div>
 			</RouterLink>

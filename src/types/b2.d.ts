@@ -1,3 +1,13 @@
+export interface B2Object {
+	name: string;
+	url: string;
+	size: number;
+}
+
+export interface VOD extends B2Object {
+	thumbnail?: string | null;
+}
+
 export interface B2ListResponse {
 	'?xml': string;
 	'ListBucketResult': ListBucketResult;
@@ -13,6 +23,8 @@ export interface ListBucketResult {
 	Prefix: string;
 	/** amount of items in ListBucketResult.Contents */
 	KeyCount: number;
+	/** for pagination */
+	NextContinuationToken?: string;
 }
 
 export interface Content {

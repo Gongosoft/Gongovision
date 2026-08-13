@@ -1,7 +1,7 @@
 import { AwsClient } from 'aws4fetch';
 import { env } from 'cloudflare:workers';
 import { XMLParser } from 'fast-xml-parser';
-import type { B2ListResponse } from '@/types/b2.d.ts';
+import type { B2ListResponse, B2Object } from '@/types/b2.d.ts';
 
 const FORWARD_HEADERS = ['range', 'if-range', 'if-match', 'if-none-match', 'if-modified-since', 'if-unmodified-since'];
 
@@ -58,16 +58,23 @@ export async function handleB2Request(request: Request): Promise<Response> {
 	return new Response(res.body, { status: res.status, statusText: res.statusText, headers });
 }
 
-export async function listVODs(): Promise<Response> {
+export async function listObjects(
+	prefix: string,
+	continuationToken?: string,
+	objects: B2Object[] = []
+): Promise<B2Object[] | null> {
 	const b2URL = new URL(`https://${env.B2_BUCKET_NAME}.${env.B2_ENDPOINT}/`);
 	b2URL.searchParams.set('list-type', '2');
-	b2URL.searchParams.set('prefix', 'vods/');
+	b2URL.searchParams.set('prefix', prefix);
+	if (continuationToken) {
+		b2URL.searchParams.set('continuation-token', continuationToken);
+	}
 
 	const signed = await b2().sign(b2URL.toString(), { method: 'GET', headers: new Headers() });
 	const res = await fetch(signed);
 	if (!res.ok) {
-		console.error(`B2 listVODs failed: ${res.status}`);
-		return Response.json([], { status: 502 });
+		console.error(`B2 listObjects (${prefix}) failed: ${res.status}`);
+		return null;
 	}
 
 	const xml = await res.text();
@@ -75,15 +82,23 @@ export async function listVODs(): Promise<Response> {
 		isArray: (tag: string): boolean => tag === 'Contents'
 	});
 	const parsed: B2ListResponse = parser.parse(xml);
+	const result = parsed.ListBucketResult;
 
-	const contents = parsed.ListBucketResult.Contents ?? [];
-	const vods = contents
-		.filter((item) => item.Key && !item.Key.endsWith('/'))
-		.map((item) => ({
-			title: item.Key,
-			videoURL: `/b2/vods/${encodeURIComponent(item.Key.replace(/^vods\//, ''))}`,
+	for (const item of result.Contents ?? []) {
+		if (!item.Key || item.Key.endsWith('/')) {
+			continue;
+		}
+		const key = item.Key.replace(new RegExp(`^${prefix}`), '');
+		objects.push({
+			name: key.replace(/\.[^.]+$/, ''),
+			url: `/b2/${prefix}${encodeURIComponent(key)}`,
 			size: item.Size || 0
-		}));
+		});
+	}
 
-	return Response.json(vods);
+	if (result.IsTruncated && result.NextContinuationToken) {
+		return listObjects(prefix, result.NextContinuationToken, objects);
+	}
+
+	return objects;
 }

@@ -9,6 +9,12 @@ const router = createRouter({
 			component: async () => import('@/views/Home.vue')
 		},
 		{
+			name: 'Clips',
+			path: '/clips/:title?',
+			component: async () => import('@/views/Clips.vue'),
+			meta: { fullscreen: true }
+		},
+		{
 			name: 'Fingal',
 			path: '/fingal',
 			alias: '/fingalfunny',

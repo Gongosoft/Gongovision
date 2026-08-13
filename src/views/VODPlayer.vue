@@ -7,19 +7,19 @@ import { get } from '@vueuse/core';
 import { useRoute } from 'vue-router';
 import { useHead } from '@unhead/vue';
 import { computed, ref, watchEffect } from 'vue';
-import { stripVODExtension, stripVODPrefix, useVODs } from '@/composables/useVODs.ts';
+import { useVODs } from '@/composables/useVODs.ts';
 
 const { vods, loading } = useVODs();
 const route = useRoute();
 const title = computed(() => decodeURIComponent(String(route.params.title)));
 const error = ref<string | null>(null);
-const vod = computed(() => get(vods).find((v) => stripVODPrefix(v.title) === get(title)));
+const vod = computed(() => get(vods).find((v) => v.name === get(title)));
 
 watchEffect(() => {
 	error.value = !get(loading) && !get(vod) ? `VOD not found: ${get(title)}` : null;
 });
 
-useHead({ title: computed(() => stripVODExtension(stripVODPrefix(get(title)))) });
+useHead({ title: computed(() => get(title).replace(/^\[[^\]]*\]\s*/, '')) });
 </script>
 
 <template>
@@ -30,9 +30,9 @@ useHead({ title: computed(() => stripVODExtension(stripVODPrefix(get(title)))) }
 			<a v-if="!loading" href="/vods" class="status-retry">back to VODs</a>
 		</div>
 		<div v-else id="vod">
-			<video-player v-if="vod.videoURL">
+			<video-player v-if="vod.url">
 				<video-skin>
-					<video :src="vod.videoURL" :poster="vod.thumbnailURL || undefined" autoplay playsinline />
+					<video :src="vod.url" :poster="vod.thumbnail || undefined" autoplay playsinline />
 				</video-skin>
 			</video-player>
 		</div>

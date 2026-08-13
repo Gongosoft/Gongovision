@@ -2,5 +2,5 @@ _headers
 _redirects
 _routes.json
 _worker.js
-/favicon.webp
+/pwa.webp
 emotes.zip

@@ -20,8 +20,8 @@ export interface UseSplitPaneReturn {
 	dragging: Ref<boolean>;
 	chatStyle: ComputedRef<{ flexBasis: string }>;
 	dividerStyle: ComputedRef<StyleValue>;
-	edgeStartEl: Ref<HTMLElement | null>;
-	edgeEndEl: Ref<HTMLElement | null>;
+	edgeStart: Ref<HTMLElement | null>;
+	edgeEnd: Ref<HTMLElement | null>;
 	onPointerDown: (e: PointerEvent) => void;
 	onPointerUp: () => void;
 	onPointerMove: (e: PointerEvent) => void;
@@ -126,8 +126,8 @@ export function useSplitPane(): UseSplitPaneReturn {
 		hidden.value = false;
 	}
 
-	const edgeStartEl = useTemplateRef<HTMLElement>('edgeStartEl');
-	const edgeEndEl = useTemplateRef<HTMLElement>('edgeEndEl');
+	const edgeStart = useTemplateRef<HTMLElement>('edgeStart');
+	const edgeEnd = useTemplateRef<HTMLElement>('edgeEnd');
 
 	function snapTo16ᱺ9(): void {
 		chatRatio.value = clamp(chatRatioFor16ᱺ9(get(viewW), get(viewH), get(isMobile)), CHAT_MIN, 1);
@@ -147,8 +147,8 @@ export function useSplitPane(): UseSplitPaneReturn {
 		dragging,
 		chatStyle,
 		dividerStyle,
-		edgeStartEl,
-		edgeEndEl,
+		edgeStart,
+		edgeEnd,
 		onPointerDown,
 		onPointerUp,
 		onPointerMove,

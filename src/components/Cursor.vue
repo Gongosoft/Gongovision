@@ -4,7 +4,7 @@ import { onMounted, onUnmounted, useTemplateRef } from 'vue';
 import { characterCursor, fairyDustCursor } from 'cursor-effects';
 import type { CursorEffectResult } from 'cursor-effects';
 
-const effectsContainerRef = useTemplateRef<HTMLDivElement>('effectsContainer');
+const container = useTemplateRef<HTMLDivElement>('container');
 const effects: CursorEffectResult[] = [];
 const colors = [
 	'#4e85ff',
@@ -29,7 +29,7 @@ const colors = [
 ];
 
 onMounted(() => {
-	const effectsContainer = get(effectsContainerRef);
+	const effectsContainer = get(container);
 	if (!effectsContainer) {
 		return;
 	}
@@ -56,7 +56,7 @@ onUnmounted(() => {
 
 <template>
 	<div id="cursor">
-		<div ref="effectsContainer" id="cursor-effects"></div>
+		<div ref="container" id="cursor-effects"></div>
 	</div>
 </template>
 

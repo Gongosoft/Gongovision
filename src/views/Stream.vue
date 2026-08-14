@@ -22,8 +22,8 @@ const {
 	dragging,
 	chatStyle,
 	dividerStyle,
-	edgeStartEl,
-	edgeEndEl,
+	edgeStart,
+	edgeEnd,
 	onPointerDown,
 	onPointerUp,
 	onPointerMove,
@@ -32,14 +32,14 @@ const {
 	flip
 } = useSplitPane();
 
-usePointerSwipe(edgeStartEl, { onSwipeEnd: () => showEdge('start') });
-usePointerSwipe(edgeEndEl, { onSwipeEnd: () => showEdge('end') });
+usePointerSwipe(edgeStart, { onSwipeEnd: () => showEdge('start') });
+usePointerSwipe(edgeEnd, { onSwipeEnd: () => showEdge('end') });
 </script>
 
 <template>
 	<div class="scene" :class="[isMobile ? 'mobile' : 'desktop', `side-${side}`]">
-		<div v-if="hidden" class="edge edge-start" ref="edgeStartEl" @click="showEdge('start')" />
-		<div v-if="hidden" class="edge edge-end" ref="edgeEndEl" @click="showEdge('end')" />
+		<div v-if="hidden" class="edge edge-start" ref="edgeStart" @click="showEdge('start')" />
+		<div v-if="hidden" class="edge edge-end" ref="edgeEnd" @click="showEdge('end')" />
 
 		<div id="gongo">
 			<iframe

@@ -16,9 +16,9 @@ import { RouterLink } from 'vue-router';
 import { get, useEventListener } from '@vueuse/core';
 import { useScreenShare } from '@/composables/useScreenShare.ts';
 
-const webcal = `webcal://${location.hostname}/schedule.ics`;
 const randomized = new WeakSet<Element>();
-const iconRowRef = useTemplateRef<HTMLElement>('iconRowRef');
+const iconRow = useTemplateRef<HTMLElement>('iconRow');
+const webcal = `webcal://${location.hostname}/schedule.ics`;
 
 const { stream: screenStream, start: startScreenShare, stop: stopScreenShare } = useScreenShare();
 
@@ -32,7 +32,7 @@ async function onCameraClick(): Promise<void> {
 	}
 }
 
-useEventListener(iconRowRef, 'mouseover', (e) => {
+useEventListener(iconRow, 'mouseover', (e) => {
 	const svg = (e.target as Element).closest?.('svg');
 	if (svg instanceof SVGElement && !randomized.has(svg)) {
 		randomized.add(svg);
@@ -42,7 +42,7 @@ useEventListener(iconRowRef, 'mouseover', (e) => {
 </script>
 
 <template>
-	<div ref="iconRowRef" id="icons">
+	<div ref="iconRow" id="icons">
 		<a title="GitHub" href="https://github.com/Gongosoft/Gongovision" target="_blank" @click.stop>
 			<span class="icon icon-animated" v-html="githubSVG" />
 		</a>

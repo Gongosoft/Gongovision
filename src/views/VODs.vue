@@ -28,9 +28,9 @@ function shuffle(): void {
 }
 
 const randomized = new WeakSet<Element>();
-const gridRef = useTemplateRef<HTMLElement>('gridRef');
+const grid = useTemplateRef<HTMLElement>('grid');
 
-useEventListener(gridRef, 'mouseover', (e) => {
+useEventListener(grid, 'mouseover', (e) => {
 	const card = (e.target as Element).closest?.('.card');
 	if (card instanceof HTMLElement && !randomized.has(card)) {
 		randomized.add(card);
@@ -62,7 +62,7 @@ useHead({ title: computed(() => formatSize(get(totalSize)) || 'VODs') });
 		<div v-else-if="vods.length === 0" class="status status-fill status-muted">
 			<span>no VODs available.</span>
 		</div>
-		<div v-else ref="gridRef" class="grid">
+		<div v-else ref="grid" class="grid">
 			<RouterLink v-for="vod in vods" :key="vod.name" :to="formatPath(vod)" class="card">
 				<div class="thumbnail">
 					<img :src="vod.thumbnail ?? fallbackThumb" :alt="vod.name" loading="lazy" />

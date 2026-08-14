@@ -3,6 +3,7 @@ import vue from '@vitejs/plugin-vue';
 import unfonts from 'unplugin-fonts/vite';
 import fflateZip from 'vite-plugin-fflate-zip';
 import vueDevTools from 'vite-plugin-vue-devtools';
+import emulatorJS from './src/scripts/buildEmulatorJS.ts';
 import { resolve } from 'path';
 import { defineConfig } from 'vite';
 import { fileURLToPath, URL } from 'url';
@@ -55,6 +56,10 @@ export default defineConfig({
 			// remoteBindings: false
 		}),
 		cloudflareRedirect(),
+		emulatorJS({
+			inDir: 'node_modules/@emulatorjs/emulatorjs/data',
+			outDir: 'public/emulatorjs'
+		}),
 		fflateZip({
 			inDir: 'src/assets/images/emotes',
 			outDir: 'dist/client',

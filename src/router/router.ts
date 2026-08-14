@@ -43,6 +43,12 @@ const router = createRouter({
 			meta: { fullscreen: true }
 		},
 		{
+			name: 'Neo Turf Masters',
+			path: '/neoturfmasters',
+			alias: '/ondagween',
+			component: async () => import('@/views/NeoTurfMasters.vue')
+		},
+		{
 			name: 'Notifications',
 			path: '/notifications',
 			component: async () => import('@/views/Notifications.vue')

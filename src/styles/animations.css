@@ -126,7 +126,7 @@
 
 @keyframes colorShift {
 	1% {
-		fill: #4e85ff;
+		color: #4e85ff;
 	}
 	5% {
 		color: #52cd3e;
@@ -183,7 +183,76 @@
 		color: #d30039;
 	}
 	100% {
-		fill: #4e85ff;
+		color: #4e85ff;
+	}
+}
+
+@property --ejs-primary-color {
+	syntax: '<number>#';
+	inherits: true;
+	initial-value: 78, 133, 255;
+}
+
+@keyframes ejsPrimaryShift {
+	1% {
+		--ejs-primary-color: 78, 133, 255;
+	}
+	5% {
+		--ejs-primary-color: 82, 205, 62;
+	}
+	10% {
+		--ejs-primary-color: 84, 81, 230;
+	}
+	15% {
+		--ejs-primary-color: 78, 255, 183;
+	}
+	20% {
+		--ejs-primary-color: 226, 134, 22;
+	}
+	25% {
+		--ejs-primary-color: 216, 61, 92;
+	}
+	30% {
+		--ejs-primary-color: 97, 61, 211;
+	}
+	40% {
+		--ejs-primary-color: 23, 108, 91;
+	}
+	45% {
+		--ejs-primary-color: 40, 255, 21;
+	}
+	50% {
+		--ejs-primary-color: 24, 180, 74;
+	}
+	55% {
+		--ejs-primary-color: 152, 255, 23;
+	}
+	60% {
+		--ejs-primary-color: 221, 0, 122;
+	}
+	65% {
+		--ejs-primary-color: 84, 196, 232;
+	}
+	70% {
+		--ejs-primary-color: 241, 125, 6;
+	}
+	75% {
+		--ejs-primary-color: 152, 35, 70;
+	}
+	80% {
+		--ejs-primary-color: 252, 246, 11;
+	}
+	85% {
+		--ejs-primary-color: 101, 64, 0;
+	}
+	90% {
+		--ejs-primary-color: 236, 33, 140;
+	}
+	95% {
+		--ejs-primary-color: 211, 0, 57;
+	}
+	100% {
+		--ejs-primary-color: 78, 133, 255;
 	}
 }
 

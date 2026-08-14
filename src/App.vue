@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import 'unfonts.css';
 import '@/styles/theme.css';
-import '@/styles/layout.css';
 import '@/styles/animations.css';
 import AFK from '@/components/AFK.vue';
 import Cursor from '@/components/Cursor.vue';
@@ -145,14 +144,19 @@ useKonamiCode({
 </template>
 
 <style>
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+
 body {
 	accent-color: var(--color-accent);
 	background-color: var(--color-bg);
 	font-family: 'Gohu';
 }
 
-video-player,
-live-video-player {
+video-player {
 	--media-border-radius: 0;
 	--media-video-border-radius: 0;
 }

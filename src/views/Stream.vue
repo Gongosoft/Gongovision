@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import '@/styles/status.css';
 import STOPTAPE from '@/components/STOPTAPE.vue';
 import TwitchChat from '@/components/TwitchChat.vue';
 import AngelThumpPlayer from '@/components/AngelThumpPlayer.vue';

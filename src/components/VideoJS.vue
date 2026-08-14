@@ -2,6 +2,11 @@
 import '@/styles/videojs.css';
 import '@videojs/html/video/ui';
 import '@videojs/html/icons/element/default';
+import { useTemplateRef } from 'vue';
+
+const currentTime = useTemplateRef<HTMLElement>('currentTime');
+
+defineExpose({ currentTime });
 </script>
 
 <template>
@@ -72,7 +77,7 @@ import '@videojs/html/icons/element/default';
 						</div>
 
 						<div class="media-time-controls">
-							<media-time type="current" class="media-time"></media-time>
+							<media-time ref="currentTime" type="current" class="media-time"></media-time>
 							<media-time-slider class="media-slider">
 								<media-slider-track class="media-slider__track">
 									<media-slider-fill class="media-slider__fill"></media-slider-fill>

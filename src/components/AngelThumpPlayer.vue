@@ -2,7 +2,7 @@
 import '@videojs/html/media/hlsjs-video';
 import VideoJS from '@/components/VideoJS.vue';
 import { useHead, useSeoMeta } from '@unhead/vue';
-import { computed, useTemplateRef } from 'vue';
+import { computed, useTemplateRef, watchEffect } from 'vue';
 import { useStreamInfo } from '@/composables/useStreamInfo.ts';
 import { get, useEventListener, useFavicon, useLocalStorage } from '@vueuse/core';
 
@@ -20,6 +20,7 @@ const stream = useTemplateRef<HTMLVideoElement>('stream');
 const regionGroup = useTemplateRef<HTMLElement>('regionGroup');
 const region = useLocalStorage<Region>('stream:region', 'auto');
 const regionLabel = computed(() => REGIONS[get(region) ?? 'auto'].label);
+const videojs = useTemplateRef<{ currentTime: HTMLElement | null }>('videojs');
 
 const src = computed(() => {
 	const selected = get(region) ?? 'auto';
@@ -54,10 +55,21 @@ useSeoMeta({
 	ogImageWidth: '1920',
 	ogImageHeight: '1080'
 });
+
+watchEffect(() => {
+	const value = get(uptime);
+	if (value === null) {
+		return;
+	}
+	const currentTime = get(videojs)?.currentTime;
+	if (currentTime) {
+		currentTime.textContent = value;
+	}
+});
 </script>
 
 <template>
-	<VideoJS>
+	<VideoJS ref="videojs">
 		<template #media>
 			<hlsjs-video
 				ref="stream"

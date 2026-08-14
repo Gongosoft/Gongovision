@@ -1,11 +1,11 @@
 /* shared fullscreen scene container */
 
 .scene {
-	position: fixed;
-	inset: 0;
-	z-index: 0;
 	display: flex;
+	inset: 0;
 	overflow: hidden;
+	position: fixed;
+	z-index: 0;
 }
 
 .scene:not(.scene-end) {
@@ -14,8 +14,8 @@
 }
 
 .scene-end {
-	justify-content: flex-start;
 	align-items: stretch;
+	justify-content: flex-start;
 }
 
 .scene-dark {

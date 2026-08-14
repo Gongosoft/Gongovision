@@ -173,11 +173,11 @@ onMounted(async () => {
 	display: flex;
 
 	& :deep(.icon svg) {
-		width: 2.5rem;
-		height: 2.5rem;
 		display: block;
 		fill: currentColor;
 		transition: fill 0.15s;
+		width: 2.5rem;
+		height: 2.5rem;
 
 		& * {
 			fill: inherit;
@@ -190,8 +190,8 @@ onMounted(async () => {
 	}
 
 	&:disabled {
-		opacity: 0.4;
 		cursor: not-allowed;
+		opacity: 0.4;
 	}
 }
 </style>

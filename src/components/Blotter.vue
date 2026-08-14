@@ -199,11 +199,11 @@ watch(
 	pointer-events: none;
 
 	&:deep(canvas) {
+		display: block;
 		max-width: 100%;
 		max-height: 100%;
 		width: auto;
 		height: auto;
-		display: block;
 	}
 }
 </style>

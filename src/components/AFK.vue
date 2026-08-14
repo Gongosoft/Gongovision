@@ -65,25 +65,25 @@ watch(documentVisibility, (current, previous) => {
 </script>
 
 <template>
-	<div v-if="daxVisibility" id="daxMug-container">
+	<div v-if="daxVisibility" id="daxMug">
 		<img id="daxMug" :src="daxMug" alt="..." />
 	</div>
 	<img id="omoLurk" :src="omoLurk" alt="..." @click="omoClick.play()" />
 </template>
 
 <style scoped>
-#daxMug-container {
+#daxMug {
 	inset: 0;
 	overflow: hidden;
 	pointer-events: none;
 	position: fixed;
 	z-index: 1;
-}
 
-#daxMug {
-	height: 100%;
-	object-fit: contain;
-	width: 100%;
+	& img {
+		object-fit: contain;
+		width: 100%;
+		height: 100%;
+	}
 }
 
 #omoLurk {

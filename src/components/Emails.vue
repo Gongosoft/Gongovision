@@ -43,11 +43,11 @@ async function subscribe(): Promise<void> {
 	display: flex;
 
 	& :deep(.icon svg) {
-		width: 2.5rem;
-		height: 2.5rem;
 		display: block;
 		fill: var(--color-text);
 		transition: fill 0.15s;
+		width: 2.5rem;
+		height: 2.5rem;
 
 		& * {
 			fill: inherit;

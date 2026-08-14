@@ -156,9 +156,9 @@ useHead({ title: computed(() => get(clip)?.name.replace(/^\[[^\]]*\]\s*|\s*\[[^\
 	height: 100%;
 
 	& .stage {
-		position: absolute;
 		inset: 0;
 		pointer-events: none;
+		position: absolute;
 		visibility: hidden;
 
 		&.active {

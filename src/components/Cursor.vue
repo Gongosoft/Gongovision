@@ -62,12 +62,12 @@ onUnmounted(() => {
 
 <style scoped>
 #cursor-effects {
-	height: 100%;
 	left: 0;
 	pointer-events: none;
 	position: fixed;
 	top: 0;
 	width: 100%;
+	height: 100%;
 	z-index: 1;
 }
 </style>

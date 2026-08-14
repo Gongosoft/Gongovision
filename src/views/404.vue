@@ -72,11 +72,11 @@ const isWide = useMediaQuery('(min-width: 985px)');
 	}
 
 	& img {
-		height: 100%;
-		width: auto;
-		object-fit: contain;
 		flex-shrink: 0;
 		margin-left: auto;
+		object-fit: contain;
+		width: auto;
+		height: 100%;
 	}
 }
 </style>

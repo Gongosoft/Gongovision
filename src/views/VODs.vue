@@ -104,17 +104,17 @@ useHead({ title: computed(() => formatSize(get(totalSize)) || 'VODs') });
 }
 
 #vods {
-	position: fixed;
 	inset: 0;
 	overflow-y: auto;
 	padding: 5rem 2rem 6rem;
+	position: fixed;
 
 	& .grid {
+		align-content: center;
 		display: flex;
 		flex-wrap: wrap;
 		gap: 1.5rem;
 		justify-content: center;
-		align-content: center;
 		min-height: 100%;
 	}
 
@@ -127,10 +127,10 @@ useHead({ title: computed(() => formatSize(get(totalSize)) || 'VODs') });
 		border: 1px solid var(--color-border);
 		color: inherit;
 		display: flex;
-		flex: 0 1 20rem;
 		flex-direction: column;
-		min-width: 18rem;
+		flex: 0 1 20rem;
 		max-width: 20rem;
+		min-width: 18rem;
 		overflow: hidden;
 		text-decoration: none;
 
@@ -146,29 +146,29 @@ useHead({ title: computed(() => formatSize(get(totalSize)) || 'VODs') });
 
 	& .thumbnail {
 		aspect-ratio: 16 / 9;
-		overflow: hidden;
 		background: var(--color-surface-alt);
+		overflow: hidden;
 
 		& img {
+			display: block;
+			object-fit: cover;
 			width: 100%;
 			height: 100%;
-			object-fit: cover;
-			display: block;
 		}
 	}
 
 	& .card-info {
-		display: flex;
-		justify-content: space-between;
 		align-items: center;
-		padding: 0.75rem 1rem;
+		display: flex;
 		gap: 0.5rem;
+		justify-content: space-between;
+		padding: 0.75rem 1rem;
 	}
 
 	& .vod-title {
 		animation: colorShift 30s linear infinite;
-		animation-play-state: paused;
 		animation-delay: var(--delay);
+		animation-play-state: paused;
 		color: var(--color-text-secondary);
 		flex: 1;
 		font-size: 0.85rem;
@@ -180,8 +180,8 @@ useHead({ title: computed(() => formatSize(get(totalSize)) || 'VODs') });
 
 	& .vod-size {
 		animation: colorShift 30s linear infinite;
-		animation-play-state: paused;
 		animation-delay: var(--delay);
+		animation-play-state: paused;
 		color: var(--color-text-muted);
 		flex-shrink: 0;
 		font-size: 0.7rem;

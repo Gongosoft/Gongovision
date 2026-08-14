@@ -90,29 +90,29 @@ const { stream: screenStream } = useScreenShare();
 	}
 
 	& #diamond-video {
-		position: absolute;
-		top: 0;
-		left: 50%;
-		transform: translateX(-50%);
-		height: 100%;
 		aspect-ratio: 16 / 9;
 		border: none;
+		height: 100%;
+		left: 50%;
+		position: absolute;
+		top: 0;
+		transform: translateX(-50%);
 		z-index: 1;
 	}
 
 	& video#diamond-video {
-		rotate: -6deg;
 		left: 42%;
+		rotate: -6deg;
 	}
 }
 
 #blotter-header {
-	position: fixed;
-	top: 50%;
 	left: 50%;
-	transform: translate(-50%, -50%);
 	margin-top: -18dvh;
 	pointer-events: none;
+	position: fixed;
+	top: 50%;
+	transform: translate(-50%, -50%);
 	z-index: 3;
 
 	@media (max-width: 580px) {

@@ -85,10 +85,10 @@ defineProps<{
 		}
 
 		&#actualEntertainment {
-			right: 0;
-			position: absolute;
-			top: 0;
 			height: 2rem;
+			position: absolute;
+			right: 0;
+			top: 0;
 
 			@media (max-width: 480px) {
 				height: 1.5rem;
@@ -157,16 +157,16 @@ defineProps<{
 
 		&#bounceDok {
 			bottom: -1rem;
-			height: 4.2rem;
 			position: absolute;
 			right: 15.45rem;
 			width: 3rem;
+			height: 4.2rem;
 
 			@media (max-width: 480px) {
 				bottom: -0.7rem;
-				height: auto;
 				right: 10rem;
 				width: 2rem;
+				height: auto;
 			}
 		}
 

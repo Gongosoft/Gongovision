@@ -23,11 +23,11 @@ const { refresh } = useStreamSource();
 
 	& img {
 		cursor: pointer;
-		height: 100%;
 		inset: 0;
 		object-fit: contain;
 		position: absolute;
 		width: 100%;
+		height: 100%;
 	}
 }
 </style>

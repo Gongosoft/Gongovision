@@ -72,24 +72,24 @@ usePointerSwipe(edgeEndEl, { onSwipeEnd: () => showEdge('end') });
 .scene {
 	background: var(--color-black);
 	display: flex;
-	height: 100dvh;
 	overflow: hidden;
 	position: relative;
 	width: 100%;
+	height: 100dvh;
 
 	&.desktop {
 		flex-direction: row;
 
 		& #divider {
+			cursor: col-resize;
 			top: 0;
 			width: 12px;
 			height: 100%;
-			cursor: col-resize;
 		}
 
 		& .edge {
-			top: 0;
 			bottom: 0;
+			top: 0;
 			width: 60px;
 		}
 
@@ -113,16 +113,16 @@ usePointerSwipe(edgeEndEl, { onSwipeEnd: () => showEdge('end') });
 		}
 
 		& #divider {
-			left: 0;
-			height: 12px;
-			width: 100%;
 			cursor: row-resize;
+			left: 0;
+			width: 100%;
+			height: 12px;
 		}
 
 		& .edge {
+			height: 50px;
 			left: 0;
 			right: 0;
-			height: 50px;
 		}
 
 		& .edge-start {
@@ -153,13 +153,13 @@ usePointerSwipe(edgeEndEl, { onSwipeEnd: () => showEdge('end') });
 }
 
 #gongo {
+	display: flex;
+	flex-direction: column;
 	flex: 1 1 0;
 	min-width: 0;
 	min-height: 0;
-	display: flex;
-	flex-direction: column;
-	position: relative;
 	overflow: hidden;
+	position: relative;
 	user-select: none;
 
 	& .frame {
@@ -171,18 +171,18 @@ usePointerSwipe(edgeEndEl, { onSwipeEnd: () => showEdge('end') });
 
 #ohmies {
 	flex: 0 0 25%;
-	overflow: hidden;
 	min-width: 0;
 	min-height: 0;
+	overflow: hidden;
 	z-index: 1;
 }
 
 #divider {
-	position: absolute;
-	z-index: 2;
 	background: transparent;
-	transition: background 0.25s;
+	position: absolute;
 	touch-action: none;
+	transition: background 0.25s;
+	z-index: 2;
 
 	&.active {
 		animation: backgroundShift 30s linear infinite;
@@ -196,10 +196,10 @@ usePointerSwipe(edgeEndEl, { onSwipeEnd: () => showEdge('end') });
 }
 
 .edge {
-	position: absolute;
-	z-index: 2;
 	cursor: pointer;
+	position: absolute;
 	touch-action: none;
+	z-index: 2;
 
 	&:hover {
 		background: var(--color-edge-hover);

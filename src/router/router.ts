@@ -15,6 +15,12 @@ const router = createRouter({
 			meta: { fullscreen: true }
 		},
 		{
+			name: 'Congo Bongo',
+			path: '/congobongo',
+			alias: '/gongobongo',
+			component: async () => import('@/views/CongoBongo.vue')
+		},
+		{
 			name: 'Fingal',
 			path: '/fingal',
 			alias: '/fingalfunny',

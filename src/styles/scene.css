@@ -39,6 +39,11 @@
 	--aspect-ratio-height: 3;
 }
 
+.aspect-3-4 {
+	--aspect-ratio-width: 3;
+	--aspect-ratio-height: 4;
+}
+
 .frame {
 	border: none;
 	width: 100%;

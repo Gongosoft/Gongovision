@@ -10,5 +10,7 @@
 /dev-dist/
 /dist/
 /node_modules/
+/public/emulatorjs/emulator.min.css
+/public/emulatorjs/emulator.min.js
 /src/assets/images/osmo/list.json
 /src/types/wrangler.d.ts

@@ -2369,6 +2369,24 @@
 			"id": "01FTCHTMTR0001606GRRVVK2AN",
 			"url": "https://cdn.7tv.app/emote/01FTCHTMTR0001606GRRVVK2AN/4x.avif",
 			"ext": ".avif"
+		},
+		{
+			"name": "kiwi1",
+			"id": "01M0NTY841N9ZBV7C1NDAY9TV8",
+			"url": "https://cdn.7tv.app/emote/01M0NTY841N9ZBV7C1NDAY9TV8/4x.avif",
+			"ext": ".avif"
+		},
+		{
+			"name": "kiwi2",
+			"id": "01M0NTYXZXGHDK8NF3WYQKA28B",
+			"url": "https://cdn.7tv.app/emote/01M0NTYXZXGHDK8NF3WYQKA28B/4x.avif",
+			"ext": ".avif"
+		},
+		{
+			"name": "kiwi3",
+			"id": "01M0NTZKTB6NSD4BCNCABFW63Z",
+			"url": "https://cdn.7tv.app/emote/01M0NTZKTB6NSD4BCNCABFW63Z/4x.avif",
+			"ext": ".avif"
 		}
 	],
 	"bttv": [

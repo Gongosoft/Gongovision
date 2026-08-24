@@ -2387,6 +2387,24 @@
 			"id": "01M0NTZKTB6NSD4BCNCABFW63Z",
 			"url": "https://cdn.7tv.app/emote/01M0NTZKTB6NSD4BCNCABFW63Z/4x.avif",
 			"ext": ".avif"
+		},
+		{
+			"name": "ReallyMad",
+			"id": "01FN8W1EP8000EXJQ7MWJVSDMP",
+			"url": "https://cdn.7tv.app/emote/01FN8W1EP8000EXJQ7MWJVSDMP/4x.avif",
+			"ext": ".avif"
+		},
+		{
+			"name": "ReallyGun",
+			"id": "01GQ2XB48G000F8SBVNAFDHV4E",
+			"url": "https://cdn.7tv.app/emote/01GQ2XB48G000F8SBVNAFDHV4E/4x.avif",
+			"ext": ".avif"
+		},
+		{
+			"name": "fakeVreenak",
+			"id": "01JMECD99PKYHHRH5HJBJWGC0K",
+			"url": "https://cdn.7tv.app/emote/01JMECD99PKYHHRH5HJBJWGC0K/4x.avif",
+			"ext": ".avif"
 		}
 	],
 	"bttv": [

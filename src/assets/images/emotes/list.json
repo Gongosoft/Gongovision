@@ -2405,6 +2405,18 @@
 			"id": "01JMECD99PKYHHRH5HJBJWGC0K",
 			"url": "https://cdn.7tv.app/emote/01JMECD99PKYHHRH5HJBJWGC0K/4x.avif",
 			"ext": ".avif"
+		},
+		{
+			"name": "Jotchua",
+			"id": "01H8122QP0000B3PVHVY0P9ZNS",
+			"url": "https://cdn.7tv.app/emote/01H8122QP0000B3PVHVY0P9ZNS/4x.avif",
+			"ext": ".avif"
+		},
+		{
+			"name": "meatDance",
+			"id": "01FR2QX1G80000H9H6YCZX1V2B",
+			"url": "https://cdn.7tv.app/emote/01FR2QX1G80000H9H6YCZX1V2B/4x.avif",
+			"ext": ".avif"
 		}
 	],
 	"bttv": [

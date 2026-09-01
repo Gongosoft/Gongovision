@@ -53,7 +53,7 @@ jobs:
         run: git add src/assets/images/emotes
 
       - name: Commit
-        uses: qoomon/actions--create-commit@v1.2.4
+        uses: qoomon/actions--create-commit@v1.2.5
         with:
           message: 'chore: sync emotes'
           skip-empty: true

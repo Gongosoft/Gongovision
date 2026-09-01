@@ -31,7 +31,7 @@
 		"@twurple/api": "^8.1.4",
 		"@twurple/auth": "^8.1.4",
 		"@types/nodemailer": "^8.0.1",
-		"@unhead/vue": "^3.2.2",
+		"@unhead/vue": "^3.4.0",
 		"@videojs/html": "^10.0.0-beta.26",
 		"@vueuse/core": "^14.3.0",
 		"@vueuse/router": "^14.4.0",

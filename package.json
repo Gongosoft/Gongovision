@@ -51,7 +51,7 @@
 		"streamer-emotes": "^0.1.2",
 		"tweakpane": "^4.0.5",
 		"validator": "^13.15.35",
-		"vue": "^3.5.40",
+		"vue": "^3.5.42",
 		"vue-3d-model": "^1.4.1",
 		"vue-router": "^5.2.0",
 		"web-push": "^3.6.7"

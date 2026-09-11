@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import '@/styles/scene.css';
 import EmulatorJS from '@/components/EmulatorJS.vue';
-import favicon from '@/assets/images/emotes/7tv/GongoBongo.avif';
+import favicon from '@/assets/images/congo-bongo.avif';
 import { useFavicon } from '@vueuse/core';
 import { useHead, useSeoMeta } from '@unhead/vue';
 

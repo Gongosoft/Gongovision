@@ -45,7 +45,7 @@ const favicons = Object.values(
 );
 
 useFavicon(favicons[Math.floor(Math.random() * favicons.length)]);
-useHead({ title: "WHAT'S THE PASSWORD?" });
+useHead({ title: '404' });
 
 const isWide = useMediaQuery('(min-width: 985px)');
 </script>
@@ -55,7 +55,7 @@ const isWide = useMediaQuery('(min-width: 985px)');
 		<Blotter
 			v-if="isWide"
 			id="blotter-404"
-			text="WHAT'S THE PASSWORD?"
+			text="PASSWORD, PLEASE."
 			material="channelSplit"
 			font-family="Gohu"
 			:font-size="69"

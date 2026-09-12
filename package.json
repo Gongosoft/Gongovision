@@ -17,7 +17,7 @@
 		"fmt:check": "oxfmt --disable-nested-config --check",
 		"lint": "oxlint",
 		"lint:fix": "oxlint --fix",
-		"prepare": "husky",
+		"prepare": "husky && wrangler types src/types/wrangler.d.ts",
 		"preview": "vite preview",
 		"sync": "bun src/scripts/syncEmotes.ts",
 		"typecheck": "vue-tsc --build",

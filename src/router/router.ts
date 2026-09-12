@@ -37,13 +37,18 @@ const router = createRouter({
 			component: async () => import('@/views/Holomatch.vue')
 		},
 		{
-			name: 'Gongo',
+			name: 'Stream (Alias)',
+			path: '/live/:pathMatch(.*)*',
+			redirect: (to) => to.fullPath.replace(/^\/live/, '/stream')
+		},
+		{
+			name: 'Stream',
 			path: '/stream',
 			component: async () => import('@/views/Stream.vue'),
 			meta: { fullscreen: true }
 		},
 		{
-			name: 'Stream Video',
+			name: 'Stream (Video Only)',
 			path: '/stream/video',
 			component: async () => import('@/views/StreamVideo.vue'),
 			meta: { fullscreen: true }

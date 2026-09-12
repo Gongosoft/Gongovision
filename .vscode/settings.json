@@ -9,7 +9,7 @@
 		".editorconfig": "oxfmt.config.ts, oxlint.config.ts, tsconfig.json",
 		".gitmodules": ".git-blame-ignore-revs, .gitattributes, .gitignore",
 		"Dockerfile": "docker-compose.yml",
-		"package.json": ".dev.vars, .dev.vars.example, bun.lock, index.html, pwa-assets.config.ts, vite.config.ts, wrangler.toml",
+		"package.json": ".dev.vars, .dev.vars.example, bun.lock, components.json, index.html, pwa-assets.config.ts, vite.config.ts, wrangler.toml",
 		"README.md": "LICENSE.md"
 	},
 	"git.ignoreSubmodules": true,

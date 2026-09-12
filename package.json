@@ -32,7 +32,8 @@
 		"@twurple/auth": "^8.1.4",
 		"@types/nodemailer": "^8.0.1",
 		"@unhead/vue": "^3.4.0",
-		"@videojs/html": "^10.0.0-beta.26",
+		"@videojs/hlsjs-video": "10.0.0-rc.2",
+		"@videojs/html": "10.0.0-rc.2",
 		"@vueuse/core": "^14.3.0",
 		"@vueuse/router": "^14.4.0",
 		"agents": "^0.22.0",
@@ -47,6 +48,7 @@
 		"mime": "^4.1.0",
 		"nodemailer": "^9.0.3",
 		"p-limit": "^7.3.1",
+		"shadcn": "^4.21.0",
 		"shaders": "2.5.92",
 		"streamer-emotes": "^0.1.2",
 		"tweakpane": "^4.0.5",
@@ -87,5 +89,8 @@
 	"lint-staged": {
 		"*": "oxfmt --no-error-on-unmatched-pattern",
 		"*.{js,ts,vue}": "oxlint --no-error-on-unmatched-pattern"
+	},
+	"registries": {
+		"@videojs": "https://shadcn.videojs.org/r/html/{name}.json"
 	}
 }

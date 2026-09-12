@@ -368,11 +368,7 @@ export default defineConfig({
 	resolve: {
 		alias: {
 			'@': fileURLToPath(new URL('/src', import.meta.url)),
-			'@osmo': resolve(ᱻ, 'src/assets/images/osmo'),
-			'@videojs/html/icons/element/default': resolve(
-				ᱻ,
-				'node_modules/@videojs/html/dist/default/icons/element/default/index.js'
-			)
+			'@osmo': resolve(ᱻ, 'src/assets/images/osmo')
 		}
 	}
 });

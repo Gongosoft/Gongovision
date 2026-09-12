@@ -1,0 +1,22 @@
+{
+	"$schema": "https://ui.shadcn.com/schema.json",
+	"style": "new-york",
+	"rsc": false,
+	"tsx": true,
+	"tailwind": {
+		"config": "",
+		"css": "src/styles/shadcn.css",
+		"baseColor": "neutral",
+		"cssVariables": true
+	},
+	"aliases": {
+		"components": "@/components",
+		"hooks": "@/lib/shadcn/hooks",
+		"lib": "@/lib/shadcn/utils",
+		"ui": "@/components/ui",
+		"utils": "@/lib/shadcn/utils"
+	},
+	"registries": {
+		"@videojs": "https://shadcn.videojs.org/r/html/{name}.json"
+	}
+}

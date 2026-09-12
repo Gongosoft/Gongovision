@@ -1,0 +1,404 @@
+@layer base {
+	@scope (.media-skin) {
+		:scope {
+			text-align: start;
+			text-transform: none;
+			letter-spacing: normal;
+			font-style: normal;
+			font-weight: 400;
+		}
+
+		:scope,
+		*,
+		:before,
+		:after {
+			box-sizing: border-box;
+			border: 0 solid;
+			margin: 0;
+			padding: 0;
+		}
+
+		button {
+			font: inherit;
+			color: inherit;
+			text-transform: none;
+			letter-spacing: inherit;
+			appearance: none;
+			background: none;
+		}
+
+		img,
+		svg,
+		media-icon {
+			max-width: 100%;
+			display: block;
+		}
+
+		svg[fill='currentColor'] {
+			fill: currentColor;
+		}
+
+		svg[fill='none'] {
+			fill: none;
+		}
+
+		svg[stroke='currentColor'] {
+			stroke: currentColor;
+		}
+
+		video {
+			border-radius: inherit;
+			object-fit: var(--media-object-fit, contain);
+			object-position: var(--media-object-position, center);
+			width: 100%;
+			max-width: 100%;
+			height: 100%;
+			display: block;
+		}
+
+		media-icon > svg {
+			width: 100%;
+			height: 100%;
+		}
+
+		media-tooltip-group,
+		media-dialog,
+		media-alert-dialog,
+		media-error-dialog,
+		media-controls {
+			display: contents;
+		}
+
+		[hidden][hidden] {
+			display: none !important;
+		}
+	}
+
+	@media (prefers-reduced-motion: no-preference) {
+		.media-skin {
+			interpolate-size: allow-keywords;
+		}
+	}
+}
+
+@layer components {
+	@scope (.media-skin) {
+		:scope {
+			--media-caption-track-duration: var(--media-duration-controls);
+			--media-caption-track-delay: 25ms;
+			--media-caption-track-y: calc(var(--media-spacing) * -2);
+		}
+
+		video::-webkit-media-text-track-container {
+			z-index: 20;
+			scale: 0.98;
+			translate: 0 var(--media-caption-track-y);
+			transition: translate var(--media-caption-track-duration) ease-out;
+			transition-delay: var(--media-caption-track-delay);
+			font-family: inherit;
+		}
+
+		:scope[data-controls-visible] {
+			--media-caption-track-y: var(--media-caption-controls-y);
+		}
+
+		@container media-root (width >= 42rem) {
+			:scope[data-theme='minimal'][data-controls-visible] video {
+				--media-caption-track-y: calc(var(--media-spacing) * -12);
+			}
+		}
+	}
+}
+
+@layer utilities;
+
+@layer base.theme {
+	.media-skin {
+		--media-background: oklch(0% 0 0);
+		--media-foreground: oklch(100% 0 0);
+		--media-controls: oklch(0% 0 0 / 0.35);
+		--media-controls-foreground: var(--media-foreground);
+		--media-popover: oklch(100% 0 0 / 0.1);
+		--media-popover-foreground: var(--media-foreground);
+		--media-primary: var(--media-accent-color, var(--media-default-accent-color));
+		--media-primary-foreground: var(
+			--media-accent-text-color,
+			contrast-color(var(--media-accent-color, var(--media-default-accent-color)))
+		);
+		--media-accent: var(
+			--media-accent-color,
+			color-mix(in oklab, var(--media-default-accent-color) 10%, transparent)
+		);
+		--media-accent-foreground: var(
+			--media-accent-text-color,
+			contrast-color(var(--media-accent-color, var(--media-internal-accent-text-fallback, oklch(0% 0 0))))
+		);
+		--media-muted: oklch(100% 0 0 / 0.15);
+		--media-muted-foreground: oklch(100% 0 0 / 0.65);
+		--media-border: oklch(0% 0 0 / 0.1);
+		--media-ring: oklch(100% 0 0);
+		--media-backdrop: oklch(0% 0 0);
+		--media-live-color: oklch(65% 0.22 27);
+		--media-shadow-surface: 0 1px 3px 0 oklch(0% 0 0 / 0.15), 0 1px 2px -1px oklch(0% 0 0 / 0.15);
+		--media-shadow-surface-inset: inset 0 1px 0 0 #ffffff1a, inset 0 0 0 1px #ffffff0d;
+		--media-shadow-thumb: 0 0 0 1px #0000001a, 0 1px 3px 0 #00000059, 0 1px 2px -1px #00000059;
+		--media-shadow-tooltip: 0 0 0 1px var(--media-border), var(--media-shadow-surface);
+		--media-shadow-separator: 0 1px 0 0 oklch(100% 0 0 / 0.075);
+		--media-shadow-current-color: oklch(from currentColor 0 0 0 / clamp(0, calc((l - 0.5) * 0.5), 0.15));
+		--media-shadow-subtle-current-color: oklch(from var(--media-shadow-current-color) l c h / calc(alpha * 0.4));
+		--media-text-shadow-dialog: 0 1px 0 #00000040;
+		--media-backdrop-filter-surface: blur(16px) saturate(150%);
+		--media-backdrop-filter-indicator: blur(8px);
+		--media-backdrop-filter-dialog: blur(16px) saturate(150%);
+		--media-control-corner-shape: round;
+		--media-control-radius: 99px;
+		--media-control-size: calc(var(--media-spacing) * 9);
+		--media-controls-radius: var(--media-control-radius);
+		--media-default-accent-color: oklch(100% 0 0);
+		--media-duration-instant: 50ms;
+		--media-duration-fast: 0.1s;
+		--media-duration: 0.15s;
+		--media-duration-slow: 0.2s;
+		--media-duration-slower: 0.25s;
+		--media-duration-controls: 0.1s;
+		--media-duration-dialog: 0.35s;
+		--media-duration-indicator: var(--media-duration-slower);
+		--media-duration-menu: 0.25s;
+		--media-duration-slider: var(--media-duration-fast);
+		--media-delay-dialog: 0.1s;
+		--media-hidden-scale: 0.95;
+		--media-hidden-blur: 8px;
+		--media-hidden-offset: calc(var(--media-spacing) * 1);
+		--media-hidden-icon-scale: 0;
+		--media-hidden-indicator-scale: 0.9;
+		--media-hidden-indicator-offset: -25%;
+		--media-hidden-playback-scale: 0.85;
+		--media-hidden-popup-scale: 0.95;
+		--media-hidden-popup-blur: 4px;
+		--media-hidden-preview-scale: 0.8;
+		--media-hidden-preview-offset: calc(var(--media-spacing) * 2);
+		--media-hidden-seek-offset: 60%;
+		--media-menu-item-radius: calc(var(--media-spacing) * 2);
+		--media-popover-boundary-offset: calc(var(--media-spacing) * 3);
+		--media-popover-side-offset: calc(var(--media-spacing) * 3);
+		--media-popup-radius: calc(var(--media-spacing) * 3);
+		--media-popup-translate-distance: calc(var(--media-spacing) * 2);
+		--media-tooltip-boundary-offset: var(--media-popover-boundary-offset);
+		--media-tooltip-side-offset: var(--media-popover-side-offset);
+		--media-dialog-radius: calc(var(--media-spacing) * 7);
+		--media-dialog-width: calc(100% - var(--media-spacing) * 6);
+		--media-dialog-max-width: calc(var(--media-spacing) * 72);
+		--media-slider-preview-label-offset: calc(var(--media-spacing) * 10.5);
+		--media-video-border-radius: var(--media-border-radius, 28px);
+		--media-scale: 1;
+		--media-scrollbar-thumb-color: oklch(from currentColor l c h / 0.3);
+		--media-spacing: calc(var(--media-scale-unit, 16px) * var(--media-scale) / 4);
+		scrollbar-color: var(--media-scrollbar-thumb-color) transparent;
+		scrollbar-width: thin;
+	}
+
+	.media-skin::-webkit-scrollbar-thumb {
+		background: var(--media-scrollbar-thumb-color);
+		border-radius: 9999px;
+	}
+
+	.media-skin:fullscreen {
+		--media-object-fit: contain;
+		--media-video-border-radius: 0;
+	}
+
+	@media (width >= 1280px) {
+		.media-skin:fullscreen {
+			--media-scale: 1.25;
+		}
+	}
+
+	@media (width >= 1536px) {
+		.media-skin:fullscreen {
+			--media-scale: 1.5;
+		}
+	}
+
+	@media (width >= 1920px) {
+		.media-skin:fullscreen {
+			--media-scale: 1.75;
+		}
+	}
+
+	.media-skin[data-theme='minimal'] {
+		--media-control-corner-shape: squircle;
+		--media-control-radius: calc(var(--media-spacing) * 2);
+		--media-control-size: calc(var(--media-spacing) * 9.5);
+		--media-controls-radius: calc(var(--media-spacing) * 3);
+		--media-popover: oklch(0% 0 0 / 0.5);
+		--media-border: oklch(100% 0 0 / 0.1);
+		--media-shadow-surface: 0 1px 2px oklch(0% 0 0 / 0.2);
+		--media-shadow-thumb: 0 0 0 1px #00000026, 0 1px 3px 0 #00000026, 0 1px 2px -1px #00000026;
+		--media-text-shadow-dialog: 0 1px 0 #00000080;
+		--media-backdrop-filter-dialog: blur(16px) saturate(120%);
+		--media-shadow-tooltip:
+			0 0 0 1px var(--media-border), 0 4px 6px -1px oklch(0% 0 0 / 0.2), 0 2px 4px -2px oklch(0% 0 0 / 0.2);
+		--media-duration-dialog: var(--media-duration);
+		--media-duration-indicator: 0.4s;
+		--media-hidden-offset: 100%;
+		--media-hidden-indicator-offset: -100%;
+		--media-menu-item-radius: calc(var(--media-spacing) * 1.5);
+		--media-popover-boundary-offset: calc(var(--media-spacing) * 2);
+		--media-popover-side-offset: calc(var(--media-spacing) * 5);
+		--media-popup-radius: calc(var(--media-spacing) * 2.5);
+		--media-popup-translate-distance: calc(var(--media-spacing) * 2);
+		--media-dialog-width: 100%;
+		--media-dialog-max-width: calc(var(--media-spacing) * 64);
+		--media-slider-preview-label-offset: calc(var(--media-spacing) * 5);
+		--media-video-border-radius: var(--media-border-radius, 12px);
+	}
+
+	.media-skin:is([data-preset='video'], [data-preset='live-video']) {
+		--media-frame-border: var(--media-border-color, light-dark(#0000001a, #ffffff26));
+		--media-controls-gradient: linear-gradient(
+			to top in oklab,
+			oklch(from var(--media-backdrop) l c h / 0.5),
+			oklch(from var(--media-backdrop) l c h / 0.3) 25%,
+			transparent
+		);
+		--media-caption-controls-y: calc(var(--media-spacing) * -14);
+		--media-slider-preview-offset: calc(var(--media-spacing) * 9);
+		--media-thumbnail-gradient: linear-gradient(
+			to top,
+			oklch(from var(--media-backdrop) l c h / 0.5),
+			oklch(from var(--media-backdrop) l c h / 0.1),
+			transparent
+		);
+	}
+
+	.media-skin:is([data-preset='video'], [data-preset='live-video'])[data-theme='minimal'] {
+		--media-frame-border: var(--media-border-color, light-dark(#00000026, #ffffff26));
+		--media-controls-gradient: linear-gradient(
+			to top in oklab,
+			oklch(from var(--media-backdrop) l c h / 0.7),
+			oklch(from var(--media-backdrop) l c h / 0.5) calc(var(--media-spacing) * 30),
+			transparent
+		);
+		--media-indicator-gradient: linear-gradient(
+			to bottom,
+			oklch(from var(--media-backdrop) l c h / 0.35),
+			oklch(from var(--media-backdrop) l c h / 0.2) calc(var(--media-spacing) * 12),
+			transparent
+		);
+		--media-caption-controls-y: calc(var(--media-spacing) * -18);
+		--media-slider-preview-offset: calc(var(--media-spacing) * 11);
+	}
+
+	.media-skin:is([data-preset='audio'], [data-preset='live-audio']) {
+		--media-background: light-dark(oklch(100% 0 0), oklch(0% 0 0));
+		--media-foreground: light-dark(oklch(0% 0 0), oklch(100% 0 0));
+		--media-controls: light-dark(oklch(100% 0 0 / 0.5), oklch(0% 0 0 / 0.4));
+		--media-controls-foreground: var(--media-foreground);
+		--media-popover: var(--media-controls);
+		--media-popover-foreground: var(--media-foreground);
+		--media-surface-border: oklch(0% 0 0 / 0.05);
+		--media-primary: var(--media-accent-color, var(--media-foreground));
+		--media-primary-foreground: var(--media-accent-text-color, contrast-color(var(--media-primary)));
+		--media-border: light-dark(oklch(0% 0 0 / 0.1), oklch(100% 0 0 / 0.1));
+		--media-ring: var(--media-foreground);
+		--media-default-accent-color: light-dark(oklch(0% 0 0), oklch(100% 0 0));
+		--media-internal-accent-text-fallback: light-dark(oklch(100% 0 0), oklch(0% 0 0));
+		--media-popover-boundary-offset: calc(var(--media-spacing) * 2);
+		--media-popover-side-offset: calc(var(--media-spacing) * 3);
+		--media-slider-preview-label-offset: calc(var(--media-spacing) * 10);
+	}
+
+	.media-skin:is([data-preset='audio'], [data-preset='live-audio'])[data-theme='minimal'] {
+		--media-controls: var(--media-background);
+		--media-popover: var(--media-background);
+		--media-controls-radius: calc(var(--media-spacing) * 3.5);
+		--media-popover-boundary-offset: calc(var(--media-spacing) * 3);
+	}
+
+	@media (prefers-reduced-transparency: reduce), (prefers-contrast: more) {
+		.media-skin:is([data-preset='audio'], [data-preset='live-audio']) {
+			--media-controls: var(--media-background);
+			--media-surface-border: light-dark(oklch(0% 0 0 / 0.05), #0000);
+		}
+	}
+}
+
+@layer base.preferences {
+	@media (pointer: fine) and (prefers-reduced-motion: no-preference) {
+		.media-skin:not([data-controls-visible]) {
+			--media-duration-controls: 0.3s;
+		}
+	}
+
+	@media (pointer: coarse) and (prefers-reduced-motion: no-preference) {
+		.media-skin:not([data-controls-visible]) {
+			--media-duration-controls: 0.15s;
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.media-skin {
+			--media-duration-fast: var(--media-duration-instant);
+			--media-duration: var(--media-duration-instant);
+			--media-duration-slow: var(--media-duration-instant);
+			--media-duration-slower: var(--media-duration-instant);
+			--media-duration-controls: var(--media-duration-instant);
+			--media-duration-dialog: var(--media-duration-instant);
+			--media-duration-indicator: var(--media-duration-instant);
+			--media-duration-menu: 0s;
+			--media-duration-slider: 0s;
+			--media-delay-dialog: 0s;
+			--media-hidden-scale: 1;
+			--media-hidden-blur: 0px;
+			--media-hidden-offset: 0px;
+			--media-hidden-icon-scale: 1;
+			--media-hidden-indicator-scale: 1;
+			--media-hidden-indicator-offset: 0px;
+			--media-hidden-playback-scale: 1;
+			--media-hidden-popup-scale: 1;
+			--media-hidden-popup-blur: 0px;
+			--media-hidden-preview-scale: 1;
+			--media-hidden-preview-offset: 0px;
+			--media-hidden-seek-offset: 0px;
+			--media-popup-translate-distance: 0px;
+			--media-spinner-animation: none;
+			--media-icon-airplay-fill-animation: none;
+			--media-icon-airplay-triangle-animation: none;
+		}
+	}
+
+	@media (prefers-reduced-transparency: reduce), (prefers-contrast: more) {
+		.media-skin {
+			--media-popover: var(--media-background);
+			--media-scrollbar-thumb-color: oklch(from currentColor l c h / 0.8);
+			--media-backdrop-filter-surface: none;
+			--media-backdrop-filter-indicator: none;
+			--media-backdrop-filter-dialog: none;
+			--media-shadow-surface-inset: inset 0 1px 0 0 #ffffff40, inset 0 0 0 1px #ffffff20;
+			scrollbar-width: auto;
+		}
+	}
+
+	@media (forced-colors: active) {
+		.media-skin {
+			--media-border: CanvasText;
+			--media-frame-border: CanvasText;
+			--media-popover: Canvas;
+			--media-popover-foreground: CanvasText;
+			--media-ring: CanvasText;
+			--media-shadow-surface-inset: inset 0 1px 0 0 CanvasText, inset 0 0 0 1px CanvasText;
+		}
+	}
+}
+
+@property --media-slider-fill {
+	syntax: '<percentage>';
+	inherits: true;
+	initial-value: 0%;
+}
+
+@property --media-slider-buffer {
+	syntax: '<percentage>';
+	inherits: true;
+	initial-value: 0%;
+}

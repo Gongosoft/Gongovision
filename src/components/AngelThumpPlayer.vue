@@ -73,51 +73,53 @@ watchEffect(() => {
 		<template #media>
 			<hlsjs-video
 				ref="stream"
-				:config.prop="{
-					hlsJs: {
-						enableWorker: true,
-						lowLatencyMode: true,
-						startLevel: -1
+				:source.prop="{
+					src,
+					engine: {
+						hlsJs: {
+							enableWorker: true,
+							lowLatencyMode: true,
+							startLevel: -1
+						}
 					}
 				}"
-				:src
 				stream-type="live"
 				playsinline
 				autoplay />
 		</template>
 		<template #poster>
-			<img :src="`https://thumbnail.angelthump.com/thumbnails/${SPHYNX}.jpeg`" />
+			<img class="media-poster-image" :src="`https://thumbnail.angelthump.com/thumbnails/${SPHYNX}.jpeg`" />
 		</template>
 		<template #settings>
-			<media-menu-item commandfor="settings-region-menu" class="media-menu__item media-menu__item--submenu">
-				<media-icon name="switches" class="media-icon"></media-icon>
+			<media-menu-item commandfor="settings-region-content" class="media-menu-trigger-item">
+				<media-icon name="switches" class="media-menu-trigger-item-icon"></media-icon>
 				CDN
-				<span class="media-menu__hint">
-					<span class="media-menu__hint-label">{{ regionLabel }}</span>
-					<media-icon name="chevron" class="media-icon media-menu__chevron"></media-icon>
+				<span class="media-menu-hint">
+					<span class="media-menu-hint-label">{{ regionLabel }}</span>
+					<media-icon name="chevron" class="media-menu-forward-chevron"></media-icon>
 				</span>
 			</media-menu-item>
 		</template>
 		<template #settings-menu>
-			<media-menu id="settings-region-menu" class="media-menu__panel">
-				<media-menu-back class="media-menu__back" label="Region">
-					<media-icon name="chevron" class="media-icon media-menu__chevron media-icon--flipped"></media-icon>
+			<media-menu-content id="settings-region-content" class="media-menu-content">
+				<media-menu-item class="media-menu-back-item">
+					<media-icon name="chevron" class="media-menu-back-chevron"></media-icon>
 					Region
-				</media-menu-back>
-				<div class="media-menu__separator"></div>
-				<media-menu-radio-group ref="regionGroup" :value="region" class="media-menu__group">
+				</media-menu-item>
+				<media-menu-separator class="media-menu-separator"></media-menu-separator>
+				<media-menu-radio-group ref="regionGroup" :value="region" class="media-menu-radio-group">
 					<media-menu-radio-item
 						v-for="(config, id) in REGIONS"
 						:key="id"
 						:value="id"
-						class="media-menu__item">
+						class="media-menu-radio-item">
 						<span data-part="label">{{ config.label }}</span>
-						<media-menu-item-indicator force-mount class="media-menu__indicator">
-							<media-icon name="check" class="media-icon"></media-icon>
+						<media-menu-item-indicator force-mount class="media-menu-item-indicator">
+							<media-icon name="check" class="media-menu-radio-item-icon"></media-icon>
 						</media-menu-item-indicator>
 					</media-menu-radio-item>
 				</media-menu-radio-group>
-			</media-menu>
+			</media-menu-content>
 		</template>
 	</VideoJS>
 </template>

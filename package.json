@@ -33,7 +33,7 @@
 		"@types/nodemailer": "^8.0.1",
 		"@unhead/vue": "^3.4.0",
 		"@videojs/hlsjs-video": "10.0.0-rc.2",
-		"@videojs/html": "10.0.0-rc.2",
+		"@videojs/html": "10.0.0-rc.4",
 		"@vueuse/core": "^14.3.0",
 		"@vueuse/router": "^14.4.0",
 		"agents": "^0.22.0",

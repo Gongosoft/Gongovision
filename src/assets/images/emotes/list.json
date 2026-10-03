@@ -2489,6 +2489,24 @@
 			"id": "01GVE4NE8G0003PPXB3RQEFKE5",
 			"url": "https://cdn.7tv.app/emote/01GVE4NE8G0003PPXB3RQEFKE5/4x.avif",
 			"ext": ".avif"
+		},
+		{
+			"name": "Buupy",
+			"id": "01JDQ9W9CP2GQR49C6W6C7KZA8",
+			"url": "https://cdn.7tv.app/emote/01JDQ9W9CP2GQR49C6W6C7KZA8/4x.avif",
+			"ext": ".avif"
+		},
+		{
+			"name": "SmokeTime",
+			"id": "01GHHFF9K00006W5APXPT67R56",
+			"url": "https://cdn.7tv.app/emote/01GHHFF9K00006W5APXPT67R56/4x.avif",
+			"ext": ".avif"
+		},
+		{
+			"name": "blueStu",
+			"id": "01M3T4S15FDKENCDKZRDE08HF4",
+			"url": "https://cdn.7tv.app/emote/01M3T4S15FDKENCDKZRDE08HF4/4x.avif",
+			"ext": ".avif"
 		}
 	],
 	"bttv": [
@@ -4464,6 +4482,30 @@
 			"name": "KenPogstick",
 			"id": "673d8873fea9e639e0e12b94",
 			"url": "https://cdn.betterttv.net/emote/673d8873fea9e639e0e12b94/3x.webp",
+			"ext": ".webp"
+		},
+		{
+			"name": "pogDoc",
+			"id": "6abd80553d79ce1291402511",
+			"url": "https://cdn.betterttv.net/emote/6abd80553d79ce1291402511/3x",
+			"ext": ".webp"
+		},
+		{
+			"name": "docDis",
+			"id": "6abd80913d79ce1291402513",
+			"url": "https://cdn.betterttv.net/emote/6abd80913d79ce1291402513/3x",
+			"ext": ".webp"
+		},
+		{
+			"name": "Gunky",
+			"id": "68adf2e09528916151009dab",
+			"url": "https://cdn.betterttv.net/emote/68adf2e09528916151009dab/3x",
+			"ext": ".webp"
+		},
+		{
+			"name": "Soopy",
+			"id": "68b0e26efbe35334954fe3f6",
+			"url": "https://cdn.betterttv.net/emote/68b0e26efbe35334954fe3f6/3x",
 			"ext": ".webp"
 		}
 	],

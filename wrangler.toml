@@ -41,7 +41,7 @@ bindings = [{ name = 'CALLOFTHEGONGO', class_name = 'Notifications' }]
 Notifications = { type = 'durable-object', storage = 'sqlite' }
 
 [[kv_namespaces]]
-binding = 'CONFIG'
+binding = 'KV'
 id = '4e0458fae76f460f88bee380c18be69d'
 
 [observability]

@@ -1,7 +1,9 @@
-import { env } from 'cloudflare:workers';
 import { writeXmltv } from '@iptv/xmltv';
+import { env, waitUntil } from 'cloudflare:workers';
 import type { Xmltv, XmltvProgramme } from '@iptv/xmltv';
 import type { AngelThumpStreamResponse, AngelThumpVigorResponse } from '@/types/angelthump.d.ts';
+
+const TOKEN_CACHE_KEY = `${ANGELTHUMP.CHANNEL}-token`;
 
 export async function checkLiveStatus(): Promise<boolean> {
 	try {
@@ -16,22 +18,37 @@ export async function checkLiveStatus(): Promise<boolean> {
 	}
 }
 
+async function cacheToken(token: AngelThumpVigorResponse): Promise<void> {
+	const cached = await env.KV.get<AngelThumpVigorResponse>(TOKEN_CACHE_KEY, 'json');
+	if (cached?.token !== token.token) {
+		await env.KV.put(TOKEN_CACHE_KEY, JSON.stringify(token));
+	}
+}
+
 export async function getToken(): Promise<AngelThumpVigorResponse | null> {
-	const res = await fetch(`${ANGELTHUMP.VIGOR}/${ANGELTHUMP.CHANNEL}/token`, {
-		method: 'POST',
-		headers: { 'Content-Type': 'application/json', 'Identifier': ANGELTHUMP.IDENTIFIER }
-	});
+	try {
+		const res = await fetch(`${ANGELTHUMP.VIGOR}/${ANGELTHUMP.CHANNEL}/token`, {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json', 'Identifier': ANGELTHUMP.IDENTIFIER },
+			signal: AbortSignal.timeout(3000)
+		});
 
-	if (!res.ok) {
-		return null;
+		if (res.ok) {
+			const data = await res.json<AngelThumpVigorResponse>();
+			if (data.token) {
+				waitUntil(cacheToken(data));
+				return data;
+			}
+		}
+	} catch {
+		/*_*/
 	}
 
-	const data = await res.json<AngelThumpVigorResponse>();
-	if (!data.token) {
+	try {
+		return await env.KV.get<AngelThumpVigorResponse>(TOKEN_CACHE_KEY, 'json');
+	} catch {
 		return null;
 	}
-
-	return data;
 }
 
 export function getHLS(token: string): string {
@@ -76,7 +93,7 @@ export async function getM3U8(request: Request, region?: string | null): Promise
 
 async function getStreamInfo(): Promise<Response> {
 	const cacheKey = `${ANGELTHUMP.CHANNEL}-stream-info`;
-	const cached = await env.CONFIG.get(cacheKey, 'json');
+	const cached = await env.KV.get(cacheKey, 'json');
 	const parsed = cached as AngelThumpStreamResponse | null;
 	if (parsed?.createdAt) {
 		return Response.json(parsed);
@@ -92,7 +109,7 @@ async function getStreamInfo(): Promise<Response> {
 			return new Response(null, { status: 502 });
 		}
 
-		await env.CONFIG.put(cacheKey, JSON.stringify(stream), { expirationTtl: 300 });
+		await env.KV.put(cacheKey, JSON.stringify(stream), { expirationTtl: 300 });
 		return Response.json(stream);
 	} catch {
 		return new Response(null, { status: 502 });

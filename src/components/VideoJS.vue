@@ -5,6 +5,8 @@ import '@videojs/html/ui/menu-radio-group';
 import '@/components/videojs/video/skin.ts';
 import { useTemplateRef } from 'vue';
 
+const { showPlaybackRate = true } = defineProps<{ showPlaybackRate?: boolean }>();
+
 const currentTime = useTemplateRef<HTMLElement>('currentTime');
 
 defineExpose({ currentTime });
@@ -191,7 +193,7 @@ const vSkinTemplates = {
 									<media-menu-item
 										commandfor="vjs-tLacI0er-0-content"
 										class="media-menu-trigger-item">
-										<media-icon name="switches" class="media-menu-trigger-item-icon"> </media-icon>
+										<media-icon name="quality" class="media-menu-trigger-item-icon"> </media-icon>
 										<media-text token="menu.quality">Quality</media-text>
 										<span class="media-menu-hint">
 											<span data-part="value" class="media-menu-hint-label"> </span>
@@ -254,7 +256,8 @@ const vSkinTemplates = {
 									</media-menu-content>
 									<media-menu-item
 										commandfor="vjs-H32r9IqW-0-content"
-										class="media-menu-trigger-item">
+										class="media-menu-trigger-item"
+										:hidden="!showPlaybackRate">
 										<media-icon name="speed" class="media-menu-trigger-item-icon"> </media-icon>
 										<media-text token="menu.speed">Speed</media-text>
 										<span class="media-menu-hint">

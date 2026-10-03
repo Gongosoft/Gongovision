@@ -36,6 +36,7 @@ import '@videojs/html/ui/time-slider-chapter-title';
 import '@videojs/html/ui/slider-value';
 import '@videojs/html/ui/captions-button';
 import '@videojs/html/ui/menu';
+import '@videojs/html/ui/menu-checkbox-item';
 import '@videojs/html/ui/menu-content';
 import '@videojs/html/ui/menu-item';
 import '@videojs/html/ui/menu-separator';
@@ -75,6 +76,7 @@ import {
 	pipEnterIcon,
 	pipExitIcon,
 	playIcon,
+	qualityIcon,
 	registerIcons,
 	restartIcon,
 	speechIcon,
@@ -107,6 +109,7 @@ registerIcons('default', {
 	'speed': speedIcon,
 	'spinner': spinnerIcon,
 	'switches': switchesIcon,
+	'quality': qualityIcon,
 	'volume-high': volumeHighIcon,
 	'volume-low': volumeLowIcon,
 	'volume-off': volumeOffIcon

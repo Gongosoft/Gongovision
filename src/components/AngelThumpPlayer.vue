@@ -17,6 +17,7 @@ type Region = keyof typeof REGIONS;
 
 const { info, uptime } = useStreamInfo();
 const stream = useTemplateRef<HTMLVideoElement>('stream');
+const lowLatency = useLocalStorage('stream:lowLatency', true);
 const regionGroup = useTemplateRef<HTMLElement>('regionGroup');
 const region = useLocalStorage<Region>('stream:region', 'auto');
 const regionLabel = computed(() => REGIONS[get(region) ?? 'auto'].label);
@@ -26,6 +27,21 @@ const src = computed(() => {
 	const selected = get(region) ?? 'auto';
 	return selected === 'auto' ? '/stream/m3u8' : `/stream/m3u8?region=${selected}`;
 });
+
+const source = computed(() => ({
+	src: src.value,
+	engine: {
+		hlsJs: {
+			enableWorker: true,
+			startLevel: -1,
+			lowLatencyMode: get(lowLatency)
+		}
+	}
+}));
+
+function setLowLatency(event: CustomEvent<{ checked: boolean }>): void {
+	lowLatency.value = event.detail.checked;
+}
 
 useEventListener(stream, 'canplay', async () => {
 	try {
@@ -37,8 +53,8 @@ useEventListener(stream, 'canplay', async () => {
 
 useEventListener(stream, 'error', (e) => console.error('video.js', e.message));
 
-useEventListener(regionGroup, 'value-change', (e) => {
-	const value = (e as CustomEvent<{ value: string }>).detail?.value;
+useEventListener(regionGroup, 'value-change', (event: CustomEvent<{ value: string }>) => {
+	const { value } = event.detail;
 	if (value in REGIONS) {
 		region.value = value as Region;
 	}
@@ -69,28 +85,24 @@ watchEffect(() => {
 </script>
 
 <template>
-	<VideoJS ref="videojs">
+	<VideoJS ref="videojs" :show-playback-rate="false">
 		<template #media>
-			<hlsjs-video
-				ref="stream"
-				:source.prop="{
-					src,
-					engine: {
-						hlsJs: {
-							enableWorker: true,
-							lowLatencyMode: true,
-							startLevel: -1
-						}
-					}
-				}"
-				stream-type="live"
-				playsinline
-				autoplay />
+			<hlsjs-video ref="stream" :source.prop="source" stream-type="live" playsinline autoplay />
 		</template>
 		<template #poster>
 			<img class="media-poster-image" :src="`https://thumbnail.angelthump.com/thumbnails/${SPHYNX}.jpeg`" />
 		</template>
 		<template #settings>
+			<media-menu-checkbox-item
+				:checked.prop="lowLatency"
+				class="media-menu-radio-item"
+				@checked-change="setLowLatency">
+				<media-icon name="speed" class="media-menu-radio-item-icon"></media-icon>
+				<span>Low Latency</span>
+				<media-menu-item-indicator force-mount class="media-menu-item-indicator">
+					<media-icon name="check" class="media-menu-radio-item-icon"></media-icon>
+				</media-menu-item-indicator>
+			</media-menu-checkbox-item>
 			<media-menu-item commandfor="settings-region-content" class="media-menu-trigger-item">
 				<media-icon name="switches" class="media-menu-trigger-item-icon"></media-icon>
 				CDN

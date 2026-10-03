@@ -72,6 +72,9 @@ export default defineConfig({
 				type: 'module'
 			},
 			filename: 'sw.ts',
+			injectManifest: {
+				injectionPoint: undefined
+			},
 			injectRegister: false,
 			manifest: {
 				name: 'Gongo',
@@ -86,11 +89,7 @@ export default defineConfig({
 			},
 			registerType: 'autoUpdate',
 			srcDir: 'src',
-			strategies: 'injectManifest',
-			workbox: {
-				cleanupOutdatedCaches: true,
-				globPatterns: ['**/*.{js,css,html,png,avif,svg,woff2,opus,webp,gif}']
-			}
+			strategies: 'injectManifest'
 		}),
 		unfonts({
 			inlineFontFace: true,

@@ -1,26 +1,29 @@
 /// <reference lib="webworker" />
 
-import { clientsClaim } from 'workbox-core';
-import { NetworkFirst } from 'workbox-strategies';
-import { precacheAndRoute } from 'workbox-precaching';
-import { NavigationRoute, registerRoute } from 'workbox-routing';
-import type { PrecacheEntry } from 'workbox-precaching';
-
-declare const self: ServiceWorkerGlobalScope & {
-	__WB_MANIFEST: (PrecacheEntry | string)[];
-};
+declare const self: ServiceWorkerGlobalScope;
 
 interface ExtendedNotificationOptions extends NotificationOptions {
 	image?: string;
 }
 
-clientsClaim();
-
-registerRoute(new NavigationRoute(new NetworkFirst({ networkTimeoutSeconds: 8 })));
-precacheAndRoute(self.__WB_MANIFEST);
-
 self.addEventListener('install', () => {
 	void self.skipWaiting();
+});
+
+self.addEventListener('activate', (event: ExtendableEvent) => {
+	event.waitUntil(
+		(async (): Promise<void> => {
+			try {
+				const cacheNames = await caches.keys();
+				for (const cacheName of cacheNames) {
+					await caches.delete(cacheName);
+				}
+			} catch {
+				/*_*/
+			}
+			await self.clients.claim();
+		})()
+	);
 });
 
 self.addEventListener('push', (event: PushEvent) => {

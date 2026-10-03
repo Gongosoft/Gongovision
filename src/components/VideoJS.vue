@@ -4,15 +4,18 @@ import '@videojs/html/video/player';
 import '@videojs/html/ui/menu-radio-group';
 import '@/components/videojs/video/skin.ts';
 import { useTemplateRef } from 'vue';
+import { useVolumeWheel } from '@/composables/useVolumeWheel.ts';
 import { usePlayerSettings } from '@/composables/usePlayerSettings.ts';
 import type { VideoPlayerElement } from '@videojs/html/video';
 
 const { showPlaybackRate = true } = defineProps<{ showPlaybackRate?: boolean }>();
 
+const container = useTemplateRef<HTMLElement>('container');
 const player = useTemplateRef<VideoPlayerElement>('player');
 const currentTime = useTemplateRef<HTMLElement>('currentTime');
 
 usePlayerSettings(player);
+useVolumeWheel(container, player);
 
 defineExpose({ currentTime });
 
@@ -30,6 +33,7 @@ const vSkinTemplates = {
 <template>
 	<video-player ref="player">
 		<media-container
+			ref="container"
 			v-skin-templates
 			class="media-skin media-container video-skin"
 			data-theme="default"

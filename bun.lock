@@ -13,8 +13,8 @@
         "@twurple/auth": "^8.1.4",
         "@types/nodemailer": "^8.0.1",
         "@unhead/vue": "^3.4.0",
-        "@videojs/hlsjs-video": "10.0.0-rc.2",
-        "@videojs/html": "10.0.0-rc.2",
+        "@videojs/hlsjs-video": "10.0.1",
+        "@videojs/html": "10.0.1",
         "@vueuse/core": "^14.3.0",
         "@vueuse/router": "^14.4.0",
         "agents": "^0.22.0",
@@ -47,7 +47,6 @@
         "@types/howler": "^2.2.13",
         "@types/konami-code-js": "^0.8.3",
         "@types/validator": "^13.15.10",
-        "@types/video.js": "^7.3.58",
         "@types/web-push": "^3.6.4",
         "@vite-pwa/assets-generator": "^1.0.2",
         "@vitejs/plugin-vue": "^6.0.8",
@@ -858,8 +857,6 @@
 
     "@types/validator": ["@types/validator@13.15.10", "", {}, "sha512-T8L6i7wCuyoK8A/ZeLYt1+q0ty3Zb9+qbSSvrIVitzT3YjZqkTZ40IbRsPanlB4h1QB3JVL1SYCdR6ngtFYcuA=="],
 
-    "@types/video.js": ["@types/video.js@7.3.58", "", {}, "sha512-1CQjuSrgbv1/dhmcfQ83eVyYbvGyqhTvb2Opxr0QCV+iJ4J6/J+XWQ3Om59WiwCd1MN3rDUHasx5XRrpUtewYQ=="],
-
     "@types/web-bluetooth": ["@types/web-bluetooth@0.0.21", "", {}, "sha512-oIQLCGWtcFZy2JW77j9k8nHzAOpqMHLQejDA48XXMWH6tjCQHz5RCFz1bzsmROyL6PUm+LLnUiI4BCn221inxA=="],
 
     "@types/web-push": ["@types/web-push@3.6.4", "", { "dependencies": { "@types/node": "*" } }, "sha512-GnJmSr40H3RAnj0s34FNTcJi1hmWFV5KXugE0mYWnYhgTAHLJ/dJKAwDmvPJYMke0RplY2XE9LnM4hqSqKIjhQ=="],
@@ -870,23 +867,23 @@
 
     "@unhead/vue": ["@unhead/vue@3.4.0", "", { "dependencies": { "@unhead/bundler": "3.4.0", "hookable": "^6.1.1", "unhead": "3.4.0", "unplugin": "^3.3.0" }, "peerDependencies": { "vite": ">=6.4.2", "vue": ">=3.5.18", "webpack": ">=5.0.0" }, "optionalPeers": ["vite", "webpack"] }, "sha512-fSnDS9d++bqR4t1z6+zFN7bQB5F0+5nwvE4yHW7BGRfEmssCP4fel0GprooUgoLkzx+FcAWMwVIakyaeErSRBA=="],
 
-    "@videojs/core": ["@videojs/core@10.0.0-rc.2", "", { "dependencies": { "@videojs/media": "10.0.0-rc.2", "@videojs/store": "10.0.0-rc.2", "@videojs/utils": "10.0.0-rc.2" } }, "sha512-yr6DA5CXFIrQ22xM5k0fEEoX64znex0NvMO5mcagkg8s5BaD0zOGuhCOGI0IHs+LFx29HZWZeY9Cf3BHpL5m6A=="],
+    "@videojs/core": ["@videojs/core@10.0.1", "", { "dependencies": { "@videojs/media": "10.0.1", "@videojs/store": "10.0.1", "@videojs/utils": "10.0.1" } }, "sha512-N+f41wgFcmpe0QUhO0Q9sFHpMxKvr38ojkX5FlxAo3LKDAo2UrG2KIeklte+1VVae3oaJfP6J/KYtrRRObRxxw=="],
 
-    "@videojs/element": ["@videojs/element@10.0.0-rc.2", "", { "dependencies": { "@lit/context": "^1.1.0" } }, "sha512-uHvwK/Hsx1+NN8m8Sa6zYHH4aiyvnGJM4iZImhDKGHrE9pe3gWbViKHQqxpHWGVXOIgG+SJmcfvM0veqwBU04Q=="],
+    "@videojs/element": ["@videojs/element@10.0.1", "", { "dependencies": { "@lit/context": "^1.1.0" } }, "sha512-s42yzkN3PH3573ZVcFRLNAXCbQTraXX9X/nUUVjx4NH3n36VGTmFiqJ3jrGhU+IWg4euasKyuVnwSp6qp4C1lg=="],
 
-    "@videojs/hlsjs-video": ["@videojs/hlsjs-video@10.0.0-rc.2", "", { "dependencies": { "@videojs/media": "10.0.0-rc.2", "@videojs/native-hls-video": "10.0.0-rc.2", "@videojs/utils": "10.0.0-rc.2", "hls.js": "1.6.7" } }, "sha512-JK5HhvTYASrhrSh7ye+ZFT+vyVAMOQt74M5eMBEZl3S04KdPWa31cGclCuDMbrWxkVlehtjB0A1Xc0XqJMiX7A=="],
+    "@videojs/hlsjs-video": ["@videojs/hlsjs-video@10.0.1", "", { "dependencies": { "@videojs/media": "10.0.1", "@videojs/native-hls-video": "10.0.1", "@videojs/utils": "10.0.1", "hls.js": "1.6.7" } }, "sha512-7Om99Vxsh7JYAVf04QO4SKgkIE2jrZ8c3KS5BtdQRqZaFYM5uWU9vubw3vwerI5nsrosg1KXcuzS5TGEUW4ToQ=="],
 
-    "@videojs/html": ["@videojs/html@10.0.0-rc.2", "", { "dependencies": { "@videojs/core": "10.0.0-rc.2", "@videojs/element": "10.0.0-rc.2", "@videojs/media": "10.0.0-rc.2", "@videojs/native-hls-video": "10.0.0-rc.2", "@videojs/spf": "10.0.0-rc.2", "@videojs/store": "10.0.0-rc.2", "@videojs/utils": "10.0.0-rc.2" }, "peerDependencies": { "@videojs/cloudflare-video": "10.0.0-rc.2", "@videojs/dash-video": "10.0.0-rc.2", "@videojs/google-cast": "10.0.0-rc.2", "@videojs/hlsjs-video": "10.0.0-rc.2", "@videojs/mux-audio": "10.0.0-rc.2", "@videojs/mux-data": "10.0.0-rc.2", "@videojs/mux-video": "10.0.0-rc.2", "@videojs/shaka-video": "10.0.0-rc.2", "@videojs/spotify-audio": "10.0.0-rc.2", "@videojs/tiktok-video": "10.0.0-rc.2", "@videojs/twitch-video": "10.0.0-rc.2", "@videojs/vimeo-video": "10.0.0-rc.2", "@videojs/wistia-video": "10.0.0-rc.2", "@videojs/youtube-video": "10.0.0-rc.2" }, "optionalPeers": ["@videojs/cloudflare-video", "@videojs/dash-video", "@videojs/google-cast", "@videojs/hlsjs-video", "@videojs/mux-audio", "@videojs/mux-data", "@videojs/mux-video", "@videojs/shaka-video", "@videojs/spotify-audio", "@videojs/tiktok-video", "@videojs/twitch-video", "@videojs/vimeo-video", "@videojs/wistia-video", "@videojs/youtube-video"] }, "sha512-ZVKg4OClXgSEKaCWzBgb5hOPMVAwj1/oqnlowmsCULmj1ePCcyQm27QkZMWUaXRqc/LbLYzIrwtIN3OMWy5oNw=="],
+    "@videojs/html": ["@videojs/html@10.0.1", "", { "dependencies": { "@videojs/core": "10.0.1", "@videojs/element": "10.0.1", "@videojs/media": "10.0.1", "@videojs/native-hls-video": "10.0.1", "@videojs/spf": "10.0.1", "@videojs/store": "10.0.1", "@videojs/utils": "10.0.1" }, "peerDependencies": { "@videojs/cloudflare-video": "10.0.1", "@videojs/dash-video": "10.0.1", "@videojs/google-cast": "10.0.1", "@videojs/hlsjs-video": "10.0.1", "@videojs/mux-audio": "10.0.1", "@videojs/mux-data": "10.0.1", "@videojs/mux-video": "10.0.1", "@videojs/shaka-video": "10.0.1", "@videojs/spotify-audio": "10.0.1", "@videojs/tiktok-video": "10.0.1", "@videojs/twitch-video": "10.0.1", "@videojs/vimeo-video": "10.0.1", "@videojs/wistia-video": "10.0.1", "@videojs/youtube-video": "10.0.1" }, "optionalPeers": ["@videojs/cloudflare-video", "@videojs/dash-video", "@videojs/google-cast", "@videojs/hlsjs-video", "@videojs/mux-audio", "@videojs/mux-data", "@videojs/mux-video", "@videojs/shaka-video", "@videojs/spotify-audio", "@videojs/tiktok-video", "@videojs/twitch-video", "@videojs/vimeo-video", "@videojs/wistia-video", "@videojs/youtube-video"] }, "sha512-QAkGefFJU/u+w7ZNod4XyQSOBQ3Ij/uPHTO/hfW+ALlIeDYEsYzplQtHoLzU+Fh4mzHFhKKJI2iEW4x15fxj9Q=="],
 
-    "@videojs/media": ["@videojs/media@10.0.0-rc.2", "", { "dependencies": { "@videojs/utils": "10.0.0-rc.2" } }, "sha512-hMZwCZQCtiPu7a1e2ZY/0ZXTqwPhy2T2VhqB+xQs7OgYx5LaCsVyjfSf7YNvIM8Fe4tTm7t/OJkehTAUrX7uSQ=="],
+    "@videojs/media": ["@videojs/media@10.0.1", "", { "dependencies": { "@videojs/utils": "10.0.1" } }, "sha512-hMC2aS/8PovwJBi8y2qShC/amYfH6SBce7SZAM54qzRq8hl4FwWGFeUMMmXp8x4agRxLuCSqGqZg/EoGH2I5mQ=="],
 
-    "@videojs/native-hls-video": ["@videojs/native-hls-video@10.0.0-rc.2", "", { "dependencies": { "@videojs/media": "10.0.0-rc.2", "@videojs/utils": "10.0.0-rc.2" } }, "sha512-euVa3CGPdAHa5xPxsEM6L3dz4aD9HzK3AsO+ede4x9bExJlEmWWQVLJQ+CpAQdbotoPMeVTiXI4/4Y3X2HuZag=="],
+    "@videojs/native-hls-video": ["@videojs/native-hls-video@10.0.1", "", { "dependencies": { "@videojs/media": "10.0.1", "@videojs/utils": "10.0.1" } }, "sha512-MElgeDaxOJUj+OjHV3++TuW8TTgipTuzlRkfFDMMbnutlPLkSlX3VKhXo5ZNPhhXkt47oBVx4RGnAQJLWzilPw=="],
 
-    "@videojs/spf": ["@videojs/spf@10.0.0-rc.2", "", { "dependencies": { "@videojs/media": "10.0.0-rc.2", "@videojs/utils": "10.0.0-rc.2", "signal-polyfill": "^0.2.2" } }, "sha512-CLi/67WE7uluWYc27MxUIiYMYfAQS3erZUzLcQcn0ycuxlOo0+buNl2TgVaitZD99RS1vx0shB1eL5YoAeFTPg=="],
+    "@videojs/spf": ["@videojs/spf@10.0.1", "", { "dependencies": { "@videojs/media": "10.0.1", "@videojs/utils": "10.0.1", "signal-polyfill": "^0.2.2" } }, "sha512-1HUTI1W++EKZuO3MaklFdEU/cEUhkJlKKuQx0Xi3VwjeHgVToAz7b1ySDH903KluPQy6cAGqXpro5Wt00y4DYA=="],
 
-    "@videojs/store": ["@videojs/store@10.0.0-rc.2", "", { "dependencies": { "@videojs/utils": "10.0.0-rc.2" }, "peerDependencies": { "@videojs/element": "10.0.0-rc.2", "react": "^18.0.0 || ^19.0.0" }, "optionalPeers": ["@videojs/element", "react"] }, "sha512-F4Rh8tWFhEODwxdssyk5ucXwEcxga2lR3dSTD0aP2gHPv2/hv5EXavsbICYXyWZnn2dDaHK+4uYJpAJGxv+xZQ=="],
+    "@videojs/store": ["@videojs/store@10.0.1", "", { "dependencies": { "@videojs/utils": "10.0.1", "react-compiler-runtime": "^1.0.0" }, "peerDependencies": { "@videojs/element": "10.0.1", "react": "^18.0.0 || ^19.0.0" }, "optionalPeers": ["@videojs/element", "react"] }, "sha512-BTkkTRHAU0XaZi+n3yWhtQJbe0BNjQLBd414u/s/nMZDz5bc1fp6b/voNbNriuSMd0Ro+ZmyzfPaMskiCa6GUQ=="],
 
-    "@videojs/utils": ["@videojs/utils@10.0.0-rc.2", "", {}, "sha512-4BKDIwxB6HWBp74nKBmP2ubOrPnCicC6CAaJBFRNQOrhFjOOy5wv74DV1ZKmNY4FFwaLxQH710+NEU5S3exGFg=="],
+    "@videojs/utils": ["@videojs/utils@10.0.1", "", {}, "sha512-S7WO9lPfyCz5YQYWtpE42JZTtJKUaiWaAZGAa+VLoBiFMfpoogCloSP4pjChTYcQ6sGcLlQJNxVKhM1RvI/Dig=="],
 
     "@vite-pwa/assets-generator": ["@vite-pwa/assets-generator@1.0.2", "", { "dependencies": { "cac": "^6.7.14", "colorette": "^2.0.20", "consola": "^3.4.2", "sharp": "^0.33.5", "sharp-ico": "^0.1.5", "unconfig": "^7.3.1" }, "bin": { "pwa-assets-generator": "bin/pwa-assets-generator.mjs" } }, "sha512-MCbrb508JZHqe7bUibmZj/lyojdhLRnfkmyXnkrCM2zVrjTgL89U8UEfInpKTvPeTnxsw2hmyZxnhsdNR6yhwg=="],
 
@@ -1771,6 +1768,8 @@
     "rc9": ["rc9@3.0.1", "", { "dependencies": { "defu": "^6.1.6", "destr": "^2.0.5" } }, "sha512-gMDyleLWVE+i6Sgtc0QbbY6pEKqYs97NGi6isHQPqYlLemPoO8dxQ3uGi0f4NiP98c+jMW6cG1Kx9dDwfvqARQ=="],
 
     "react": ["react@19.2.8", "", {}, "sha512-PWaYA1L/q9u2u7xYQi+Y3L3Yfnie7XyLeaJICV1MGD6LprsBxcAqGjYyr0eY3p+QdsA+x/Irkt4Qif8D63+Sbw=="],
+
+    "react-compiler-runtime": ["react-compiler-runtime@1.0.0", "", { "peerDependencies": { "react": "^17.0.0 || ^18.0.0 || ^19.0.0 || ^0.0.0-experimental" } }, "sha512-rRfjYv66HlG8896yPUDONgKzG5BxZD1nV9U6rkm+7VCuvQc903C4MjcoZR4zPw53IKSOX9wMQVpA1IAbRtzQ7w=="],
 
     "react-dom": ["react-dom@19.3.0", "", { "dependencies": { "scheduler": "^0.28.0" }, "peerDependencies": { "react": "^19.3.0" } }, "sha512-JDk8dgif51OjFoDE70+OT9ICyYr+69HlmihNwp1+Nsfbna3t5sIiCa9ZJktDmQ4/1b/rn26hIAR2uYXDMr5r0Q=="],
 

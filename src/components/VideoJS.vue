@@ -1,9 +1,8 @@
 <script setup lang="ts">
 import '@videojs/html/global.css';
-import '@videojs/html/shared.css';
 import '@videojs/html/video/player';
 import '@videojs/html/ui/menu-radio-group';
-import '@/components/videojs/skins/video/skin.ts';
+import '@/components/videojs/video/skin.ts';
 import { useTemplateRef } from 'vue';
 
 const currentTime = useTemplateRef<HTMLElement>('currentTime');
@@ -52,7 +51,7 @@ const vSkinTemplates = {
 				<media-controls-content class="video-controls video-controls-content">
 					<media-tooltip-group>
 						<media-controls-group class="video-controls-primary">
-							<media-play-button class="media-button media-play-button" id="vjs-2LlEBWp8-0-trigger">
+							<media-play-button class="media-button media-play-button" id="vjs-6EpYm0RN-0-trigger">
 								<media-icon name="restart" class="media-button-icon media-play-button-restart-icon">
 								</media-icon>
 								<media-icon name="play" class="media-button-icon media-play-button-play-icon">
@@ -61,16 +60,16 @@ const vSkinTemplates = {
 								</media-icon>
 							</media-play-button>
 							<media-tooltip
-								trigger="vjs-2LlEBWp8-0-trigger"
+								trigger="vjs-6EpYm0RN-0-trigger"
 								side="top"
 								class="media-popup media-popup-safe-area media-popup-transition media-popup-surface media-tooltip">
 								<media-tooltip-label> </media-tooltip-label>
 								<media-tooltip-shortcut class="media-tooltip-shortcut"> </media-tooltip-shortcut>
 							</media-tooltip>
 							<media-mute-button
-								commandfor="vjs-w7EFSLPI-0-popup"
+								commandfor="vjs-9Jipq7XQ-0-popup"
 								class="media-button media-mute-button video-controls-volume-button"
-								id="vjs-2LlEBWp8-0-2-trigger">
+								id="vjs-6EpYm0RN-0-2-trigger">
 								<media-icon name="volume-off" class="media-button-icon media-mute-button-off-icon">
 								</media-icon>
 								<media-icon name="volume-low" class="media-button-icon media-mute-button-low-icon">
@@ -79,7 +78,7 @@ const vSkinTemplates = {
 								</media-icon>
 							</media-mute-button>
 							<media-tooltip
-								trigger="vjs-2LlEBWp8-0-2-trigger"
+								trigger="vjs-6EpYm0RN-0-2-trigger"
 								delay="0"
 								disabled
 								sticky
@@ -94,7 +93,7 @@ const vSkinTemplates = {
 								close-delay="100"
 								side="top"
 								class="media-popup media-popup-safe-area media-popup-transition media-popup-surface media-volume-popover"
-								id="vjs-w7EFSLPI-0-popup">
+								id="vjs-9Jipq7XQ-0-popup">
 								<media-volume-slider
 									class="media-slider media-volume-slider"
 									thumb-alignment="edge"
@@ -151,7 +150,7 @@ const vSkinTemplates = {
 							</media-controls-group>
 							<media-captions-button
 								class="media-button media-captions-button video-controls-captions-button"
-								id="vjs-2LlEBWp8-0-3-trigger">
+								id="vjs-6EpYm0RN-0-3-trigger">
 								<media-icon
 									name="captions-off"
 									class="media-button-icon media-captions-button-off-icon">
@@ -160,16 +159,16 @@ const vSkinTemplates = {
 								</media-icon>
 							</media-captions-button>
 							<media-tooltip
-								trigger="vjs-2LlEBWp8-0-3-trigger"
+								trigger="vjs-6EpYm0RN-0-3-trigger"
 								side="top"
 								class="media-popup media-popup-safe-area media-popup-transition media-popup-surface media-tooltip">
 								<media-tooltip-label> </media-tooltip-label>
 								<media-tooltip-shortcut class="media-tooltip-shortcut"> </media-tooltip-shortcut>
 							</media-tooltip>
 							<button
-								commandfor="vjs--FkLpPw4-0-popup"
+								commandfor="vjs-Keqr6Ase-0-popup"
 								class="media-button media-settings-menu-trigger video-controls-settings-button"
-								id="vjs-2LlEBWp8-0-4-trigger">
+								id="vjs-6EpYm0RN-0-4-trigger">
 								<media-icon name="gear" class="media-button-icon-base media-settings-menu-trigger-icon">
 								</media-icon>
 								<media-text class="media-settings-menu-trigger-label" token="menu.settings"
@@ -177,7 +176,7 @@ const vSkinTemplates = {
 								>
 							</button>
 							<media-tooltip
-								trigger="vjs-2LlEBWp8-0-4-trigger"
+								trigger="vjs-6EpYm0RN-0-4-trigger"
 								side="top"
 								class="media-popup media-popup-safe-area media-popup-transition media-popup-surface media-tooltip">
 								<media-text token="menu.settings">Settings</media-text>
@@ -186,11 +185,11 @@ const vSkinTemplates = {
 								side="top"
 								align="center"
 								class="media-popup media-popup-surface media-menu-popup media-menu-resizable-popup"
-								id="vjs--FkLpPw4-0-popup">
+								id="vjs-Keqr6Ase-0-popup">
 								<media-menu-content class="media-menu-content">
 									<slot name="settings"></slot>
 									<media-menu-item
-										commandfor="vjs-9u7bYsN5-0-content"
+										commandfor="vjs-tLacI0er-0-content"
 										class="media-menu-trigger-item">
 										<media-icon name="switches" class="media-menu-trigger-item-icon"> </media-icon>
 										<media-text token="menu.quality">Quality</media-text>
@@ -199,7 +198,7 @@ const vSkinTemplates = {
 											<media-icon name="chevron" class="media-menu-forward-chevron"> </media-icon>
 										</span>
 									</media-menu-item>
-									<media-menu-content class="media-menu-content" id="vjs-9u7bYsN5-0-content">
+									<media-menu-content class="media-menu-content" id="vjs-tLacI0er-0-content">
 										<media-menu-item class="media-menu-back-item">
 											<media-icon name="chevron" class="media-menu-back-chevron"> </media-icon>
 											<media-text token="menu.quality">Quality</media-text>
@@ -224,7 +223,7 @@ const vSkinTemplates = {
 										</media-quality-radio-group>
 									</media-menu-content>
 									<media-menu-item
-										commandfor="vjs-ieXR5ng0-0-content"
+										commandfor="vjs-Eo8DtgMd-0-content"
 										class="media-menu-trigger-item">
 										<media-icon name="speech" class="media-menu-trigger-item-icon"> </media-icon>
 										<media-text token="menu.audio">Audio</media-text>
@@ -233,7 +232,7 @@ const vSkinTemplates = {
 											<media-icon name="chevron" class="media-menu-forward-chevron"> </media-icon>
 										</span>
 									</media-menu-item>
-									<media-menu-content class="media-menu-content" id="vjs-ieXR5ng0-0-content">
+									<media-menu-content class="media-menu-content" id="vjs-Eo8DtgMd-0-content">
 										<media-menu-item class="media-menu-back-item">
 											<media-icon name="chevron" class="media-menu-back-chevron"> </media-icon>
 											<media-text token="menu.audio">Audio</media-text>
@@ -254,7 +253,7 @@ const vSkinTemplates = {
 										</media-audio-track-radio-group>
 									</media-menu-content>
 									<media-menu-item
-										commandfor="vjs-aHbCtmyv-0-content"
+										commandfor="vjs-H32r9IqW-0-content"
 										class="media-menu-trigger-item">
 										<media-icon name="speed" class="media-menu-trigger-item-icon"> </media-icon>
 										<media-text token="menu.speed">Speed</media-text>
@@ -263,7 +262,7 @@ const vSkinTemplates = {
 											<media-icon name="chevron" class="media-menu-forward-chevron"> </media-icon>
 										</span>
 									</media-menu-item>
-									<media-menu-content class="media-menu-content" id="vjs-aHbCtmyv-0-content">
+									<media-menu-content class="media-menu-content" id="vjs-H32r9IqW-0-content">
 										<media-menu-item class="media-menu-back-item">
 											<media-icon name="chevron" class="media-menu-back-chevron"> </media-icon>
 											<media-text token="menu.speed">Speed</media-text>
@@ -284,7 +283,7 @@ const vSkinTemplates = {
 										</media-playback-rate-radio-group>
 									</media-menu-content>
 									<media-menu-item
-										commandfor="vjs-VFLiqDY6-0-content"
+										commandfor="vjs-rIQzx-29-0-content"
 										class="media-menu-trigger-item">
 										<media-icon name="captions-off" class="media-menu-trigger-item-icon">
 										</media-icon>
@@ -294,7 +293,7 @@ const vSkinTemplates = {
 											<media-icon name="chevron" class="media-menu-forward-chevron"> </media-icon>
 										</span>
 									</media-menu-item>
-									<media-menu-content class="media-menu-content" id="vjs-VFLiqDY6-0-content">
+									<media-menu-content class="media-menu-content" id="vjs-rIQzx-29-0-content">
 										<media-menu-item class="media-menu-back-item">
 											<media-icon name="chevron" class="media-menu-back-chevron"> </media-icon>
 											<media-text token="menu.captions">Captions</media-text>
@@ -319,14 +318,14 @@ const vSkinTemplates = {
 							</media-menu>
 						</media-controls-group>
 						<media-controls-group class="video-controls-secondary">
-							<media-cast-button class="media-button media-cast-button" id="vjs-2LlEBWp8-0-5-trigger">
+							<media-cast-button class="media-button media-cast-button" id="vjs-6EpYm0RN-0-5-trigger">
 								<media-icon name="cast-enter" class="media-button-icon media-cast-button-enter-icon">
 								</media-icon>
 								<media-icon name="cast-exit" class="media-button-icon media-cast-button-exit-icon">
 								</media-icon>
 							</media-cast-button>
 							<media-tooltip
-								trigger="vjs-2LlEBWp8-0-5-trigger"
+								trigger="vjs-6EpYm0RN-0-5-trigger"
 								side="top"
 								class="media-popup media-popup-safe-area media-popup-transition media-popup-surface media-tooltip">
 								<media-tooltip-label> </media-tooltip-label>
@@ -334,7 +333,7 @@ const vSkinTemplates = {
 							</media-tooltip>
 							<media-airplay-button
 								class="media-button media-airplay-button"
-								id="vjs-2LlEBWp8-0-6-trigger">
+								id="vjs-6EpYm0RN-0-6-trigger">
 								<media-icon
 									name="airplay-enter"
 									class="media-button-icon media-airplay-button-enter-icon">
@@ -345,20 +344,20 @@ const vSkinTemplates = {
 								</media-icon>
 							</media-airplay-button>
 							<media-tooltip
-								trigger="vjs-2LlEBWp8-0-6-trigger"
+								trigger="vjs-6EpYm0RN-0-6-trigger"
 								side="top"
 								class="media-popup media-popup-safe-area media-popup-transition media-popup-surface media-tooltip">
 								<media-tooltip-label> </media-tooltip-label>
 								<media-tooltip-shortcut class="media-tooltip-shortcut"> </media-tooltip-shortcut>
 							</media-tooltip>
-							<media-pip-button class="media-button media-pip-button" id="vjs-2LlEBWp8-0-7-trigger">
+							<media-pip-button class="media-button media-pip-button" id="vjs-6EpYm0RN-0-7-trigger">
 								<media-icon name="pip-enter" class="media-button-icon media-pip-button-enter-icon">
 								</media-icon>
 								<media-icon name="pip-exit" class="media-button-icon media-pip-button-exit-icon">
 								</media-icon>
 							</media-pip-button>
 							<media-tooltip
-								trigger="vjs-2LlEBWp8-0-7-trigger"
+								trigger="vjs-6EpYm0RN-0-7-trigger"
 								side="top"
 								class="media-popup media-popup-safe-area media-popup-transition media-popup-surface media-tooltip">
 								<media-tooltip-label> </media-tooltip-label>
@@ -366,7 +365,7 @@ const vSkinTemplates = {
 							</media-tooltip>
 							<media-fullscreen-button
 								class="media-button media-fullscreen-button"
-								id="vjs-2LlEBWp8-0-8-trigger">
+								id="vjs-6EpYm0RN-0-8-trigger">
 								<media-icon
 									name="fullscreen-enter"
 									class="media-button-icon media-fullscreen-button-enter-icon">
@@ -377,7 +376,7 @@ const vSkinTemplates = {
 								</media-icon>
 							</media-fullscreen-button>
 							<media-tooltip
-								trigger="vjs-2LlEBWp8-0-8-trigger"
+								trigger="vjs-6EpYm0RN-0-8-trigger"
 								side="top"
 								class="media-popup media-popup-safe-area media-popup-transition media-popup-surface media-tooltip">
 								<media-tooltip-label> </media-tooltip-label>

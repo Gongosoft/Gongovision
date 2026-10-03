@@ -1,6 +1,6 @@
-import nodemailer from 'nodemailer';
 import picBust from '@/assets/images/emotes/bttv/picBust.webp';
 import { env } from 'cloudflare:workers';
+import { createTransport } from 'nodemailer';
 import type { Transporter } from 'nodemailer';
 
 let transporter: Transporter | null = null;
@@ -10,7 +10,7 @@ function getTransporter(): Transporter {
 		return transporter;
 	}
 
-	transporter = nodemailer.createTransport({
+	transporter = createTransport({
 		host: env.SMTP_SERVER,
 		port: env.SMTP_PORT,
 		secure: false,

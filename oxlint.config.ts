@@ -46,6 +46,12 @@ export default defineConfig({
 			}
 		},
 		{
+			files: ['src/components/videojs/**/*.ts'],
+			rules: {
+				'import/no-relative-parent-imports': 'off'
+			}
+		},
+		{
 			files: ['src/router/router.ts'],
 			rules: {
 				'typescript/explicit-function-return-type': 'off'

@@ -2519,6 +2519,18 @@
 			"id": "01JGADG6HPJQK1YA8KXW2GZQVE",
 			"url": "https://cdn.7tv.app/emote/01JGADG6HPJQK1YA8KXW2GZQVE/4x.avif",
 			"ext": ".avif"
+		},
+		{
+			"name": "YUCK",
+			"id": "01HFD9Z1YG00053PHAJVKF2VR3",
+			"url": "https://cdn.7tv.app/emote/01HFD9Z1YG00053PHAJVKF2VR3/4x.avif",
+			"ext": ".avif"
+		},
+		{
+			"name": "BillGates",
+			"id": "01HPD85X2G000012ZCBFP3Z4AK",
+			"url": "https://cdn.7tv.app/emote/01HPD85X2G000012ZCBFP3Z4AK/4x.avif",
+			"ext": ".avif"
 		}
 	],
 	"bttv": [

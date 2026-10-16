@@ -369,7 +369,7 @@ export default defineConfig({
 	},
 	resolve: {
 		alias: {
-			'@': fileURLToPath(new URL('/src', import.meta.url)),
+			'@': fileURLToPath(new URL('src', import.meta.url)),
 			'@osmo': resolve(ᱻ, 'src/assets/images/osmo')
 		}
 	}

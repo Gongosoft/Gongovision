@@ -48,6 +48,9 @@ export default defineConfig({
 			data: { url: '/stream' },
 			requireInteraction: true
 		}),
+		OWNCAST: JSON.stringify({
+			HOST: 'https://live.gongo.tv'
+		}),
 		TWITCH_CHANNEL: JSON.stringify('fakesphynx')
 	},
 	plugins: [

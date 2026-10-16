@@ -1,12 +1,15 @@
 import { useLocalStorage } from '@vueuse/core';
-import { onMounted, onUnmounted, toValue } from 'vue';
-import type { MaybeRefOrGetter } from 'vue';
+import { computed, onMounted, onUnmounted, toValue } from 'vue';
 import type { VideoPlayerStore } from '@videojs/html';
+import type { MaybeRefOrGetter, WritableComputedRef } from 'vue';
+
+export type StreamSource = 'owncast' | 'angelthump';
 
 interface PlayerSettings {
 	volume: number;
 	muted: boolean;
 	quality: string;
+	source: StreamSource;
 }
 
 export interface PlayerElement {
@@ -14,6 +17,17 @@ export interface PlayerElement {
 }
 
 type VideoRendition = VideoPlayerStore['videoRenditionList'][number];
+
+const settings = useLocalStorage<PlayerSettings>(
+	'stream:settings',
+	{
+		volume: 1,
+		muted: false,
+		quality: 'auto',
+		source: 'owncast'
+	},
+	{ writeDefaults: false }
+);
 
 function hasStoredSettings(): boolean {
 	try {
@@ -25,20 +39,20 @@ function hasStoredSettings(): boolean {
 
 function selectedQuality(renditions: VideoRendition[]): string {
 	const selected = renditions.find((rendition) => rendition.selected);
-	return selected ? selected.id : 'auto';
+	return selected?.id ?? 'auto';
+}
+
+export function useStreamSourceSetting(): WritableComputedRef<StreamSource> {
+	return computed({
+		get: () => settings.value.source ?? 'owncast',
+		set: (value) => {
+			settings.value.source = value;
+		}
+	});
 }
 
 export function usePlayerSettings(player: MaybeRefOrGetter<PlayerElement | null>): void {
 	const hadStoredSettings = hasStoredSettings();
-	const settings = useLocalStorage<PlayerSettings>(
-		'stream:settings',
-		{
-			volume: 1,
-			muted: false,
-			quality: 'auto'
-		},
-		{ writeDefaults: false }
-	);
 
 	let unsubscribe: (() => void) | undefined = undefined;
 

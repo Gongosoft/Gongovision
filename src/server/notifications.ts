@@ -1,6 +1,7 @@
 import isEmail from 'validator/lib/isEmail';
 import { Agent, callable } from 'agents';
-import { checkLiveStatus } from '@/server/angelthump.ts';
+import { getOwncastLiveStatus } from '@/server/owncast.ts';
+import { getAngelThumpLiveStatus } from '@/server/angelthump.ts';
 import { init as initPush, send as sendPush } from '@/server/webpush.ts';
 import { confirmationEmail, liveNotificationEmail, sendEmail } from '@/server/email.ts';
 import type {
@@ -33,13 +34,14 @@ export class Notifications extends Agent<Env, NotificationState> {
 
 	private ws: WebSocket | null = null;
 	private reconnectTimer: ReturnType<typeof setTimeout> | null = null;
+	private angelthumpLive: boolean | null = null;
+	private owncastLive: boolean | null = null;
 
 	public override async onStart(): Promise<void> {
 		initPush();
-		const live = await checkLiveStatus();
-		await this.onLiveChange(live, 'poll');
+		await this.pollStreams();
 		this.openWebSocket();
-		await this.scheduleEvery(60, 'pollAngelthump');
+		await this.scheduleEvery(60, 'pollStreams');
 	}
 
 	private openWebSocket(): void {
@@ -57,7 +59,8 @@ export class Notifications extends Agent<Env, NotificationState> {
 			try {
 				const data = JSON.parse(event.data) as { action: string; live?: boolean };
 				if (data.action === 'live') {
-					void this.onLiveChange(data.live === true, 'ws');
+					this.angelthumpLive = data.live === true;
+					void this.onLiveChange('ws');
 				}
 			} catch {
 				/*_*/
@@ -95,22 +98,32 @@ export class Notifications extends Agent<Env, NotificationState> {
 		}, 5000);
 	}
 
-	public async pollAngelthump(): Promise<void> {
-		const live = await checkLiveStatus();
-		await this.onLiveChange(live, 'poll');
+	public async pollStreams(): Promise<void> {
+		const [angelthumpLive, owncastLive] = await Promise.all([getAngelThumpLiveStatus(), getOwncastLiveStatus()]);
+
+		if ((this.ws === null || this.angelthumpLive === null) && angelthumpLive !== null) {
+			this.angelthumpLive = angelthumpLive;
+		}
+		if (owncastLive !== null) {
+			this.owncastLive = owncastLive;
+		}
+
+		await this.onLiveChange('poll');
 	}
 
-	private async onLiveChange(live: boolean, source: 'ws' | 'poll'): Promise<void> {
+	private async onLiveChange(source: 'ws' | 'poll'): Promise<void> {
+		const live = this.angelthumpLive === true || this.owncastLive === true;
 		if (this.state.isLive === live) {
 			return;
 		}
 
-		if (source === 'poll' && this.ws !== null) {
-			console.info('onLiveChange: ignoring poll signal, WebSocket is connected');
-			return;
-		}
-
-		console.info('onLiveChange:', { from: this.state.isLive, to: live, source });
+		console.info('onLiveChange:', {
+			from: this.state.isLive,
+			to: live,
+			source,
+			angelthumpLive: this.angelthumpLive,
+			owncastLive: this.owncastLive
+		});
 		this.setState({ ...this.state, isLive: live });
 		if (live) {
 			await this.sendNotifications();
@@ -335,8 +348,8 @@ export class Notifications extends Agent<Env, NotificationState> {
 	}
 
 	@callable()
-	public getLiveStatus(): { isLive: boolean } {
-		return { isLive: this.state.isLive };
+	public getLiveStatus(): { isLive: boolean; angelthump: boolean | null; owncast: boolean | null } {
+		return { isLive: this.state.isLive, angelthump: this.angelthumpLive, owncast: this.owncastLive };
 	}
 
 	@callable()

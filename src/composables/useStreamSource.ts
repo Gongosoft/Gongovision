@@ -1,9 +1,11 @@
 import { computed, ref, watch } from 'vue';
 import { get, useIntervalFn, useWebSocket } from '@vueuse/core';
 import type { Ref } from 'vue';
+import type { OwncastStatus } from '@/types/owncast.d.ts';
 
-const wsLive = ref<boolean | null>(null);
-const pollLive = ref<boolean | null>(null);
+const angelthumpWsLive = ref<boolean | null>(null);
+const angelthumpPollLive = ref<boolean | null>(null);
+const owncastStatus = ref<OwncastStatus | null>(null);
 
 const {
 	status: wsStatus,
@@ -27,19 +29,39 @@ watch(wsData, (raw) => {
 	try {
 		const msg = JSON.parse(raw);
 		if (msg.action === 'live') {
-			wsLive.value = msg.live === true;
+			angelthumpWsLive.value = msg.live === true;
 		}
 	} catch {
 		/*_*/
 	}
 });
 
-const isGreatSphynxLive = computed<boolean | null>(() => {
-	const ws = get(wsLive);
+const angelthumpLive = computed<boolean | null>(() => {
+	const ws = get(angelthumpWsLive);
 	if (ws !== null) {
 		return ws;
 	}
-	return get(pollLive);
+	return get(angelthumpPollLive);
+});
+
+const owncastLive = computed<boolean | null>(() => {
+	const status = get(owncastStatus);
+	if (status === null) {
+		return null;
+	}
+	return status.online;
+});
+
+const isStreamLive = computed<boolean | null>(() => {
+	const angelthump = get(angelthumpLive);
+	const owncast = get(owncastLive);
+	if (angelthump === true || owncast === true) {
+		return true;
+	}
+	if (angelthump === null || owncast === null) {
+		return null;
+	}
+	return false;
 });
 
 const { pause: pausePolling, resume: resumePolling } = useIntervalFn(
@@ -47,8 +69,8 @@ const { pause: pausePolling, resume: resumePolling } = useIntervalFn(
 		try {
 			const res = await fetch('/notification/live');
 			if (res.ok) {
-				const data: { isLive: boolean } = await res.json();
-				pollLive.value = data.isLive;
+				const data: { angelthump?: boolean | null } = await res.json();
+				angelthumpPollLive.value = data.angelthump ?? null;
 			}
 		} catch {
 			/*_*/
@@ -58,23 +80,44 @@ const { pause: pausePolling, resume: resumePolling } = useIntervalFn(
 	{ immediate: true, immediateCallback: true }
 );
 
+useIntervalFn(
+	async () => {
+		try {
+			const res = await fetch(`${OWNCAST.HOST}/api/status`);
+			if (res.ok) {
+				owncastStatus.value = await res.json();
+			}
+		} catch {
+			/*_*/
+		}
+	},
+	15_000,
+	{ immediate: true, immediateCallback: true }
+);
+
 watch(wsStatus, (status) => {
 	if (status === 'OPEN') {
 		pausePolling();
 	} else if (status === 'CLOSED') {
-		wsLive.value = null;
+		angelthumpWsLive.value = null;
 		resumePolling();
 	}
 });
 
 interface UseStreamSourceReturn {
-	isGreatSphynxLive: Ref<boolean | null>;
+	angelthumpLive: Ref<boolean | null>;
+	isStreamLive: Ref<boolean | null>;
+	owncastLive: Ref<boolean | null>;
+	owncastStatus: Ref<OwncastStatus | null>;
 	refresh: () => void;
 }
 
 export function useStreamSource(): UseStreamSourceReturn {
 	return {
-		isGreatSphynxLive,
+		angelthumpLive,
+		isStreamLive,
+		owncastLive,
+		owncastStatus,
 		refresh: () => location.reload()
 	};
 }

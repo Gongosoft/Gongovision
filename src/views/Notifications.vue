@@ -5,7 +5,7 @@ import backSVG from '@/assets/images/arrow-left.svg?raw';
 import { RouterLink } from 'vue-router';
 import { useStreamSource } from '@/composables/useStreamSource.ts';
 
-const { isGreatSphynxLive } = useStreamSource();
+const { isStreamLive } = useStreamSource();
 </script>
 
 <template>
@@ -14,7 +14,7 @@ const { isGreatSphynxLive } = useStreamSource();
 			<span class="icon icon-animated" v-html="backSVG" />
 		</RouterLink>
 		<Emails />
-		<WebPush :is-live="isGreatSphynxLive" />
+		<WebPush :is-live="isStreamLive" />
 	</div>
 </template>
 

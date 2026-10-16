@@ -88,6 +88,8 @@ import {
 	volumeOffIcon
 } from '@videojs/html/icons';
 
+import globeIcon from '@/assets/images/globe.svg?raw';
+
 registerIcons('default', {
 	'airplay-enter': airPlayEnterIcon,
 	'airplay-exit': airPlayExitIcon,
@@ -100,16 +102,17 @@ registerIcons('default', {
 	'fullscreen-enter': fullscreenEnterIcon,
 	'fullscreen-exit': fullscreenExitIcon,
 	'gear': gearIcon,
+	'globe': globeIcon,
 	'pause': pauseIcon,
 	'pip-enter': pipEnterIcon,
 	'pip-exit': pipExitIcon,
 	'play': playIcon,
+	'quality': qualityIcon,
 	'restart': restartIcon,
 	'speech': speechIcon,
 	'speed': speedIcon,
 	'spinner': spinnerIcon,
 	'switches': switchesIcon,
-	'quality': qualityIcon,
 	'volume-high': volumeHighIcon,
 	'volume-low': volumeLowIcon,
 	'volume-off': volumeOffIcon

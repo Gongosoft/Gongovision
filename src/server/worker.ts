@@ -1,8 +1,12 @@
 import { env } from 'cloudflare:workers';
+import { writeM3U } from '@iptv/playlist';
 import { routeAgentRequest } from 'agents';
+import { getXMLTV } from '@/server/xmltv.ts';
 import { handleRssRequest } from '@/server/rss.ts';
-import { handleStreamRequest } from '@/server/angelthump.ts';
 import { handleB2Request, listObjects } from '@/server/b2.ts';
+import { getOwncastLiveStatus, getOwncastStreamInfo } from '@/server/owncast.ts';
+import { getAngelThumpM3U8, getAngelThumpStreamInfo } from '@/server/angelthump.ts';
+import type { StreamInfoResponse } from '@/types/stream.d.ts';
 
 export { Notifications } from '@/server/notifications.ts';
 
@@ -55,10 +59,52 @@ export default {
 			return handleRssRequest(request);
 		}
 
-		if (pathname.startsWith('/stream/')) {
-			const streamResponse = await handleStreamRequest(pathname, request);
-			if (streamResponse) {
-				return streamResponse;
+		switch (pathname) {
+			case '/stream/info': {
+				const [owncast, angelthump] = await Promise.all([getOwncastStreamInfo(), getAngelThumpStreamInfo()]);
+				return Response.json({ owncast, angelthump } satisfies StreamInfoResponse);
+			}
+			case '/stream/m3u': {
+				const { origin } = new URL(request.url);
+				const body = writeM3U({
+					channels: [
+						{ name: 'GreatSphynx (AngelThump)', url: `${origin}/stream/m3u8` },
+						{ name: 'GreatSphynx (Owncast)', url: `${OWNCAST.HOST}/hls/stream.m3u8` }
+					]
+				});
+				return new Response(body, {
+					headers: { 'Content-Type': 'application/vnd.apple.mpegurl', 'Cache-Control': 'no-store' }
+				});
+			}
+			case '/stream/m3u8': {
+				if ((await getOwncastLiveStatus()) === true) {
+					return new Response(null, {
+						status: 307,
+						headers: {
+							'Location': `${OWNCAST.HOST}/hls/stream.m3u8`,
+							'Cache-Control': 'no-store'
+						}
+					});
+				}
+				const region = new URL(request.url).searchParams.get('region');
+				const manifest = await getAngelThumpM3U8(request, region);
+				if (manifest === null) {
+					return new Response(null, { status: 502 });
+				}
+				return new Response(manifest, {
+					headers: { 'Content-Type': 'application/vnd.apple.mpegurl', 'Cache-Control': 'no-store' }
+				});
+			}
+			case '/stream/xmltv': {
+				return new Response(getXMLTV(), {
+					headers: {
+						'Content-Type': 'application/xml; charset=utf-8',
+						'Cache-Control': 'public, max-age=86400'
+					}
+				});
+			}
+			default: {
+				break;
 			}
 		}
 

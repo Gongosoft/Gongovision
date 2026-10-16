@@ -1,14 +1,14 @@
 <script setup lang="ts">
 import STOPTAPE from '@/components/STOPTAPE.vue';
 import TwitchChat from '@/components/TwitchChat.vue';
-import AngelThumpPlayer from '@/components/AngelThumpPlayer.vue';
+import StreamPlayer from '@/components/StreamPlayer.vue';
 import { computed } from 'vue';
 import { useRouteHash } from '@vueuse/router';
 import { get, usePointerSwipe } from '@vueuse/core';
 import { useSplitPane } from '@/composables/useSplitPane.ts';
 import { useStreamSource } from '@/composables/useStreamSource.ts';
 
-const { isGreatSphynxLive } = useStreamSource();
+const { angelthumpLive, isStreamLive } = useStreamSource();
 
 const hash = useRouteHash();
 const renderIFrame = computed(() => get(hash) === '#iframe');
@@ -43,12 +43,12 @@ usePointerSwipe(edgeEnd, { onSwipeEnd: () => showEdge('end') });
 
 		<div id="gongo">
 			<iframe
-				v-if="isGreatSphynxLive !== false && renderIFrame"
+				v-if="angelthumpLive !== false && renderIFrame"
 				class="frame"
 				:src="`${PLAYER}/?channel=${SPHYNX}`"
 				allow="autoplay; fullscreen"
 				allowfullscreen />
-			<AngelThumpPlayer v-else-if="isGreatSphynxLive !== false" />
+			<StreamPlayer v-else-if="isStreamLive !== false" />
 			<STOPTAPE v-else />
 		</div>
 

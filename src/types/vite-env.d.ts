@@ -20,5 +20,8 @@ declare global {
 	};
 	const BASE_URL: string;
 	const LIVE_NOTIFICATION: NotificationPayload;
+	const OWNCAST: {
+		HOST: string;
+	};
 	const TWITCH_CHANNEL: string;
 }

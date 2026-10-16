@@ -4,7 +4,7 @@ import { RouterLink } from 'vue-router';
 import { useScreenShare } from '@/composables/useScreenShare.ts';
 import { useStreamSource } from '@/composables/useStreamSource.ts';
 
-const { isGreatSphynxLive } = useStreamSource();
+const { isStreamLive } = useStreamSource();
 
 const {
 	video = true,
@@ -41,8 +41,8 @@ const { stream: screenStream } = useScreenShare();
 	</div>
 
 	<Blotter
-		v-if="isGreatSphynxLive !== null"
-		:text="isGreatSphynxLive ? 'LIVE' : 'OFFLINE'"
+		v-if="isStreamLive !== null"
+		:text="isStreamLive ? 'LIVE' : 'OFFLINE'"
 		material="liquidDistort"
 		font-family="VCR OSD"
 		:font-size="69"

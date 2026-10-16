@@ -1,9 +1,11 @@
-import { get, useNow } from '@vueuse/core';
-import { computed, ref, shallowRef } from 'vue';
-import type { ComputedRef } from 'vue';
-import type { AngelThumpStreamResponse } from '@/types/angelthump.d.ts';
+import { computed, ref, toValue, watch } from 'vue';
+import { get, useIntervalFn, useTimestamp } from '@vueuse/core';
+import { useStreamSource } from '@/composables/useStreamSource.ts';
+import type { ComputedRef, MaybeRefOrGetter } from 'vue';
+import type { StreamInfoResponse } from '@/types/stream.d.ts';
+import type { StreamSource } from '@/composables/usePlayerSettings.ts';
 
-const info = ref<AngelThumpStreamResponse | null>(null);
+const info = ref<StreamInfoResponse | null>(null);
 
 async function refresh(): Promise<void> {
 	try {
@@ -22,34 +24,38 @@ interface UseStreamInfoReturn {
 	uptime: ComputedRef<string | null>;
 }
 
-export function useStreamInfo(): UseStreamInfoReturn {
-	if (info.value === null) {
-		void refresh();
-	}
+export function useStreamInfo(source: MaybeRefOrGetter<StreamSource>): UseStreamInfoReturn {
+	const { angelthumpLive, owncastStatus } = useStreamSource();
 
-	const now = useNow({
-		scheduler: (fn) => {
-			const id = setInterval(fn, 1000);
-			const active = shallowRef(true);
-			return {
-				isActive: active,
-				pause: (): void => {
-					clearInterval(id);
-					active.value = false;
-				},
-				resume: (): void => {
-					active.value = true;
-				}
-			};
+	watch(
+		angelthumpLive,
+		(live) => {
+			if (live === true) {
+				void refresh();
+			} else if (live === false) {
+				info.value = null;
+			}
+		},
+		{ immediate: true }
+	);
+
+	const now = useTimestamp({
+		scheduler: (update) => useIntervalFn(update, 1000)
+	});
+
+	const startedAt = computed<string | null>(() => {
+		if (toValue(source) === 'owncast') {
+			return get(owncastStatus)?.lastConnectTime ?? null;
 		}
+		return get(info)?.angelthump?.createdAt ?? null;
 	});
 
 	const uptime = computed(() => {
-		const stream = get(info);
-		if (!stream?.createdAt) {
+		const start = get(startedAt);
+		if (!start) {
 			return null;
 		}
-		const elapsed = Math.max(0, get(now).getTime() - Date.parse(stream.createdAt));
+		const elapsed = Math.max(0, get(now) - Date.parse(start));
 		const h = Math.floor(elapsed / 3_600_000);
 		const m = Math.floor((elapsed % 3_600_000) / 60_000);
 		const s = Math.floor((elapsed % 60_000) / 1000);

@@ -80,3 +80,8 @@ remote = true
 binding = 'GONGSKY'
 service_id = '019fe31c-a67a-7180-96d2-8d4e1d1d4905'
 remote = true
+
+[[vpc_services]]
+binding = 'OWNCAST'
+service_id = '01a13916-698d-7e02-a9c2-902b92091d7b'
+remote = true

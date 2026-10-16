@@ -1,6 +1,6 @@
-import { env } from 'cloudflare:workers';
 import webpush from 'web-push';
-import type { NotificationPayload, PushSubscription } from '@/types/notification';
+import { env } from 'cloudflare:workers';
+import type { NotificationPayload, PushSubscription } from '@/types/notification.d.ts';
 
 let initialized = false;
 

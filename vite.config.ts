@@ -1,4 +1,5 @@
 import agents from 'agents/vite';
+import glsl from 'vite-plugin-glsl';
 import vue from '@vitejs/plugin-vue';
 import unfonts from 'unplugin-fonts/vite';
 import fflateZip from 'vite-plugin-fflate-zip';
@@ -69,6 +70,7 @@ export default defineConfig({
 			zipName: 'emotes',
 			excludedFiles: ['picmin.svg']
 		}),
+		glsl(),
 		pwa({
 			devOptions: {
 				enabled: true,
@@ -369,7 +371,7 @@ export default defineConfig({
 	},
 	resolve: {
 		alias: {
-			'@': fileURLToPath(new URL('/src', import.meta.url)),
+			'@': fileURLToPath(new URL('src', import.meta.url)),
 			'@osmo': resolve(ᱻ, 'src/assets/images/osmo')
 		}
 	}

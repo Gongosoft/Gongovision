@@ -32,6 +32,12 @@ const router = createRouter({
 			component: async () => import('@/views/Gongo.vue')
 		},
 		{
+			name: 'Gongoizer',
+			path: '/gongoizer',
+			component: async () => import('@/views/Gongoizer.vue'),
+			meta: { fullscreen: true }
+		},
+		{
 			name: 'Holomatch',
 			path: '/holomatch',
 			component: async () => import('@/views/Holomatch.vue')

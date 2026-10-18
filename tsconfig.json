@@ -1,7 +1,7 @@
 {
 	"extends": ["@vue/tsconfig/tsconfig.dom.json", "agents/tsconfig"],
 	"include": ["*.ts", "src/**/*.ts", "src/**/*.vue"],
-	"exclude": ["src/assets", "src/lib/*/"],
+	"exclude": ["src/assets", "src/lib/blotter/"],
 	"compilerOptions": {
 		// Type Checking
 		"strict": true,
@@ -37,7 +37,7 @@
 		// Completeness
 		"skipLibCheck": true,
 
-		"types": ["unplugin-fonts/client", "vite/client", "vite-plugin-pwa/vue"],
+		"types": ["unplugin-fonts/client", "vite/client", "vite-plugin-glsl/ext", "vite-plugin-pwa/vue"],
 		"paths": {
 			"@/*": ["./src/*"],
 			"@osmo/*": ["./src/assets/images/osmo/*"]

@@ -13,7 +13,7 @@ export default defineConfig({
 		browser: true,
 		vue: true
 	},
-	ignorePatterns: ['**/*.js', '**/*.jsx', '**/*.mjs', '/public/', '/src/lib/*/'],
+	ignorePatterns: ['**/*.js', '**/*.jsx', '**/*.mjs', '/public/', '/src/lib/*/', '!/src/lib/gongoizer/'],
 	options: {
 		maxWarnings: 42,
 		typeAware: true,
@@ -40,7 +40,11 @@ export default defineConfig({
 			}
 		},
 		{
-			files: ['src/components/Emails.vue', 'src/components/WebPush.vue'],
+			files: [
+				'src/components/Emails.vue',
+				'src/components/WebPush.vue',
+				'src/components/gongoizer/GongoizerControls.vue'
+			],
 			rules: {
 				'eslint/no-alert': 'off'
 			}
@@ -49,6 +53,13 @@ export default defineConfig({
 			files: ['src/components/videojs/**/*.ts'],
 			rules: {
 				'import/no-relative-parent-imports': 'off'
+			}
+		},
+		{
+			// data tables keep the compact P({...}) spread helper and verbatim 0.0/1.0 palette stop values
+			files: ['src/lib/gongoizer/presets.ts', 'src/lib/gongoizer/palettes.ts'],
+			rules: {
+				'unicorn/no-zero-fractions': 'off'
 			}
 		},
 		{
@@ -84,6 +95,7 @@ export default defineConfig({
 		'eslint/id-length': 'off',
 		'eslint/max-params': 'off',
 		'eslint/max-statements': 'off',
+		'eslint/new-cap': ['warn', { capIsNewExceptions: ['Gongify'] }],
 		'eslint/no-console': 'off',
 		'eslint/no-continue': 'off',
 		'eslint/no-duplicate-imports': ['warn', { allowSeparateTypeImports: true }],

@@ -13,7 +13,7 @@ function chatRatioFor16ᱺ9(w: number, h: number, mobile: boolean): number {
 	return mobile ? 1 - (w * 9) / (h * 16) : 1 - (h * 16) / (w * 9);
 }
 
-export interface UseSplitPaneReturn {
+interface UseSplitPaneReturn {
 	isMobile: ComputedRef<boolean>;
 	side: ComputedRef<'start' | 'end'>;
 	hidden: Ref<boolean>;

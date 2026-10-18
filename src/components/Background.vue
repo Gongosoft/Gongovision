@@ -1,20 +1,21 @@
 <script setup lang="ts">
-import '@/lib/gongoizer/feedback-bg.js';
 import frame1 from '@/assets/images/background.avif';
-import { useTemplateRef } from 'vue';
-import { useBackgroundPreset, useDiamondCutout } from '@/composables/useBackgroundPreset.ts';
-import type { FeedbackBackgroundElement } from '@/composables/useBackgroundPreset.ts';
+import GongoizerCanvas from '@/components/gongoizer/GongoizerCanvas.vue';
+import { computed, useTemplateRef } from 'vue';
+import { useGongoizer } from '@/composables/useGongoizer.ts';
+import { useBackgroundPreset } from '@/composables/useBackgroundPreset.ts';
 
 const { preset, params, ready } = useBackgroundPreset();
-const shader = useTemplateRef<FeedbackBackgroundElement>('shader');
+const canvasRef = useTemplateRef<InstanceType<typeof GongoizerCanvas>>('shader');
+const canvas = computed(() => canvasRef.value?.canvas ?? null);
 
-useDiamondCutout(shader);
+useGongoizer({ canvas, preset, params, gate: ready });
 </script>
 
 <template>
 	<div id="background">
 		<img :src="frame1" />
-		<feedback-background v-if="ready" ref="shader" :preset="preset" :params="params" :fallback="frame1" />
+		<GongoizerCanvas v-if="ready" ref="shader" />
 	</div>
 </template>
 
@@ -30,8 +31,7 @@ useDiamondCutout(shader);
 		grid-area: 1 / 1;
 	}
 
-	& img,
-	& feedback-background {
+	& img {
 		height: 100%;
 		object-fit: cover;
 		width: 100%;

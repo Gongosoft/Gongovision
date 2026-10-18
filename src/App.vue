@@ -5,20 +5,19 @@ import '@/styles/animations.css';
 import AFK from '@/components/AFK.vue';
 import Cursor from '@/components/Cursor.vue';
 import Diamond from '@/components/Diamond.vue';
-import OSMO from '@/assets/audio/OSMO.opus?url';
 import Gohu from '@/assets/fonts/gohu.woff2?url';
 import Background from '@/components/Background.vue';
 import Gongoverlay from '@/components/Gongoverlay.vue';
 import ServiceWorker from '@/components/ServiceWorker.vue';
 import VCROSD from '@/assets/fonts/vcr-osd-mono.woff2?url';
 import BackgroundImage from '@/assets/images/background.avif';
-import { Howl } from 'howler';
 import { computed } from 'vue';
-import { RouterView, useRoute } from 'vue-router';
 import { useHead, useSeoMeta } from '@unhead/vue';
+import { RouterView, useRoute, useRouter } from 'vue-router';
 import { useKonamiCode } from '@/composables/useKonamiCode.ts';
 
 const route = useRoute();
+const router = useRouter();
 const isFullscreen = computed(() => Boolean(route.meta.fullscreen));
 const showDiamond = computed(() => route.path === '/' || route.path === '/notifications');
 
@@ -114,12 +113,9 @@ useSeoMeta({
 });
 
 useKonamiCode({
-	callback: () =>
-		new Howl({
-			src: OSMO,
-			format: ['opus'],
-			volume: 0.42
-		}).play()
+	callback: () => {
+		void router.push('/gongoizer');
+	}
 });
 </script>
 

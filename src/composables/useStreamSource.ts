@@ -6,6 +6,7 @@ import type { OwncastStatus } from '@/types/owncast.d.ts';
 const angelthumpWsLive = ref<boolean | null>(null);
 const angelthumpPollLive = ref<boolean | null>(null);
 const owncastStatus = ref<OwncastStatus | null>(null);
+const owncastUnreachable = ref(false);
 
 const {
 	status: wsStatus,
@@ -45,11 +46,10 @@ const angelthumpLive = computed<boolean | null>(() => {
 });
 
 const owncastLive = computed<boolean | null>(() => {
-	const status = get(owncastStatus);
-	if (status === null) {
-		return null;
+	if (get(owncastUnreachable)) {
+		return false;
 	}
-	return status.online;
+	return get(owncastStatus)?.online ?? null;
 });
 
 const isStreamLive = computed<boolean | null>(() => {
@@ -84,11 +84,16 @@ useIntervalFn(
 	async () => {
 		try {
 			const res = await fetch(`${OWNCAST.HOST}/api/status`);
-			if (res.ok) {
-				owncastStatus.value = await res.json();
+			if (!res.ok) {
+				owncastStatus.value = null;
+				owncastUnreachable.value = true;
+				return;
 			}
+			owncastStatus.value = await res.json();
+			owncastUnreachable.value = false;
 		} catch {
-			/*_*/
+			owncastStatus.value = null;
+			owncastUnreachable.value = true;
 		}
 	},
 	15_000,

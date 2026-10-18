@@ -21,7 +21,7 @@ const ready = ref(!randomized);
 
 if (randomized) {
 	try {
-		params.value = randomize({ ...BASE });
+		params.value = { ...randomize({ ...BASE }), strobe: 0 };
 	} catch {
 		/*_*/
 	} finally {

@@ -628,7 +628,7 @@ export class GongoizerShader {
 	private render(out: GLTarget | null = null): void {
 		const { gl, display } = this;
 		const { params: p } = this;
-		const [prev, cur] = this.state!;
+		const [cur, prev] = this.state!;
 		const alpha = Math.min(1, this.acc * SIM_HZ);
 		const tDisplay = this.clock;
 		const off = this.phaseOffset - this.fInj * this.lastDt * (1 - alpha);

@@ -417,9 +417,10 @@ const vSkinTemplates = {
 			<media-hotkey keys="i" action="togglePictureInPicture"> </media-hotkey>
 			<media-gesture type="tap" action="togglePaused" pointer="mouse" region="center"> </media-gesture>
 			<media-gesture type="tap" action="toggleControls" pointer="touch"> </media-gesture>
-			<media-gesture type="doubletap" action="seekStep" region="left"> </media-gesture>
-			<media-gesture type="doubletap" action="toggleFullscreen" region="center"> </media-gesture>
-			<media-gesture type="doubletap" action="seekStep" region="right"> </media-gesture>
+			<media-gesture type="doubletap" action="toggleFullscreen" pointer="mouse"> </media-gesture>
+			<media-gesture type="doubletap" action="seekStep" pointer="touch" region="left"> </media-gesture>
+			<media-gesture type="doubletap" action="toggleFullscreen" pointer="touch" region="center"> </media-gesture>
+			<media-gesture type="doubletap" action="seekStep" pointer="touch" region="right"> </media-gesture>
 			<media-status-announcer class="media-status-announcer"> </media-status-announcer>
 			<div class="video-status-indicators">
 				<media-volume-indicator class="media-indicator media-volume-indicator">

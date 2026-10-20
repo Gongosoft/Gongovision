@@ -56,8 +56,7 @@ export default defineConfig({
 			}
 		},
 		{
-			// data tables keep the compact P({...}) spread helper and verbatim 0.0/1.0 palette stop values
-			files: ['src/lib/gongoizer/presets.ts', 'src/lib/gongoizer/palettes.ts'],
+			files: ['src/lib/gongoizer/palettes.ts', 'src/lib/gongoizer/presets.ts'],
 			rules: {
 				'unicorn/no-zero-fractions': 'off'
 			}

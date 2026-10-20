@@ -1,11 +1,13 @@
 <script setup lang="ts">
+import MenuTile from '@/components/MenuTile.vue';
 import bellSVG from '@/assets/images/bell.svg?raw';
 import unsubscribeSVG from '@/assets/images/bell-mute.svg?raw';
 import exclaimSVG from '@/assets/images/bell-exclaimation.svg?raw';
 import { computed, onMounted, ref } from 'vue';
+import { useStreamSource } from '@/composables/useStreamSource.ts';
 import { get, usePermission, useWebNotification } from '@vueuse/core';
 
-const { isLive } = defineProps<{ isLive: boolean | null }>();
+const { isStreamLive } = useStreamSource();
 
 const { isSupported } = useWebNotification();
 const permission = usePermission('notifications');
@@ -38,10 +40,7 @@ const currentSVG = computed(() => {
 
 const iconFill = computed(() => {
 	if (get(isHovered)) {
-		if (get(isSubscribed)) {
-			return 'var(--color-error)';
-		}
-		return 'var(--color-accent)';
+		return get(isSubscribed) ? 'var(--color-error)' : 'var(--color-accent)';
 	}
 	return 'var(--color-text)';
 });
@@ -95,7 +94,7 @@ async function subscribe(): Promise<void> {
 
 		isSubscribed.value = true;
 
-		if (isLive && Notification.permission === 'granted') {
+		if (get(isStreamLive) && Notification.permission === 'granted') {
 			void new Notification(LIVE_NOTIFICATION.title, {
 				body: LIVE_NOTIFICATION.body,
 				icon: LIVE_NOTIFICATION.icon,
@@ -154,44 +153,14 @@ onMounted(async () => {
 </script>
 
 <template>
-	<button
-		class="icon-button"
-		:title="iconTitle"
+	<MenuTile
+		:animated="false"
+		:fill="iconFill"
+		:icon="currentSVG"
 		:disabled="isLoading"
-		:style="{ color: iconFill }"
+		:title="iconTitle"
+		label="Browser"
 		@click="onClick"
 		@mouseenter="isHovered = true"
-		@mouseleave="isHovered = false">
-		<span class="icon" v-html="currentSVG" />
-	</button>
+		@mouseleave="isHovered = false" />
 </template>
-
-<style scoped>
-.icon-button {
-	all: unset;
-	cursor: pointer;
-	display: flex;
-
-	& :deep(.icon svg) {
-		display: block;
-		fill: currentColor;
-		transition: fill 0.15s;
-		width: 2.5rem;
-		height: 2.5rem;
-
-		& * {
-			fill: inherit;
-		}
-
-		@media (max-width: 480px) {
-			width: 2rem;
-			height: 2rem;
-		}
-	}
-
-	&:disabled {
-		cursor: not-allowed;
-		opacity: 0.4;
-	}
-}
-</style>

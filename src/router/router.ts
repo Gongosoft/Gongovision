@@ -6,7 +6,8 @@ const router = createRouter({
 		{
 			name: 'Home',
 			path: '/',
-			component: async () => import('@/views/Home.vue')
+			component: async () => import('@/views/Menu.vue'),
+			meta: { menu: 'home' }
 		},
 		{
 			name: 'Clips',
@@ -15,10 +16,28 @@ const router = createRouter({
 			meta: { fullscreen: true }
 		},
 		{
+			name: 'Community',
+			path: '/community',
+			component: async () => import('@/views/Menu.vue'),
+			meta: { menu: 'community' }
+		},
+		{
 			name: 'Congo Bongo',
 			path: '/congobongo',
 			alias: '/gongobongo',
 			component: async () => import('@/views/CongoBongo.vue')
+		},
+		{
+			name: 'Content',
+			path: '/content',
+			component: async () => import('@/views/Menu.vue'),
+			meta: { menu: 'content' }
+		},
+		{
+			name: 'Content (YouTube)',
+			path: '/content/youtube',
+			component: async () => import('@/views/Menu.vue'),
+			meta: { menu: 'youtube' }
 		},
 		{
 			name: 'Fingal',
@@ -43,6 +62,18 @@ const router = createRouter({
 			component: async () => import('@/views/Holomatch.vue')
 		},
 		{
+			name: 'Neo Turf Masters',
+			path: '/neoturfmasters',
+			alias: '/ondagween',
+			component: async () => import('@/views/NeoTurfMasters.vue')
+		},
+		{
+			name: 'Notifications',
+			path: '/notifications',
+			component: async () => import('@/views/Menu.vue'),
+			meta: { menu: 'notifications' }
+		},
+		{
 			name: 'Stream (Alias)',
 			path: '/live/:pathMatch(.*)*',
 			redirect: (to) => to.fullPath.replace(/^\/live/, '/stream')
@@ -58,17 +89,6 @@ const router = createRouter({
 			path: '/stream/video',
 			component: async () => import('@/views/StreamVideo.vue'),
 			meta: { fullscreen: true }
-		},
-		{
-			name: 'Neo Turf Masters',
-			path: '/neoturfmasters',
-			alias: '/ondagween',
-			component: async () => import('@/views/NeoTurfMasters.vue')
-		},
-		{
-			name: 'Notifications',
-			path: '/notifications',
-			component: async () => import('@/views/Notifications.vue')
 		},
 		{
 			name: 'VODs',

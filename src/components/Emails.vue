@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import isEmail from 'validator/lib/isEmail';
+import MenuTile from '@/components/MenuTile.vue';
 import envelopeSVG from '@/assets/images/envelope.svg?raw';
 
 async function subscribe(): Promise<void> {
@@ -31,36 +32,5 @@ async function subscribe(): Promise<void> {
 </script>
 
 <template>
-	<button class="icon-button" title="Email notifications" @click="subscribe">
-		<span class="icon" v-html="envelopeSVG" />
-	</button>
+	<MenuTile :icon="envelopeSVG" label="Email" title="Email notifications" @click="subscribe" />
 </template>
-
-<style scoped>
-.icon-button {
-	all: unset;
-	cursor: pointer;
-	display: flex;
-
-	& :deep(.icon svg) {
-		display: block;
-		fill: var(--color-text);
-		transition: fill 0.15s;
-		width: 2.5rem;
-		height: 2.5rem;
-
-		& * {
-			fill: inherit;
-		}
-
-		@media (max-width: 480px) {
-			width: 2rem;
-			height: 2rem;
-		}
-	}
-
-	&:hover :deep(.icon svg) {
-		fill: var(--color-accent);
-	}
-}
-</style>

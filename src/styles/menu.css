@@ -1,0 +1,36 @@
+/*
+ * Geometry shared by the menu grid (Menu.vue), the LIVE / OFFLINE header and the diamond (Diamond.vue).
+ * The diamond is the yardstick: the menu has to fit inside its slanted edges on every screen.
+ */
+
+:root {
+	/* bounding box of a rhombus with 75°/105° vertices: aspect-ratio 1.303 = 1 / tan(37.5°) */
+	--diamond-width: min(max(85vw, 130vmin), calc(130vh * 1.303));
+
+	/*
+	 * one design pixel, small enough that three menu columns fit across the diamond at its top row
+	 * (0.058 = icon size as a fraction of the diamond, over the 48px design size)
+	 *
+	 * a length rather than a scale factor because firefox rejects dividing lengths, and every size
+	 * below is then a plain number times it
+	 */
+	--menu-unit: clamp(0.4583px, calc(var(--diamond-width) * 0.058 / 48), 1px);
+	--menu-icon-size: calc(48 * var(--menu-unit));
+
+	/* icons use a 24px grid and VCR OSD a 10.24px one, so the 48px design stays pixel-aligned */
+	--menu-label-size: max(10.24px, calc(20.48 * var(--menu-unit)));
+	--menu-label-padding: calc(2.4 * var(--menu-unit));
+	--menu-tile-gap: calc(6.4 * var(--menu-unit));
+	--menu-tile-width: calc(140 * var(--menu-unit));
+	--menu-tile-height: calc(
+		var(--menu-icon-size) + var(--menu-tile-gap) + var(--menu-label-size) * 1.2 + var(--menu-label-padding) * 2
+	);
+	--menu-column-gap: calc(32 * var(--menu-unit));
+	/* includes the gap, so a short row can start half a tile in */
+	--menu-half-column: calc((var(--menu-tile-width) + var(--menu-column-gap)) / 2);
+	--menu-row-gap: calc(24 * var(--menu-unit));
+	--menu-header-gap: clamp(1rem, 4vmin, 56px);
+
+	/* the first two rows are centred on screen; the back button hangs below them */
+	--menu-top: calc(50% - var(--menu-tile-height) - var(--menu-row-gap) / 2);
+}

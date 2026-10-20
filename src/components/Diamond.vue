@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import Blotter from '@/components/Blotter.vue';
+import DiamondBorder from '@/components/DiamondBorder.vue';
+import { useTemplateRef } from 'vue';
 import { RouterLink } from 'vue-router';
-import { useScreenShare } from '@/composables/useScreenShare.ts';
 import { useStreamSource } from '@/composables/useStreamSource.ts';
 
 const { isStreamLive } = useStreamSource();
@@ -16,29 +17,23 @@ const {
 	scale?: number;
 }>();
 
-const { stream: screenStream } = useScreenShare();
+const diamond = useTemplateRef<HTMLDivElement>('diamond');
 </script>
 
 <template>
 	<div
 		id="diamond"
+		ref="diamond"
 		:class="{ 'diamond-transparent': transparent }"
 		:style="{ transform: `translate(-50%, -50%) scale(${scale})` }">
-		<video
-			v-if="video && screenStream"
-			id="diamond-video"
-			:srcObject="screenStream"
-			autoplay
-			muted
-			playsinline
-			title="Stream" />
-
-		<iframe v-else-if="video" id="diamond-video" src="/stream/video#iframe" allow="autoplay" title="Stream" />
+		<iframe v-if="video" id="diamond-video" src="/stream/video#iframe" allow="autoplay" title="Stream" />
 
 		<RouterLink v-if="video" to="/stream" id="diamond-link" />
 
 		<slot />
 	</div>
+
+	<DiamondBorder :target="diamond" />
 
 	<Blotter
 		v-if="isStreamLive !== null"
@@ -58,11 +53,6 @@ const { stream: screenStream } = useScreenShare();
  * rhombus with 75° left/right vertices and 105° top/bottom vertices
  * has diagonal ratio dᵥ/dₕ = tan(37.5°) ≈ 0.7673
  * the bounding box therefore needs aspect-ratio (w/h) = 1 / 0.7673 ≈ 1.303
- *
- * sizing: width = min(max(85vw, 130vmin), calc(130vh * 1.303))
- *   85vw        - fills most width on landscape screens
- *   130vmin     - prevents the diamond becoming tiny on narrow/tall screens
- *   130vh cap   - keeps vertical overflow reasonable on ultrawide displays
  */
 
 #diamond {
@@ -74,7 +64,7 @@ const { stream: screenStream } = useScreenShare();
 	overflow: hidden;
 	position: fixed;
 	top: 50%;
-	width: min(max(85vw, 130vmin), calc(130vh * 1.303));
+	width: var(--diamond-width);
 	z-index: 1;
 
 	& > * {
@@ -99,32 +89,20 @@ const { stream: screenStream } = useScreenShare();
 		transform: translateX(-50%);
 		z-index: 1;
 	}
-
-	& video#diamond-video {
-		left: 42%;
-		rotate: -6deg;
-	}
 }
 
+/*
+ * bottom-anchored above the menu's top row, with a hard 3px outline: a filter because Blotter draws
+ * onto a canvas, and max-content stops the box being squeezed to half the screen width on phones
+ */
 #blotter-header {
+	filter: drop-shadow(3px 0 0 #000) drop-shadow(-3px 0 0 #000) drop-shadow(0 3px 0 #000) drop-shadow(0 -3px 0 #000);
 	left: 50%;
-	margin-top: -18dvh;
 	pointer-events: none;
 	position: fixed;
-	top: 50%;
-	transform: translate(-50%, -50%);
+	top: calc(var(--menu-top) - var(--menu-header-gap));
+	transform: translate(-50%, -100%);
+	width: max-content;
 	z-index: 3;
-
-	@media (max-width: 580px) {
-		margin-top: -16dvh;
-	}
-
-	@media (max-width: 520px) {
-		margin-top: -14dvh;
-	}
-
-	@media (max-width: 480px) {
-		margin-top: -12dvh;
-	}
 }
 </style>

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import 'unfonts.css';
+import '@/styles/menu.css';
 import '@/styles/theme.css';
 import '@/styles/animations.css';
 import AFK from '@/components/AFK.vue';
@@ -18,8 +19,8 @@ import { useKonamiCode } from '@/composables/useKonamiCode.ts';
 
 const route = useRoute();
 const router = useRouter();
+const showDiamond = computed(() => Boolean(route.meta.menu));
 const isFullscreen = computed(() => Boolean(route.meta.fullscreen));
-const showDiamond = computed(() => route.path === '/' || route.path === '/notifications');
 
 const titles = new Set([
 	'aongo',

@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import Blotter from '@/components/Blotter.vue';
 import DiamondBorder from '@/components/DiamondBorder.vue';
-import { useTemplateRef } from 'vue';
 import { RouterLink } from 'vue-router';
+import { computed, useTemplateRef } from 'vue';
 import { useStreamSource } from '@/composables/useStreamSource.ts';
+import { get, useElementBounding, useMediaQuery, useWindowSize } from '@vueuse/core';
 
 const { isStreamLive } = useStreamSource();
 
@@ -18,6 +19,45 @@ const {
 }>();
 
 const diamond = useTemplateRef<HTMLDivElement>('diamond');
+const header = useTemplateRef<HTMLDivElement>('header');
+
+const isDesktop = useMediaQuery('(min-width: 900px)');
+
+const HEADER_MARGIN = 8;
+const headerBounds = useElementBounding(header);
+const diamondBounds = useElementBounding(diamond);
+const { width: viewportWidth } = useWindowSize();
+
+/**
+ * Blotter bakes its text into a fixed-size buffer at the font size it was built with,
+ * so the canvas has to be scaled to fit instead (https://github.com/bradley/Blotter/issues/38).
+ * The header sits above the diamond's centre, making its top edge the narrowest part of the diamond it has to clear.
+ */
+const blotterScale = computed(() => {
+	const width = get(headerBounds.width);
+	const height = get(headerBounds.height);
+	const bottom = get(headerBounds.bottom);
+	const diamondWidth = get(diamondBounds.width);
+	const diamondHeight = get(diamondBounds.height);
+	const diamondTop = get(diamondBounds.top);
+	const viewport = get(viewportWidth);
+
+	if (!width || !height || !bottom || !diamondWidth || !diamondHeight) {
+		return 1;
+	}
+
+	const taper = (2 * diamondWidth) / diamondHeight;
+	// width the diamond has left where the header's bottom edge sits, minus the outline's room
+	const room = diamondWidth - HEADER_MARGIN * 2 - taper * (diamondTop + diamondHeight / 2 - bottom);
+	// at scale s the top edge is `height * s` higher, where the diamond is another `taper * height * s` narrower
+	const fit = Math.min(
+		(bottom - HEADER_MARGIN) / height, // keep the top edge on screen
+		(viewport - HEADER_MARGIN * 2) / width, // keep it inside the viewport
+		room / (width + taper * height) // keep it inside the diamond
+	);
+
+	return Math.max(0, Math.min(1, fit));
+});
 </script>
 
 <template>
@@ -35,17 +75,18 @@ const diamond = useTemplateRef<HTMLDivElement>('diamond');
 
 	<DiamondBorder :target="diamond" />
 
-	<Blotter
-		v-if="isStreamLive !== null"
-		:text="isStreamLive ? 'LIVE' : 'OFFLINE'"
-		material="liquidDistort"
-		font-family="VCR OSD"
-		:font-size="69"
-		:material-uniforms="{
-			uSpeed: 0.16,
-			uVolatility: 0.02
-		}"
-		id="blotter-header" />
+	<div id="blotter-header" ref="header" :style="{ '--blotter-scale': blotterScale }">
+		<Blotter
+			v-if="isStreamLive !== null"
+			:text="isStreamLive ? 'LIVE' : 'OFFLINE'"
+			material="liquidDistort"
+			font-family="VCR OSD"
+			:font-size="isDesktop ? 92.16 : 69"
+			:material-uniforms="{
+				uSpeed: 0.16,
+				uVolatility: 0.02
+			}" />
+	</div>
 </template>
 
 <style scoped>
@@ -94,6 +135,9 @@ const diamond = useTemplateRef<HTMLDivElement>('diamond');
 /*
  * bottom-anchored above the menu's top row, with a hard 3px outline: a filter because Blotter draws
  * onto a canvas, and max-content stops the box being squeezed to half the screen width on phones
+ *
+ * the canvas is scaled inside this wrapper rather than on it, so the wrapper keeps reporting the
+ * canvas' natural size to the scale calculation; measuring its transformed box would feed back
  */
 #blotter-header {
 	filter: drop-shadow(3px 0 0 #000) drop-shadow(-3px 0 0 #000) drop-shadow(0 3px 0 #000) drop-shadow(0 -3px 0 #000);
@@ -104,5 +148,10 @@ const diamond = useTemplateRef<HTMLDivElement>('diamond');
 	transform: translate(-50%, -100%);
 	width: max-content;
 	z-index: 3;
+
+	& :deep(canvas) {
+		transform: scale(var(--blotter-scale, 1));
+		transform-origin: 50% 100%;
+	}
 }
 </style>

@@ -5,6 +5,7 @@ import { useHead, useSeoMeta } from '@unhead/vue';
 import { computed, useTemplateRef, watchEffect } from 'vue';
 import { useStreamInfo } from '@/composables/useStreamInfo.ts';
 import { useStreamSource } from '@/composables/useStreamSource.ts';
+import { useWatchingStream } from '@/composables/useWatchingStream.ts';
 import { usePlaybackMetrics } from '@/composables/usePlaybackMetrics.ts';
 import { useStreamSourceSetting } from '@/composables/usePlayerSettings.ts';
 import { get, useEventListener, useFavicon, useIntervalFn, useLocalStorage, useTimestamp } from '@vueuse/core';
@@ -47,6 +48,7 @@ const effectiveSource = computed<StreamSource>(() => {
 
 const { info, uptime } = useStreamInfo(effectiveSource);
 const { sessionId } = usePlaybackMetrics(stream, effectiveSource);
+useWatchingStream(stream, effectiveSource);
 
 const showSource = computed(() => get(live.owncast) === true && get(live.angelthump) === true);
 

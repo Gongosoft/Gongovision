@@ -78,7 +78,7 @@ const blotterScale = computed(() => {
 	<div id="blotter-header" ref="header" :style="{ '--blotter-scale': blotterScale }">
 		<Blotter
 			v-if="isStreamLive !== null"
-			:text="isStreamLive ? 'LIVE' : 'OFFLINE'"
+			:text="isStreamLive ? 'YAY' : 'OFFLINE'"
 			material="liquidDistort"
 			font-family="VCR OSD"
 			:font-size="isDesktop ? 92.16 : 69"

@@ -88,6 +88,7 @@ import {
 	volumeOffIcon
 } from '@videojs/html/icons';
 
+import clipIcon from '@/assets/images/clip.svg?raw';
 import globeIcon from '@/assets/images/globe.svg?raw';
 
 registerIcons('default', {
@@ -99,6 +100,7 @@ registerIcons('default', {
 	'cast-exit': castExitIcon,
 	'check': checkIcon,
 	'chevron': chevronIcon,
+	'clip': clipIcon,
 	'fullscreen-enter': fullscreenEnterIcon,
 	'fullscreen-exit': fullscreenExitIcon,
 	'gear': gearIcon,

@@ -159,6 +159,7 @@ const vSkinTemplates = {
 								<media-time class="media-time-toggle video-time-value" type="remaining" toggle>
 								</media-time>
 							</media-controls-group>
+							<slot name="controls"></slot>
 							<media-captions-button
 								class="media-button media-captions-button video-controls-captions-button"
 								id="vjs-6EpYm0RN-0-3-trigger">

@@ -2,13 +2,22 @@
 import '@videojs/html/media/hlsjs-video';
 import VideoJS from '@/components/VideoJS.vue';
 import { useHead, useSeoMeta } from '@unhead/vue';
-import { computed, useTemplateRef, watchEffect } from 'vue';
 import { useStreamInfo } from '@/composables/useStreamInfo.ts';
+import { computed, useTemplateRef, watch, watchEffect } from 'vue';
+import { useClipRecorder } from '@/composables/useClipRecorder.ts';
 import { useStreamSource } from '@/composables/useStreamSource.ts';
 import { useWatchingStream } from '@/composables/useWatchingStream.ts';
 import { usePlaybackMetrics } from '@/composables/usePlaybackMetrics.ts';
 import { useStreamSourceSetting } from '@/composables/usePlayerSettings.ts';
-import { get, useEventListener, useFavicon, useIntervalFn, useLocalStorage, useTimestamp } from '@vueuse/core';
+import {
+	get,
+	useDateFormat,
+	useEventListener,
+	useFavicon,
+	useIntervalFn,
+	useLocalStorage,
+	useTimestamp
+} from '@vueuse/core';
 import type { StreamSource } from '@/composables/usePlayerSettings.ts';
 
 const SOURCES: Record<StreamSource, { label: string }> = {
@@ -23,6 +32,7 @@ const REGIONS = {
 
 type Region = keyof typeof REGIONS;
 
+const clipRecorder = useClipRecorder();
 const sourceSetting = useStreamSourceSetting();
 const { angelthumpLive, owncastLive } = useStreamSource();
 const stream = useTemplateRef<HTMLVideoElement>('stream');
@@ -66,11 +76,26 @@ const source = computed(() => ({
 		hlsJs: {
 			enableWorker: true,
 			startLevel: -1,
-			lowLatencyMode: get(lowLatency),
+			fLoader: clipRecorder.fLoader,
 			...(get(effectiveSource) === 'owncast' ? { cmcd: { sessionId } } : {})
 		}
 	}
 }));
+
+watch(src, clipRecorder.clear);
+
+async function saveClip(): Promise<void> {
+	const video = get(stream);
+	if (!video) {
+		return;
+	}
+	const stamp = get(useDateFormat(new Date(), 'YYYY-MM-DD-HH-mm-ss'));
+	try {
+		await clipRecorder.save(video.currentTime, `gongo-${stamp}`);
+	} catch (error) {
+		console.error('clip', error);
+	}
+}
 
 const thumbnail = useTimestamp({
 	scheduler: (update) => useIntervalFn(update, 20_000)
@@ -146,6 +171,18 @@ watchEffect(() => {
 	<VideoJS ref="videojs" :show-playback-rate="false">
 		<template #media>
 			<hlsjs-video ref="stream" :source.prop="source" stream-type="live" playsinline autoplay />
+		</template>
+		<template #controls>
+			<button
+				type="button"
+				class="media-button"
+				:disabled="clipRecorder.saving.value"
+				:title="clipRecorder.saving.value ? 'Saving clip...' : 'Clip'"
+				@click="saveClip">
+				<media-icon
+					:name="clipRecorder.saving.value ? 'spinner' : 'clip'"
+					class="media-button-icon"></media-icon>
+			</button>
 		</template>
 		<template #poster>
 			<img class="media-poster-image" :src="poster" />

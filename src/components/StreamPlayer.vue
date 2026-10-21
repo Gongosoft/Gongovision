@@ -168,6 +168,9 @@ useSeoMeta({
 		<template #media>
 			<hlsjs-video ref="stream" :source.prop="source" stream-type="live" playsinline autoplay />
 		</template>
+		<template #overlay>
+			<slot name="overlay"></slot>
+		</template>
 		<template #controls>
 			<button
 				type="button"

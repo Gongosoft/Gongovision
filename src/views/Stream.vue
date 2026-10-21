@@ -40,8 +40,10 @@ usePointerSwipe(edgeEnd, { onSwipeEnd: () => showEdge('end') });
 
 <template>
 	<div class="scene" :class="[isMobile ? 'mobile' : 'desktop', `side-${side}`]">
-		<div v-if="hidden" class="edge edge-start" ref="edgeStart" @click="showEdge('start')" />
-		<div v-if="hidden" class="edge edge-end" ref="edgeEnd" @click="showEdge('end')" />
+		<template v-if="hidden && !showPlayer">
+			<div class="edge edge-start" ref="edgeStart" @click="showEdge('start')" />
+			<div class="edge edge-end" ref="edgeEnd" @click="showEdge('end')" />
+		</template>
 
 		<div id="gongo">
 			<iframe
@@ -50,7 +52,12 @@ usePointerSwipe(edgeEnd, { onSwipeEnd: () => showEdge('end') });
 				:src="`${PLAYER}/?channel=${SPHYNX}`"
 				allow="autoplay; fullscreen"
 				allowfullscreen />
-			<StreamPlayer v-else-if="showPlayer" />
+			<StreamPlayer v-else-if="showPlayer">
+				<template v-if="hidden" #overlay>
+					<div class="edge edge-start" ref="edgeStart" data-interactive @click="showEdge('start')" />
+					<div class="edge edge-end" ref="edgeEnd" data-interactive @click="showEdge('end')" />
+				</template>
+			</StreamPlayer>
 			<STOPTAPE v-else />
 		</div>
 

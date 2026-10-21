@@ -1,47 +1,17 @@
 import picBust from '@/assets/images/emotes/bttv/picBust.webp';
 import { env } from 'cloudflare:workers';
-import { createTransport } from 'nodemailer';
-import type { Transporter } from 'nodemailer';
 
-let transporter: Transporter | null = null;
-
-function getTransporter(): Transporter {
-	if (transporter) {
-		return transporter;
-	}
-
-	transporter = createTransport({
-		host: env.SMTP_SERVER,
-		port: env.SMTP_PORT,
-		secure: false,
-		requireTLS: true,
-		auth: {
-			user: env.SMTP_USERNAME,
-			pass: env.SMTP_PASSWORD
-		}
-	});
-
-	return transporter;
-}
-
-export interface EmailOpts {
-	to: string;
-	subject: string;
-	html: string;
-}
+type EmailOpts = Omit<EmailMessageBuilder, 'from' | 'to'> & { to: string };
 
 export async function sendEmail(opts: EmailOpts): Promise<boolean> {
-	console.log('sendEmail:', { from: env.SMTP_USERNAME, to: opts.to, subject: opts.subject });
+	console.log('sendEmail:', { from: env.FROM_EMAIL, to: opts.to, subject: opts.subject });
 
 	try {
-		const transport = getTransporter();
-		await transport.sendMail({
-			from: env.SMTP_USERNAME,
-			to: opts.to,
-			subject: opts.subject,
-			html: opts.html
+		const result = await env.EMAIL.send({
+			from: env.FROM_EMAIL,
+			...opts
 		});
-		console.log('sendEmail ok');
+		console.log('sendEmail ok:', result.messageId);
 		return true;
 	} catch (error) {
 		console.error('sendEmail failed:', (error as Error).message ?? error);

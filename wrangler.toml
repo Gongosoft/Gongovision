@@ -4,7 +4,6 @@ compatibility_date = '2026-07-17'
 compatibility_flags = ['nodejs_compat']
 workers_dev = false
 preview_urls = false
-routes = [{ pattern = 'gongo.tv', custom_domain = true }]
 
 [assets]
 binding = 'ASSETS'
@@ -55,6 +54,16 @@ binding = 'R2'
 bucket_name = 'gongo'
 remote = true
 
+[[routes]]
+pattern = 'gongo.tv'
+custom_domain = true
+
+[[routes]]
+pattern = 'preview.gongo.tv'
+custom_domain = true
+previews_enabled = true
+enabled = false
+
 [secrets]
 required = ['B2_APPLICATION_KEY', 'TWITCH_CLIENT_SECRET', 'VAPID_PRIVATE_KEY']
 
@@ -88,3 +97,44 @@ remote = true
 binding = 'OWNCAST'
 service_id = '01a13916-698d-7e02-a9c2-902b92091d7b'
 remote = true
+
+[previews.vars]
+B2_APPLICATION_KEY_ID = '00348459c62c8d40000000007'
+B2_ENDPOINT = 's3.eu-central-003.backblazeb2.com'
+B2_BUCKET_NAME = 'gongos'
+FRESHRSS_USERNAME = 'root'
+FRESHRSS_QUERY_TOKEN = '3I0QvV6LCOaYmkf8WKgFpr'
+FROM_EMAIL = 'notifications@gongo.tv'
+TWITCH_CLIENT_ID = '1ao3j6d7bndjeovhkrfgb6tdkcwg62'
+VAPID_PUBLIC_KEY = 'BIs_XyzFXw8YdSbwrUY2AyxboSm7dUsWf3__WIFNR0OYX_SBsHmQQr75ujLdm2577i_2YcIovKOlsPXq-kT_WL0'
+VAPID_SUBJECT = 'https://gongo.tv/stream'
+
+[previews.browser]
+binding = 'BROWSER'
+
+[previews.durable_objects]
+bindings = [{ name = 'CALLOFTHEGONGO', class_name = 'Notifications' }]
+
+[[previews.kv_namespaces]]
+binding = 'KV'
+id = '4e0458fae76f460f88bee380c18be69d'
+
+[[previews.r2_buckets]]
+binding = 'R2'
+bucket_name = 'gongo'
+
+[[previews.send_email]]
+name = 'EMAIL'
+allowed_sender_addresses = ['notifications@gongo.tv']
+
+[[previews.vpc_services]]
+binding = 'FRESHRSS'
+service_id = '019fe31d-5e26-7be2-b585-7916cb15fcda'
+
+[[previews.vpc_services]]
+binding = 'GONGSKY'
+service_id = '019fe31c-a67a-7180-96d2-8d4e1d1d4905'
+
+[[previews.vpc_services]]
+binding = 'OWNCAST'
+service_id = '01a13916-698d-7e02-a9c2-902b92091d7b'

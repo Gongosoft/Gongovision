@@ -1,0 +1,80 @@
+name: Preview
+
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, closed, reopened]
+
+concurrency:
+  group: preview-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  deployments: write
+  pull-requests: write
+
+env:
+  PREVIEW_NAME: pr-${{ github.event.pull_request.number }}
+
+jobs:
+  preview:
+    if: github.event.action != 'closed' && github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7.0.1
+
+      - name: Install Bun
+        uses: oven-sh/setup-bun@v2.2.0
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Generate types
+        run: bun run typegen
+
+      - name: Build
+        run: bun run build
+
+      - id: preview
+        name: Create or update Preview
+        uses: cloudflare/wrangler-action@v4.1.3
+        with:
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+          command: preview --name ${{ env.PREVIEW_NAME }} --message ${{ github.event.pull_request.head.sha }}
+
+      - name: Comment Preview URLs
+        run: |
+          gh pr comment ${{ github.event.pull_request.number }} --edit-last --create-if-none --body "Preview: $PREVIEW_URL"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PREVIEW_URL: ${{ steps.preview.outputs.preview-url }}
+
+  cleanup:
+    if: github.event.action == 'closed' && github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7.0.1
+
+      - name: Install Bun
+        uses: oven-sh/setup-bun@v2.2.0
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Delete Preview
+        uses: cloudflare/wrangler-action@v4.1.3
+        with:
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          command: preview delete --name ${{ env.PREVIEW_NAME }} --skip-confirmation

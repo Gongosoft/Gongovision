@@ -1,5 +1,3 @@
-# TODO: run linter, fmt:check and builds on pull_request so i can tell if merging something will break stuff
-
 name: Run checks
 
 on:

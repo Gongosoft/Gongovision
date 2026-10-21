@@ -12,6 +12,8 @@ const { angelthumpLive, isStreamLive } = useStreamSource();
 
 const hash = useRouteHash();
 const renderIFrame = computed(() => get(hash) === '#iframe');
+const showIFrame = computed(() => get(angelthumpLive) !== false && get(renderIFrame));
+const showPlayer = computed(() => !get(showIFrame) && get(isStreamLive) !== false);
 
 const { PLAYER, CHANNEL: SPHYNX } = ANGELTHUMP;
 
@@ -43,12 +45,12 @@ usePointerSwipe(edgeEnd, { onSwipeEnd: () => showEdge('end') });
 
 		<div id="gongo">
 			<iframe
-				v-if="angelthumpLive !== false && renderIFrame"
+				v-if="showIFrame"
 				class="frame"
 				:src="`${PLAYER}/?channel=${SPHYNX}`"
 				allow="autoplay; fullscreen"
 				allowfullscreen />
-			<StreamPlayer v-else-if="isStreamLive !== false" />
+			<StreamPlayer v-else-if="showPlayer" />
 			<STOPTAPE v-else />
 		</div>
 

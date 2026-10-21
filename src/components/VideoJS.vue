@@ -1,23 +1,26 @@
 <script setup lang="ts">
 import '@videojs/html/global.css';
-import '@videojs/html/video/player';
 import '@videojs/html/ui/menu-radio-group';
+import '@/components/videojs/player.ts';
 import '@/components/videojs/video/skin.ts';
-import { useTemplateRef } from 'vue';
+import LiveTimeSlider from '@/components/videojs/LiveTimeSlider.vue';
+import { ref, useTemplateRef } from 'vue';
 import { useVolumeWheel } from '@/composables/useVolumeWheel.ts';
 import { usePlayerSettings } from '@/composables/usePlayerSettings.ts';
-import type { VideoPlayerElement } from '@videojs/html/video';
+import type { LiveStreamPlayerElement } from '@/components/videojs/player.ts';
 
-const { showPlaybackRate = true } = defineProps<{ showPlaybackRate?: boolean }>();
+const { showPlaybackRate = true, uptime = null } = defineProps<{
+	showPlaybackRate?: boolean;
+	/** when set, the right-hand time display toggles between time behind live and this */
+	uptime?: string | null;
+}>();
 
 const container = useTemplateRef<HTMLElement>('container');
-const player = useTemplateRef<VideoPlayerElement>('player');
-const currentTime = useTemplateRef<HTMLElement>('currentTime');
+const player = useTemplateRef<LiveStreamPlayerElement>('player');
+const showUptime = ref(false);
 
 usePlayerSettings(player);
 useVolumeWheel(container, player);
-
-defineExpose({ currentTime });
 
 const vSkinTemplates = {
 	created(el: Element): void {
@@ -31,7 +34,7 @@ const vSkinTemplates = {
 </script>
 
 <template>
-	<video-player ref="player">
+	<gongo-player ref="player">
 		<media-container
 			ref="container"
 			v-skin-templates
@@ -57,6 +60,7 @@ const vSkinTemplates = {
 					</div>
 				</media-dialog-popup>
 			</media-error-dialog>
+			<slot name="overlay"></slot>
 			<media-controls>
 				<media-controls-backdrop class="video-controls-backdrop"> </media-controls-backdrop>
 				<media-controls-content class="video-controls video-controls-content">
@@ -117,47 +121,17 @@ const vSkinTemplates = {
 								</media-volume-slider>
 							</media-volume-popover>
 							<media-controls-group class="video-time-slider-group">
-								<media-time ref="currentTime" class="media-time-value video-time-value" type="current">
-								</media-time>
-								<media-time-slider class="media-slider media-time-slider">
-									<media-time-slider-chapters class="media-time-slider-chapters">
-										<template>
-											<div class="media-time-slider-chapter">
-												<media-slider-track
-													class="media-slider-track media-time-slider-chapter-track">
-													<media-slider-buffer
-														class="media-slider-buffer media-time-slider-chapter-layer">
-													</media-slider-buffer>
-													<media-slider-fill
-														class="media-slider-fill media-time-slider-chapter-layer">
-													</media-slider-fill>
-												</media-slider-track>
-											</div>
-										</template>
-									</media-time-slider-chapters>
-									<media-slider-thumb class="media-slider-thumb media-time-slider-thumb">
-									</media-slider-thumb>
-									<media-slider-preview class="media-slider-preview" overflow="visible">
-										<media-slider-thumbnail
-											class="media-slider-preview-content media-popup-surface media-slider-thumbnail">
-											<img
-												alt=""
-												aria-hidden="true"
-												decoding="async"
-												class="media-slider-thumbnail-image" />
-											<media-icon name="spinner" class="media-slider-thumbnail-spinner-icon">
-											</media-icon>
-										</media-slider-thumbnail>
-										<div class="media-slider-preview-content media-time-slider-preview-content">
-											<media-time-slider-chapter-title class="media-time-slider-chapter-title">
-											</media-time-slider-chapter-title>
-											<media-slider-value class="media-time-slider-value" type="pointer">
-											</media-slider-value>
-										</div>
-									</media-slider-preview>
-								</media-time-slider>
-								<media-time class="media-time-toggle video-time-value" type="remaining" toggle>
-								</media-time>
+								<media-live-button class="media-button media-live-button"> </media-live-button>
+								<LiveTimeSlider :player="player" />
+								<button
+									type="button"
+									class="media-time-toggle video-time-value"
+									:aria-disabled="!uptime"
+									:aria-label="showUptime && uptime ? 'Show time behind live' : 'Show stream uptime'"
+									@click="showUptime = Boolean(uptime) && !showUptime">
+									<span v-if="showUptime && uptime">{{ uptime }}</span>
+									<media-time v-else type="remaining"> </media-time>
+								</button>
 							</media-controls-group>
 							<slot name="controls"></slot>
 							<media-captions-button
@@ -459,5 +433,11 @@ const vSkinTemplates = {
 				</media-status-indicator>
 			</div>
 		</media-container>
-	</video-player>
+	</gongo-player>
 </template>
+
+<style>
+gongo-player {
+	display: contents;
+}
+</style>

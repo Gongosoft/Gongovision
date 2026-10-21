@@ -2796,6 +2796,56 @@
 		}
 	}
 
+	@scope (.media-skin[data-theme="default"]) {
+		.media-live-button {
+			align-items: center;
+			gap: calc(var(--media-spacing) * 1.5);
+			width: auto;
+			padding-inline: calc(var(--media-spacing) * 3);
+			padding-block: calc(var(--media-spacing) * 2);
+			font-size: calc(var(--media-spacing) * 2.75);
+			letter-spacing: 0.05em;
+			text-transform: uppercase;
+			font-weight: 600;
+			line-height: 1;
+			display: inline-flex !important;
+		}
+
+		.media-live-button:not([data-live]) {
+			display: none !important;
+		}
+
+		.media-live-button:before {
+			width: calc(var(--media-spacing) * 2);
+			height: calc(var(--media-spacing) * 2);
+			transition-property: background-color;
+			transition-duration: 0.15s;
+			transition-duration: var(--media-duration);
+			content: '';
+			background-color: currentColor;
+			border-radius: 9999px;
+			flex-shrink: 0;
+			transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
+			display: inline-block;
+		}
+
+		@supports (color: color-mix(in lab, red, red)) {
+			.media-live-button:before {
+				background-color: color-mix(in oklab, currentcolor 40%, transparent);
+			}
+		}
+
+		.media-live-button[data-live-edge]:before {
+			content: '';
+			background-color: var(--media-live-color);
+		}
+
+		.media-live-button[data-live-edge][aria-disabled='true'] {
+			cursor: default;
+			opacity: 1;
+		}
+	}
+
 	@scope (.media-skin[data-theme="default"][data-preset="video"]) {
 		.media-time-toggle {
 			cursor: pointer;

@@ -153,7 +153,8 @@ body {
 	font-family: 'Gohu';
 }
 
-video-player {
+video-player,
+gongo-player {
 	--media-border-radius: 0;
 	--media-video-border-radius: 0;
 }

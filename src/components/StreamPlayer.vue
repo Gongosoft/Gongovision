@@ -2,8 +2,8 @@
 import '@videojs/html/media/hlsjs-video';
 import VideoJS from '@/components/VideoJS.vue';
 import { useHead, useSeoMeta } from '@unhead/vue';
+import { computed, useTemplateRef, watch } from 'vue';
 import { useStreamInfo } from '@/composables/useStreamInfo.ts';
-import { computed, useTemplateRef, watch, watchEffect } from 'vue';
 import { useClipRecorder } from '@/composables/useClipRecorder.ts';
 import { useStreamSource } from '@/composables/useStreamSource.ts';
 import { useWatchingStream } from '@/composables/useWatchingStream.ts';
@@ -40,7 +40,6 @@ const lowLatency = useLocalStorage('stream:lowLatency', true);
 const sourceGroup = useTemplateRef<HTMLElement>('sourceGroup');
 const regionGroup = useTemplateRef<HTMLElement>('regionGroup');
 const region = useLocalStorage<Region>('stream:region', 'auto');
-const videojs = useTemplateRef<{ currentTime: HTMLElement | null }>('videojs');
 
 const sourceLabel = computed(() => SOURCES[get(sourceSetting)].label);
 const regionLabel = computed(() => REGIONS[get(region) ?? 'auto'].label);
@@ -162,21 +161,10 @@ useSeoMeta({
 	ogImageWidth: '1920',
 	ogImageHeight: '1080'
 });
-
-watchEffect(() => {
-	const value = get(uptime);
-	if (value === null) {
-		return;
-	}
-	const currentTime = get(videojs)?.currentTime;
-	if (currentTime) {
-		currentTime.textContent = value;
-	}
-});
 </script>
 
 <template>
-	<VideoJS ref="videojs" :show-playback-rate="false">
+	<VideoJS :show-playback-rate="false" :uptime="uptime">
 		<template #media>
 			<hlsjs-video ref="stream" :source.prop="source" stream-type="live" playsinline autoplay />
 		</template>

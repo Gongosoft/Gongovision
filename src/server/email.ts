@@ -38,6 +38,10 @@ export function liveNotificationEmail(email: string, token: string): EmailOpts {
 	return {
 		to: email,
 		subject: 'the pull of the gongo compels you',
+		headers: {
+			'List-Unsubscribe': `<${unsubscribeURL}>`,
+			'List-Unsubscribe-Post': 'List-Unsubscribe=One-Click'
+		},
 		html: `
 			<p>GreatSphynx just started streaming!</p>
 			<br />

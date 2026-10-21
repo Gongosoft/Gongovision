@@ -289,7 +289,7 @@ export class Notifications extends Agent<Env, NotificationState> {
 			return new Response(result.message, { status: result.ok ? 200 : 400 });
 		}
 
-		if (request.method === 'GET' && path.endsWith('/email/unsubscribe')) {
+		if ((request.method === 'GET' || request.method === 'POST') && path.endsWith('/email/unsubscribe')) {
 			const result = this.removeEmailSub(emailParam(url), tokenParam(url));
 			return new Response(result.message, { status: result.ok ? 200 : 400 });
 		}

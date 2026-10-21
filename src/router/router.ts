@@ -74,11 +74,6 @@ const router = createRouter({
 			meta: { menu: 'notifications' }
 		},
 		{
-			name: 'Stream (Alias)',
-			path: '/live/:pathMatch(.*)*',
-			redirect: (to) => to.fullPath.replace(/^\/live/, '/stream')
-		},
-		{
 			name: 'Stream',
 			path: '/stream',
 			component: async () => import('@/views/Stream.vue'),

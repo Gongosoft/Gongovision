@@ -13,5 +13,6 @@
 /vods/latest /b2/vods/%5B2025-03-28%5D%20glingo.mp4 308
 /webcal /schedule.ics 308
 /i/* / 308
-/vods/download/* /b2/vods/:splat 308
+/live* /stream:splat 308
 /music/* /b2/music/:splat 308
+/vods/download/* /b2/vods/:splat 308

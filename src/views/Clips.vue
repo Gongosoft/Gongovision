@@ -28,6 +28,28 @@ const active = computed(() => {
 	return index === -1 ? 0 : index;
 });
 
+const playbackRate = ref(1);
+
+function setSpeed(video: HTMLVideoElement | null): void {
+	if (!video) {
+		return;
+	}
+	video.defaultPlaybackRate = get(playbackRate);
+	video.playbackRate = get(playbackRate);
+	video.dispatchEvent(new Event('ratechange'));
+}
+
+function onSpeedChange(event: Event): void {
+	const video = event.target as HTMLVideoElement;
+	const current = get(active) === 0 ? get(videoA) : get(videoB);
+	if (video !== current || video.playbackRate === get(playbackRate)) {
+		return;
+	}
+	playbackRate.value = video.playbackRate;
+	setSpeed(get(videoA));
+	setSpeed(get(videoB));
+}
+
 async function play(video: HTMLVideoElement | null): Promise<void> {
 	if (!video) {
 		return;
@@ -44,6 +66,7 @@ function load(video: HTMLVideoElement | null, url: string): void {
 		return;
 	}
 	video.src = url;
+	setSpeed(video);
 	video.load();
 }
 
@@ -84,7 +107,10 @@ function onEnded(): void {
 	}
 }
 
-watch(active, (i) => play(slotVideo(i)));
+watch(active, (i) => {
+	setSpeed(slotVideo(i));
+	void play(slotVideo(i));
+});
 
 watchEffect(
 	() => {
@@ -133,14 +159,14 @@ useHead({ title: computed(() => get(clip)?.name.replace(/^\[[^\]]*\]\s*|\s*\[[^\
 			<div class="stage" :class="{ active: active === 0 }">
 				<video-player>
 					<video-skin>
-						<video ref="videoA" playsinline preload="auto" @ended="onEnded" />
+						<video ref="videoA" playsinline preload="auto" @ended="onEnded" @ratechange="onSpeedChange" />
 					</video-skin>
 				</video-player>
 			</div>
 			<div class="stage" :class="{ active: active === 1 }">
 				<video-player>
 					<video-skin>
-						<video ref="videoB" playsinline preload="auto" @ended="onEnded" />
+						<video ref="videoB" playsinline preload="auto" @ended="onEnded" @ratechange="onSpeedChange" />
 					</video-skin>
 				</video-player>
 			</div>

@@ -70,6 +70,13 @@ const src = computed(() => {
 	return selected === 'auto' ? '/stream/m3u8' : `/stream/m3u8?region=${selected}`;
 });
 
+const LOW_LATENCY = {
+	lowLatencyMode: true,
+	liveSyncDurationCount: 2,
+	liveMaxLatencyDurationCount: 6,
+	maxLiveSyncPlaybackRate: 1.1
+};
+
 const source = computed(() => ({
 	src: src.value,
 	engine: {
@@ -77,6 +84,7 @@ const source = computed(() => ({
 			enableWorker: true,
 			startLevel: -1,
 			fLoader: clipRecorder.fLoader,
+			...(get(lowLatency) ? LOW_LATENCY : { lowLatencyMode: false }),
 			...(get(effectiveSource) === 'owncast' ? { cmcd: { sessionId } } : {})
 		}
 	}

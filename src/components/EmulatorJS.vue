@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import osmoboy from '@osmo/osmoboy-classic.avif';
 import { useScript } from '@unhead/vue';
 import { onBeforeUnmount, onMounted } from 'vue';
 
@@ -6,6 +7,7 @@ const loader = useScript({ src: '/emulatorjs/loader.js', key: crypto.randomUUID(
 
 onMounted(() => {
 	window.EJS_backgroundColor = '#000';
+	window.EJS_backgroundImage = osmoboy;
 	window.EJS_Buttons = { exitEmulation: false };
 	window.EJS_color = '#4e85ff';
 	window.EJS_pathtodata = '/emulatorjs/';

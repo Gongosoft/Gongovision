@@ -5,10 +5,11 @@ import { useHead, useSeoMeta } from '@unhead/vue';
 import { computed, useTemplateRef, watch } from 'vue';
 import { useStreamInfo } from '@/composables/useStreamInfo.ts';
 import { useClipRecorder } from '@/composables/useClipRecorder.ts';
-import { useStreamSource } from '@/composables/useStreamSource.ts';
 import { useWatchingStream } from '@/composables/useWatchingStream.ts';
 import { usePlaybackMetrics } from '@/composables/usePlaybackMetrics.ts';
 import { useStreamSourceSetting } from '@/composables/usePlayerSettings.ts';
+import { REGIONS, useStreamSource } from '@/composables/useStreamSource.ts';
+import type { Region } from '@/types/angelthump.d.ts';
 import {
 	get,
 	useDateFormat,
@@ -25,49 +26,24 @@ const SOURCES: Record<StreamSource, { label: string }> = {
 	angelthump: { label: 'AngelThump' }
 };
 
-const REGIONS = {
-	auto: { label: 'Auto' },
-	...ANGELTHUMP.CDN
-};
-
-type Region = keyof typeof REGIONS;
-
 const clipRecorder = useClipRecorder();
 const sourceSetting = useStreamSourceSetting();
-const { angelthumpLive, owncastLive } = useStreamSource();
 const stream = useTemplateRef<HTMLVideoElement>('stream');
 const lowLatency = useLocalStorage('stream:lowLatency', true);
 const sourceGroup = useTemplateRef<HTMLElement>('sourceGroup');
 const regionGroup = useTemplateRef<HTMLElement>('regionGroup');
-const region = useLocalStorage<Region>('stream:region', 'auto');
+const { angelthumpLive, owncastLive, effectiveSource, region, src } = useStreamSource();
 
 const sourceLabel = computed(() => SOURCES[get(sourceSetting)].label);
 const regionLabel = computed(() => REGIONS[get(region) ?? 'auto'].label);
 
 const live = { owncast: owncastLive, angelthump: angelthumpLive } as const;
 
-const effectiveSource = computed<StreamSource>(() => {
-	const selected = get(sourceSetting);
-	if (get(live[selected]) !== false) {
-		return selected;
-	}
-	const fallback: StreamSource = selected === 'owncast' ? 'angelthump' : 'owncast';
-	return get(live[fallback]) === true ? fallback : selected;
-});
-
 const { info, uptime } = useStreamInfo(effectiveSource);
 const { sessionId } = usePlaybackMetrics(stream, effectiveSource);
 useWatchingStream(stream, effectiveSource);
 
 const showSource = computed(() => get(live.owncast) === true && get(live.angelthump) === true);
-
-const src = computed(() => {
-	if (get(effectiveSource) === 'owncast') {
-		return `${OWNCAST.HOST}/hls/stream.m3u8`;
-	}
-	const selected = get(region) ?? 'auto';
-	return selected === 'auto' ? '/stream/m3u8' : `/stream/m3u8?region=${selected}`;
-});
 
 const LOW_LATENCY = {
 	lowLatencyMode: true,

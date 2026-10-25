@@ -1,3 +1,5 @@
+export type Region = keyof typeof ANGELTHUMP.CDN | 'auto';
+
 export interface AngelThumpStreamResponse {
 	id: string;
 	ingest: {

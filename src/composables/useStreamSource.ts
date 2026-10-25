@@ -1,7 +1,16 @@
 import { computed, ref, watch } from 'vue';
-import { get, useIntervalFn, useWebSocket } from '@vueuse/core';
-import type { Ref } from 'vue';
+import { useStreamSourceSetting } from '@/composables/usePlayerSettings.ts';
+import { get, useIntervalFn, useLocalStorage, useWebSocket } from '@vueuse/core';
+import type { ComputedRef, Ref } from 'vue';
+import type { RemovableRef } from '@vueuse/core';
+import type { Region } from '@/types/angelthump.d.ts';
 import type { OwncastStatus } from '@/types/owncast.d.ts';
+import type { StreamSource } from '@/composables/usePlayerSettings.ts';
+
+export const REGIONS = {
+	auto: { label: 'Auto' },
+	...ANGELTHUMP.CDN
+};
 
 const angelthumpWsLive = ref<boolean | null>(null);
 const angelthumpPollLive = ref<boolean | null>(null);
@@ -109,20 +118,49 @@ watch(wsStatus, (status) => {
 	}
 });
 
+const sourceSetting = useStreamSourceSetting();
+const region = useLocalStorage<Region>('stream:region', 'auto');
+
+const effectiveSource = computed<StreamSource>(() => {
+	const selected = get(sourceSetting);
+	const live = { owncast: owncastLive, angelthump: angelthumpLive };
+	if (get(live[selected]) !== false) {
+		return selected;
+	}
+	const fallback: StreamSource = selected === 'owncast' ? 'angelthump' : 'owncast';
+	return get(live[fallback]) === true ? fallback : selected;
+});
+
+const src = computed(() => {
+	if (get(effectiveSource) === 'owncast') {
+		return `${OWNCAST.HOST}/hls/stream.m3u8`;
+	}
+	const selected = get(region) ?? 'auto';
+	return selected === 'auto' ? '/stream/m3u8' : `/stream/m3u8?region=${selected}`;
+});
+
 interface UseStreamSourceReturn {
 	angelthumpLive: Ref<boolean | null>;
+	effectiveSource: ComputedRef<StreamSource>;
 	isStreamLive: Ref<boolean | null>;
 	owncastLive: Ref<boolean | null>;
 	owncastStatus: Ref<OwncastStatus | null>;
+	/** selected AngelThump CDN */
+	region: RemovableRef<Region>;
+	/** HLS URL of `effectiveSource` */
+	src: ComputedRef<string>;
 	refresh: () => void;
 }
 
 export function useStreamSource(): UseStreamSourceReturn {
 	return {
 		angelthumpLive,
+		effectiveSource,
 		isStreamLive,
 		owncastLive,
 		owncastStatus,
+		region,
+		src,
 		refresh: () => location.reload()
 	};
 }

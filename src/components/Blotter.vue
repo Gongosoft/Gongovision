@@ -2,8 +2,8 @@
 import blotterᱹjs from 'blotter.js/build/blotter.min.js?url';
 import { get } from '@vueuse/core';
 import { useScript } from '@unhead/vue';
-import { onMounted, onUnmounted, useTemplateRef, watch } from 'vue';
-import type { BlotterMaterial, BlotterRenderScope, MaterialKind } from '@/types/blotter.d.ts';
+import { computed, onMounted, onUnmounted, useTemplateRef, watch } from 'vue';
+import type { BlotterInstance, BlotterMaterial, MaterialKind } from '@/types/blotter.d.ts';
 
 const { onLoaded: onBlotterLoaded } = useScript(blotterᱹjs);
 
@@ -55,30 +55,31 @@ const {
 	fontFill = '#ffffff',
 	fontSize = 42
 } = defineProps<{
-	text: string;
+	text: string | string[];
 	material?: MaterialKind;
 	materialUniforms?: Record<string, number | number[]>;
 	fontFamily?: string;
 	fontFill?: string;
-	fontSize?: number;
+	/** a size per line when `text` is an array; the last one repeats */
+	fontSize?: number | number[];
 }>();
 
 const container = useTemplateRef<HTMLDivElement>('container');
-let scope: BlotterRenderScope | null = null;
+const lines = computed(() => [text].flat().filter(Boolean));
+let current: BlotterInstance | null = null;
 let setupCount = 0;
 
 function teardown(): void {
-	const element = get(container);
-	if (scope && element) {
-		element.innerHTML = '';
-	}
-	scope = null;
+	current?.teardown();
+	current = null;
+	get(container)?.replaceChildren();
 }
 
 async function setup(): Promise<void> {
 	const count = ++setupCount;
 	const element = get(container);
-	if (!element || !text) {
+	const content = get(lines);
+	if (!element || content.length === 0) {
 		teardown();
 		return;
 	}
@@ -89,8 +90,10 @@ async function setup(): Promise<void> {
 		return;
 	}
 
+	const sizes = [fontSize].flat();
+
 	try {
-		await document.fonts.load(`${fontSize}px ${fontFamily}`);
+		await document.fonts.load(`${sizes[0]}px ${fontFamily}`);
 	} catch {
 		/*_*/
 	}
@@ -101,15 +104,18 @@ async function setup(): Promise<void> {
 
 	teardown();
 
-	const blotterText = new Blotter.Text(text.toUpperCase(), {
-		family: fontFamily,
-		size: fontSize,
-		fill: fontFill,
-		paddingLeft: 16,
-		paddingRight: 16,
-		paddingTop: 8,
-		paddingBottom: 8
-	});
+	const blotterTexts = content.map(
+		(value, index) =>
+			new Blotter.Text(value.toUpperCase(), {
+				family: fontFamily,
+				size: sizes[index] ?? sizes.at(-1),
+				fill: fontFill,
+				paddingLeft: 16,
+				paddingRight: 16,
+				paddingTop: 8,
+				paddingBottom: 8
+			})
+	);
 
 	const MaterialConstructor = (Blotter as unknown as Record<string, new () => BlotterMaterial>)[
 		`${materialKind.charAt(0).toUpperCase()}${materialKind.slice(1)}Material`
@@ -128,10 +134,11 @@ async function setup(): Promise<void> {
 		}
 	}
 
-	const instance = new Blotter(material, { texts: blotterText });
-	const newScope = instance.forText(blotterText);
-	newScope.appendTo(element);
-	scope = newScope;
+	const instance = new Blotter(material, { texts: blotterTexts });
+	for (const blotterText of blotterTexts) {
+		instance.forText(blotterText).appendTo(element);
+	}
+	current = instance;
 }
 
 const loadedKinds = new Set<MaterialKind>();
@@ -158,7 +165,7 @@ function loadMaterial(kind: MaterialKind): void {
 			loadedKinds.add(kind);
 			setup();
 		},
-		{ key: `blotter-${kind}` }
+		{ key: `blotter-${crypto.randomUUID()}` }
 	);
 
 	if (get(controller.status) === 'awaitingLoad') {
@@ -180,22 +187,25 @@ watch(
 );
 watch(
 	[
-		(): string => text,
-		(): Record<string, number | number[]> => materialUniforms,
+		(): string => get(lines).join('\n'),
+		(): string => JSON.stringify(materialUniforms),
 		(): string => fontFamily,
 		(): string => fontFill,
-		(): number => fontSize
+		(): string => JSON.stringify(fontSize)
 	],
 	setup
 );
 </script>
 
 <template>
-	<div v-if="text" ref="container" class="blotter" />
+	<div v-if="lines.length" ref="container" class="blotter" />
 </template>
 
 <style scoped>
 .blotter {
+	align-items: center;
+	display: flex;
+	flex-direction: column;
 	pointer-events: none;
 
 	&:deep(canvas) {

@@ -44,6 +44,7 @@ export interface BlotterInstance {
 	forText: (text: BlotterText) => BlotterRenderScope;
 	setMaterial: (material: BlotterMaterial) => void;
 	material: BlotterMaterial;
+	teardown: () => void;
 }
 
 export interface ChannelSplitUniforms {

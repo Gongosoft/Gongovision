@@ -3,15 +3,13 @@ import offline from '@/assets/images/offline.avif';
 import Background from '@/components/Background.vue';
 import { useStreamSource } from '@/composables/useStreamSource.ts';
 
-const { showImage = true } = defineProps<{ showImage?: boolean }>();
-
 const { refresh } = useStreamSource();
 </script>
 
 <template>
 	<div id="STOPTAPE" title="Offline" @click="refresh">
 		<Background contained />
-		<img v-if="showImage" :src="offline" alt="Offline" />
+		<img :src="offline" alt="Offline" />
 	</div>
 </template>
 

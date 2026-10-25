@@ -26,7 +26,7 @@ const { PLAYER, CHANNEL: SPHYNX } = ANGELTHUMP;
 			class="frame" />
 		<StreamPlayer v-else-if="isStreamLive !== false" />
 		<div v-else class="status status-fill">
-			<STOPTAPE :show-image="!renderIFrame" />
+			<STOPTAPE />
 		</div>
 	</div>
 </template>

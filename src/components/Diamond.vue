@@ -1,12 +1,18 @@
 <script setup lang="ts">
+import '@videojs/html/media/hlsjs-video';
 import Blotter from '@/components/Blotter.vue';
+import Background from '@/components/Background.vue';
 import DiamondBorder from '@/components/DiamondBorder.vue';
-import { RouterLink } from 'vue-router';
-import { computed, useTemplateRef } from 'vue';
+import { RouterLink, useRoute } from 'vue-router';
+import { computed, ref, useTemplateRef } from 'vue';
 import { useStreamSource } from '@/composables/useStreamSource.ts';
-import { get, useElementBounding, useMediaQuery, useWindowSize } from '@vueuse/core';
+import { useDiamondHeader } from '@/composables/useDiamondHeader.ts';
+import { get, useElementBounding, useEventListener, useMediaQuery, useWindowSize } from '@vueuse/core';
 
-const { isStreamLive } = useStreamSource();
+const { title: headerTitle } = useDiamondHeader();
+const { isStreamLive, src } = useStreamSource();
+const offline = computed(() => get(isStreamLive) === false);
+const route = useRoute();
 
 const {
 	video = true,
@@ -20,19 +26,46 @@ const {
 
 const diamond = useTemplateRef<HTMLDivElement>('diamond');
 const header = useTemplateRef<HTMLDivElement>('header');
+const stream = useTemplateRef<HTMLVideoElement>('stream');
+const autoplayBlocked = ref(false);
+const muted = computed(() => get(autoplayBlocked) || Boolean(route.meta.muted));
 
-const isDesktop = useMediaQuery('(min-width: 900px)');
+useEventListener(stream, 'canplay', async () => {
+	const element = get(stream);
+	try {
+		await element?.play();
+	} catch {
+		autoplayBlocked.value = true;
+		if (element) {
+			element.muted = true;
+			await element.play();
+		}
+	}
+});
 
-const HEADER_MARGIN = 8;
 const headerBounds = useElementBounding(header);
 const diamondBounds = useElementBounding(diamond);
 const { width: viewportWidth } = useWindowSize();
+const isDesktop = useMediaQuery('(min-width: 900px)');
+const MIN_HEADER_SIZE = 22;
+const HEADER_MARGIN = 8;
+const GLYPH = 0.6;
 
-/**
- * Blotter bakes its text into a fixed-size buffer at the font size it was built with,
- * so the canvas has to be scaled to fit instead (https://github.com/bradley/Blotter/issues/38).
- * The header sits above the diamond's centre, making its top edge the narrowest part of the diamond it has to clear.
- */
+const blotterHeader = computed(() => {
+	const override = headerTitle.value;
+	const max = get(isDesktop) ? 92.16 : 69;
+	if (!override) {
+		return { text: null, size: max };
+	}
+	const room = Math.max(get(viewportWidth) * 0.86 - 32, 120);
+	const size = Math.max(MIN_HEADER_SIZE, Math.floor(Math.min(max, room / (override.length * GLYPH))));
+	const chars = Math.max(4, Math.floor(room / (size * GLYPH)));
+	return {
+		text: override.length > chars ? `${override.slice(0, chars - 1)}...` : override,
+		size
+	};
+});
+
 const blotterScale = computed(() => {
 	const width = get(headerBounds.width);
 	const height = get(headerBounds.height);
@@ -47,9 +80,7 @@ const blotterScale = computed(() => {
 	}
 
 	const taper = (2 * diamondWidth) / diamondHeight;
-	// width the diamond has left where the header's bottom edge sits, minus the outline's room
 	const room = diamondWidth - HEADER_MARGIN * 2 - taper * (diamondTop + diamondHeight / 2 - bottom);
-	// at scale s the top edge is `height * s` higher, where the diamond is another `taper * height * s` narrower
 	const fit = Math.min(
 		(bottom - HEADER_MARGIN) / height, // keep the top edge on screen
 		(viewport - HEADER_MARGIN * 2) / width, // keep it inside the viewport
@@ -66,7 +97,12 @@ const blotterScale = computed(() => {
 		ref="diamond"
 		:class="{ 'diamond-transparent': transparent }"
 		:style="{ transform: `translate(-50%, -50%) scale(${scale})` }">
-		<iframe v-if="video" id="diamond-video" src="/stream/video#iframe" allow="autoplay" title="Stream" />
+		<template v-if="video">
+			<Background v-if="offline" contained />
+			<div v-else id="diamond-video">
+				<hlsjs-video ref="stream" :src="src" :muted.prop="muted" stream-type="live" playsinline />
+			</div>
+		</template>
 
 		<RouterLink v-if="video" to="/stream" id="diamond-link" />
 
@@ -75,17 +111,18 @@ const blotterScale = computed(() => {
 
 	<DiamondBorder :target="diamond" />
 
-	<div id="blotter-header" ref="header" :style="{ '--blotter-scale': blotterScale }">
+	<div
+		id="blotter-header"
+		ref="header"
+		:class="{ 'blotter-override': blotterHeader.text }"
+		:style="{ '--blotter-scale': blotterScale }">
 		<Blotter
-			v-if="isStreamLive !== null"
-			:text="isStreamLive ? 'LIVE' : 'OFFLINE'"
+			v-if="blotterHeader.text || isStreamLive !== null"
+			:text="blotterHeader.text ?? (isStreamLive ? 'LIVE' : 'OFFLINE')"
 			material="liquidDistort"
 			font-family="VCR OSD"
-			:font-size="isDesktop ? 92.16 : 69"
-			:material-uniforms="{
-				uSpeed: 0.16,
-				uVolatility: 0.02
-			}" />
+			:font-size="blotterHeader.size"
+			:material-uniforms="{ uSpeed: 0.16, uVolatility: 0.02 }" />
 	</div>
 </template>
 
@@ -122,7 +159,6 @@ const blotterScale = computed(() => {
 
 	& #diamond-video {
 		aspect-ratio: 16 / 9;
-		border: none;
 		height: 100%;
 		left: 50%;
 		position: absolute;
@@ -141,13 +177,20 @@ const blotterScale = computed(() => {
  */
 #blotter-header {
 	filter: drop-shadow(3px 0 0 #000) drop-shadow(-3px 0 0 #000) drop-shadow(0 3px 0 #000) drop-shadow(0 -3px 0 #000);
-	left: 50%;
+	left: 0;
+	margin-inline: auto;
 	pointer-events: none;
 	position: fixed;
+	right: 0;
 	top: calc(var(--menu-top) - var(--menu-header-gap));
-	transform: translate(-50%, -100%);
+	transform: translateY(-100%);
 	width: max-content;
 	z-index: 3;
+
+	/* a page's own title sits above its content, which starts higher than the menu rows */
+	&.blotter-override {
+		top: var(--menu-title-bottom);
+	}
 
 	& :deep(canvas) {
 		transform: scale(var(--blotter-scale, 1));

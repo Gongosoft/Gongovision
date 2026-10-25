@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
 
 const router = createRouter({
-	history: createWebHistory(import.meta.env.BASE_URL),
+	history: createWebHistory(),
 	routes: [
 		{
 			name: 'Home',
@@ -34,8 +34,16 @@ const router = createRouter({
 			meta: { menu: 'content' }
 		},
 		{
-			name: 'Content (YouTube)',
+			name: 'Radio',
+			path: '/content/radio',
+			alias: '/radio',
+			component: async () => import('@/views/Radio.vue'),
+			meta: { menu: 'radio', muted: true }
+		},
+		{
+			name: 'YouTube Links',
 			path: '/content/youtube',
+			alias: '/youtube',
 			component: async () => import('@/views/Menu.vue'),
 			meta: { menu: 'youtube' }
 		},

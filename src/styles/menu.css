@@ -6,6 +6,7 @@
 :root {
 	/* bounding box of a rhombus with 75°/105° vertices: aspect-ratio 1.303 = 1 / tan(37.5°) */
 	--diamond-width: min(max(85vw, 130vmin), calc(130vh * 1.303));
+	--diamond-height: calc(var(--diamond-width) / 1.303);
 
 	/*
 	 * one design pixel, small enough that three menu columns fit across the diamond at its top row
@@ -32,5 +33,9 @@
 	--menu-header-gap: clamp(1rem, 4vmin, 56px);
 
 	/* the first two rows are centred on screen; the back button hangs below them */
-	--menu-top: calc(50% - var(--menu-tile-height) - var(--menu-row-gap) / 2);
+	--menu-top-offset: calc(-1 * var(--menu-tile-height) - var(--menu-row-gap) / 2);
+	--menu-top: calc(50% + var(--menu-top-offset));
+
+	/* where a page's own title in the diamond's header ends: one gap higher than LIVE / OFFLINE */
+	--menu-title-bottom: calc(var(--menu-top) - var(--menu-header-gap) * 2);
 }

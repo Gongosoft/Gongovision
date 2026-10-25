@@ -18,6 +18,10 @@ declare global {
 		VIGOR: string;
 		WS: string;
 	};
+	const AZURACAST: {
+		HOST: string;
+		STATION: string;
+	};
 	const BASE_URL: string;
 	const LIVE_NOTIFICATION: NotificationPayload;
 	const OWNCAST: {

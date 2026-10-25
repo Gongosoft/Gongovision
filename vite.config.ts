@@ -38,6 +38,10 @@ export default defineConfig({
 			VIGOR: 'https://vigor.angelthump.com',
 			WS: 'wss://uws.angelthump.com/ws'
 		}),
+		AZURACAST: JSON.stringify({
+			HOST: 'https://radio.gongo.tv',
+			STATION: 'gongo'
+		}),
 		BASE_URL: JSON.stringify('https://gongo.tv'),
 		LIVE_NOTIFICATION: JSON.stringify({
 			title: 'the pull of the gongo compels you',

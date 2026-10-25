@@ -1,6 +1,6 @@
 import type { Component } from 'vue';
 
-export type MenuName = 'home' | 'community' | 'content' | 'notifications' | 'youtube';
+export type MenuName = 'home' | 'community' | 'content' | 'notifications' | 'radio' | 'youtube';
 
 export interface MenuTileProps {
 	/** raw svg markup (a `?raw` import) */

@@ -1,13 +1,17 @@
 import { toValue } from 'vue';
 import { useEventListener } from '@vueuse/core';
 import type { MaybeRefOrGetter } from 'vue';
-import type { PlayerElement } from '@/composables/usePlayerSettings.ts';
+import type { MediaVolumeState } from '@videojs/html';
 
 const VOLUME_WHEEL_STEP = 0.05;
 
+interface VolumeCapablePlayer {
+	readonly store: MediaVolumeState;
+}
+
 export function useVolumeWheel(
 	container: MaybeRefOrGetter<HTMLElement | null>,
-	player: MaybeRefOrGetter<PlayerElement | null>
+	player: MaybeRefOrGetter<VolumeCapablePlayer | null>
 ): void {
 	function handleWheel(event: WheelEvent): void {
 		const store = toValue(player)?.store;

@@ -7,7 +7,7 @@ import { useBackgroundPreset } from '@/composables/useBackgroundPreset.ts';
 
 const { contained = false } = defineProps<{ contained?: boolean }>();
 
-const { preset, params, ready } = useBackgroundPreset();
+const { preset, params, ready } = useBackgroundPreset(contained ? 'contained' : 'page');
 const canvasRef = useTemplateRef<InstanceType<typeof GongoizerCanvas>>('shader');
 const canvas = computed(() => canvasRef.value?.canvas ?? null);
 

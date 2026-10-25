@@ -20,6 +20,7 @@ import spotifySVG from '@/assets/images/spotify.svg?raw';
 import bullhornSVG from '@/assets/images/bullhorn.svg?raw';
 import downloadSVG from '@/assets/images/download.svg?raw';
 import playlistSVG from '@/assets/images/playlist.svg?raw';
+import radioSVG from '@/assets/images/cassette-tape.svg?raw';
 import { computed } from 'vue';
 import { useRoute } from 'vue-router';
 import type { ComputedRef } from 'vue';
@@ -34,29 +35,16 @@ const MENUS: Record<MenuName, MenuItem[]> = {
 		{ icon: peopleSVG, label: 'Community', to: '/community' },
 		{ icon: bullhornSVG, label: 'Notifs', title: 'Notifications', to: '/notifications' }
 	],
-	notifications: [
-		{ component: WebPush },
-		{
-			icon: discordSVG,
-			label: 'Discord',
-			title: 'Discord',
-			fill: '#5865f2',
-			href: 'https://discord.com/channels/847280020622671933/1158478340336914572'
-		},
-		{ component: Emails }
-	],
 	community: [
 		{
 			icon: discordSVG,
 			label: 'Discord',
-			title: 'Discord',
 			fill: '#5865f2',
 			href: 'https://discord.gg/yRahnWpyDa'
 		},
 		{
 			icon: blueskySVG,
 			label: 'Bluesky',
-			title: 'GreatSphynx on Bluesky',
 			fill: '#1185fe',
 			href: 'https://bsky.app/profile/greatsphynx.bsky.social'
 		},
@@ -68,10 +56,11 @@ const MENUS: Record<MenuName, MenuItem[]> = {
 	content: [
 		{ icon: githubSVG, label: 'GitHub', href: 'https://github.com/Gongosoft/Gongovision' },
 		{ icon: youtubeSVG, label: 'YouTube', fill: '#ff0033', to: '/content/youtube' },
+		{ icon: radioSVG, label: 'Radio', title: 'AzuraCast', to: '/content/radio' },
 		{
 			icon: bankSVG,
 			label: 'Archive',
-			title: 'GreatSphynx Archives',
+			title: 'Internet Archive',
 			href: 'https://archive.org/details/@great_sphynx'
 		},
 		{
@@ -82,6 +71,18 @@ const MENUS: Record<MenuName, MenuItem[]> = {
 		},
 		{ icon: downloadSVG, label: 'Emotes', href: '/emotes' }
 	],
+	notifications: [
+		{ component: WebPush },
+		{
+			icon: discordSVG,
+			label: 'Discord',
+			title: 'Discord',
+			fill: '#5865f2',
+			href: 'https://discord.com/channels/847280020622671933/1158478340336914572'
+		},
+		{ component: Emails }
+	],
+	radio: [],
 	youtube: [
 		{
 			icon: youtubeSVG,

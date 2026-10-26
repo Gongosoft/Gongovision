@@ -30,7 +30,7 @@ const { currentTime, duration } = useMediaControls(video);
 
 const chatURL = computed(() => {
 	const current = get(vod);
-	return current ? `/b2/vods/chat/${encodeURIComponent(`${current.name}.chat.json`)}` : null;
+	return current ? `/b2/twitch_vods/chat/${encodeURIComponent(`${current.name}.chat.json`)}` : null;
 });
 
 const { available: hasChat, visible: chatLines } = useChatReplay(chatURL, currentTime);

@@ -65,7 +65,13 @@ previews_enabled = true
 enabled = false
 
 [secrets]
-required = ['B2_APPLICATION_KEY', 'TWITCH_CLIENT_SECRET', 'VAPID_PRIVATE_KEY']
+required = [
+	'B2_BUCKET_NAME',
+	'B2_APPLICATION_KEY',
+	'B2_APPLICATION_KEY_ID',
+	'TWITCH_CLIENT_SECRET',
+	'VAPID_PRIVATE_KEY'
+]
 
 [[send_email]]
 name = 'EMAIL'
@@ -73,9 +79,7 @@ allowed_sender_addresses = ['notifications@gongo.tv']
 remote = true
 
 [vars]
-B2_APPLICATION_KEY_ID = '00348459c62c8d40000000007'
-B2_ENDPOINT = 's3.eu-central-003.backblazeb2.com'
-B2_BUCKET_NAME = 'gongos'
+B2_ENDPOINT = 's3.us-west-004.backblazeb2.com'
 FRESHRSS_USERNAME = 'root'
 FRESHRSS_QUERY_TOKEN = '3I0QvV6LCOaYmkf8WKgFpr'
 FROM_EMAIL = 'notifications@gongo.tv'
@@ -99,9 +103,7 @@ service_id = '01a13916-698d-7e02-a9c2-902b92091d7b'
 remote = true
 
 [previews.vars]
-B2_APPLICATION_KEY_ID = '00348459c62c8d40000000007'
-B2_ENDPOINT = 's3.eu-central-003.backblazeb2.com'
-B2_BUCKET_NAME = 'gongos'
+B2_ENDPOINT = 's3.us-west-004.backblazeb2.com'
 FRESHRSS_USERNAME = 'root'
 FRESHRSS_QUERY_TOKEN = '3I0QvV6LCOaYmkf8WKgFpr'
 FROM_EMAIL = 'notifications@gongo.tv'

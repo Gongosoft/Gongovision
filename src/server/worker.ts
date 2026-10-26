@@ -109,11 +109,13 @@ export default {
 		}
 
 		if (pathname === '/vods/list') {
-			const objects = await listObjects('vods/');
+			const objects = await listObjects('twitch_vods/');
 			if (!objects) {
 				return new Response(null, { status: 502 });
 			}
-			return Response.json(objects.filter((object) => !object.name.includes('/')));
+			return Response.json(
+				objects.filter((object) => !object.name.includes('/') && !object.name.endsWith('.thumb'))
+			);
 		}
 
 		if (pathname === '/.well-known/did.json' || pathname.startsWith('/xrpc/')) {

@@ -1,5 +1,7 @@
 # https://secure.backblaze.com/app_keys.htm
+B2_BUCKET_NAME=''
 B2_APPLICATION_KEY=''
+B2_APPLICATION_KEY_ID=''
 # https://dev.twitch.tv/docs/authentication/register-app
 TWITCH_CLIENT_SECRET=''
 # bun web-push generate-vapid-keys

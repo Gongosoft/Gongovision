@@ -1,7 +1,7 @@
 import { clamp } from '@vueuse/shared';
-import { computed, ref, useTemplateRef } from 'vue';
+import { computed, ref } from 'vue';
 import { get, useLocalStorage, useMediaQuery, useWindowSize } from '@vueuse/core';
-import type { ComputedRef, Ref, StyleValue } from 'vue';
+import type { ComputedRef, InjectionKey, Ref, StyleValue } from 'vue';
 
 const CHAT_MAX = 0.85;
 const CHAT_MIN = 0.12;
@@ -13,15 +13,13 @@ function chatRatioFor16ᱺ9(w: number, h: number, mobile: boolean): number {
 	return mobile ? 1 - (w * 9) / (h * 16) : 1 - (h * 16) / (w * 9);
 }
 
-interface UseSplitPaneReturn {
+export interface UseSplitPaneReturn {
 	isMobile: ComputedRef<boolean>;
 	side: ComputedRef<'start' | 'end'>;
 	hidden: Ref<boolean>;
 	dragging: Ref<boolean>;
 	chatStyle: ComputedRef<{ flexBasis: string }>;
 	dividerStyle: ComputedRef<StyleValue>;
-	edgeStart: Ref<HTMLElement | null>;
-	edgeEnd: Ref<HTMLElement | null>;
 	onPointerDown: (e: PointerEvent) => void;
 	onPointerUp: () => void;
 	onPointerMove: (e: PointerEvent) => void;
@@ -29,6 +27,11 @@ interface UseSplitPaneReturn {
 	flip: () => void;
 	snapTo16ᱺ9: () => void;
 }
+
+/** what `SplitPaneEdges` needs from `SplitPane` */
+export const splitPaneKey: InjectionKey<
+	Pick<UseSplitPaneReturn, 'isMobile' | 'showEdge'> & { edgesShown: ComputedRef<boolean> }
+> = Symbol('split-pane');
 
 export function useSplitPane(): UseSplitPaneReturn {
 	const isMobile = useMediaQuery('(max-width: 767px)');
@@ -126,9 +129,6 @@ export function useSplitPane(): UseSplitPaneReturn {
 		hidden.value = false;
 	}
 
-	const edgeStart = useTemplateRef<HTMLElement>('edgeStart');
-	const edgeEnd = useTemplateRef<HTMLElement>('edgeEnd');
-
 	function snapTo16ᱺ9(): void {
 		chatRatio.value = clamp(chatRatioFor16ᱺ9(get(viewW), get(viewH), get(isMobile)), CHAT_MIN, 1);
 		hidden.value = false;
@@ -147,8 +147,6 @@ export function useSplitPane(): UseSplitPaneReturn {
 		dragging,
 		chatStyle,
 		dividerStyle,
-		edgeStart,
-		edgeEnd,
 		onPointerDown,
 		onPointerUp,
 		onPointerMove,

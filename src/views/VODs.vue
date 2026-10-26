@@ -6,6 +6,7 @@ import shuffleSVG from '@/assets/images/shuffle.svg?raw';
 import fallbackThumb from '@/assets/images/thumbnails/fallback.avif';
 import { useHead } from '@unhead/vue';
 import { computed, useTemplateRef } from 'vue';
+import { formatBytes } from '@/utils/format.ts';
 import { useVODs } from '@/composables/useVODs.ts';
 import { RouterLink, useRouter } from 'vue-router';
 import { get, useEventListener } from '@vueuse/core';
@@ -15,8 +16,6 @@ const router = useRouter();
 const { vods, totalSize, loading, errorMessage, refresh } = useVODs();
 
 const formatPath = (vod: VOD): string => `/vods/${encodeURIComponent(vod.name)}`;
-const formatSize = (bytes: number): string =>
-	bytes ? `${bytes / 1e9 >= 0.1 ? `${(bytes / 1e9).toFixed(1)} GB` : `${(bytes / 1e6).toFixed(0)} MB`}` : '';
 
 function shuffle(): void {
 	const list = get(vods);
@@ -38,7 +37,7 @@ useEventListener(grid, 'mouseover', (e) => {
 	}
 });
 
-useHead({ title: computed(() => formatSize(get(totalSize)) || 'VODs') });
+useHead({ title: computed(() => formatBytes(get(totalSize)) || 'VODs') });
 </script>
 
 <template>
@@ -69,7 +68,7 @@ useHead({ title: computed(() => formatSize(get(totalSize)) || 'VODs') });
 				</div>
 				<div class="card-info">
 					<span class="vod-title">{{ vod.name }}</span>
-					<span v-if="vod.size" class="vod-size">{{ formatSize(vod.size) }}</span>
+					<span v-if="vod.size" class="vod-size">{{ formatBytes(vod.size) }}</span>
 				</div>
 			</RouterLink>
 		</div>

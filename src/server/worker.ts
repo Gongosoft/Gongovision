@@ -110,7 +110,10 @@ export default {
 
 		if (pathname === '/vods/list') {
 			const objects = await listObjects('vods/');
-			return Response.json(objects ?? [], { status: objects ? 200 : 502 });
+			if (!objects) {
+				return new Response(null, { status: 502 });
+			}
+			return Response.json(objects.filter((object) => !object.name.includes('/')));
 		}
 
 		if (pathname === '/.well-known/did.json' || pathname.startsWith('/xrpc/')) {

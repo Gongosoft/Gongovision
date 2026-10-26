@@ -121,6 +121,11 @@ export default defineConfig({
 						src: './src/assets/fonts/heavy-data.woff2'
 					},
 					{
+						name: 'Inter',
+						local: 'Inter',
+						src: './src/assets/fonts/inter.woff2'
+					},
+					{
 						name: 'VCR OSD',
 						local: 'VCR OSD Mono',
 						src: './src/assets/fonts/vcr-osd-mono.woff2'

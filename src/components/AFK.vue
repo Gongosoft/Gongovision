@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import OSMO from '@/assets/audio/OSMO.opus?url';
-import daxMug from '@/assets/images/emotes/bttv/daxMug.webp';
-import omoLurk from '@/assets/images/emotes/7tv/omoLurk.avif';
+import daxMugSrc from '@/assets/images/emotes/bttv/daxMug.webp';
+import omoLurkSrc from '@/assets/images/emotes/7tv/omoLurk.avif';
 import { Howl } from 'howler';
-import { ref, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
 import {
 	get,
 	TransitionPresets,
@@ -15,11 +15,19 @@ import {
 } from '@vueuse/core';
 import type { CubicBezierPoints, EasingFunction } from '@vueuse/core';
 
+const { effects = {}, contained = false } = defineProps<{
+	effects?: { omoLurk?: boolean; daxMug?: boolean };
+	contained?: boolean;
+}>();
+
+const showOmoLurk = computed(() => effects.omoLurk ?? true);
+const showDaxMug = computed(() => effects.daxMug ?? true);
+
 const { idle } = useIdle(10_000);
 
 const documentVisibility = useDocumentVisibility();
 
-const { isLoading: daxLoading } = useImage({ src: daxMug }, { immediate: true, delay: 5000 });
+const { isLoading: daxLoading } = useImage({ src: daxMugSrc }, { immediate: get(showDaxMug), delay: 5000 });
 const daxRetry = ref(false);
 const daxVisibility = ref(false);
 const daxTimeout = useTimeoutFn(() => {
@@ -27,17 +35,22 @@ const daxTimeout = useTimeoutFn(() => {
 }, 150);
 
 const omoVisibility = ref(0);
-const omoClick = new Howl({
-	src: OSMO,
-	format: ['opus'],
-	volume: 0.42
-});
+const omoClick = get(showOmoLurk)
+	? new Howl({
+			src: OSMO,
+			format: ['opus'],
+			volume: 0.42
+		})
+	: null;
 const omoDuration = ref(1500);
 const omoEasing = ref<EasingFunction | CubicBezierPoints>(TransitionPresets.easeInCubic);
 
 const output = useTransition(omoVisibility, { duration: omoDuration, transition: omoEasing });
 
 watch(idle, (isIdle) => {
+	if (!get(showOmoLurk)) {
+		return;
+	}
 	if (isIdle) {
 		omoDuration.value = 1500;
 		omoEasing.value = TransitionPresets.easeInCubic;
@@ -50,6 +63,9 @@ watch(idle, (isIdle) => {
 });
 
 watch(documentVisibility, (current, previous) => {
+	if (!get(showDaxMug)) {
+		return;
+	}
 	if (current === 'visible' && previous === 'hidden') {
 		if (Math.random() >= 0.99) {
 			if (get(daxRetry) || !get(daxLoading)) {
@@ -65,18 +81,26 @@ watch(documentVisibility, (current, previous) => {
 </script>
 
 <template>
-	<div v-if="daxVisibility" id="daxMug">
-		<img id="daxMug" :src="daxMug" alt="..." />
+	<div v-if="showDaxMug && daxVisibility" id="daxMug" :class="{ contained }">
+		<img :src="daxMugSrc" alt="..." />
 	</div>
-	<img id="omoLurk" :src="omoLurk" alt="..." @click="omoClick.play()" />
+	<img v-if="showOmoLurk" id="omoLurk" :class="{ contained }" :src="omoLurkSrc" alt="..." @click="omoClick?.play()" />
 </template>
 
 <style scoped>
+#daxMug,
+#omoLurk {
+	position: fixed;
+
+	&.contained {
+		position: absolute;
+	}
+}
+
 #daxMug {
 	inset: 0;
 	overflow: hidden;
 	pointer-events: none;
-	position: fixed;
 	z-index: 1;
 
 	& img {
@@ -91,7 +115,6 @@ watch(documentVisibility, (current, previous) => {
 	cursor: pointer;
 	left: 50%;
 	pointer-events: auto;
-	position: fixed;
 	transform: v-bind('`translateX(-50%) translateY(${(1 - output) * 110}%)`');
 	user-select: none;
 	z-index: 1;

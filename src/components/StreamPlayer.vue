@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import '@videojs/html/media/hlsjs-video';
+import AFK from '@/components/AFK.vue';
 import VideoJS from '@/components/VideoJS.vue';
 import { useHead, useSeoMeta } from '@unhead/vue';
 import { computed, ref, useTemplateRef, watch } from 'vue';
@@ -185,6 +186,7 @@ useEventListener(regionGroup, 'value-change', (event: CustomEvent<{ value: strin
 		</template>
 		<template #overlay>
 			<slot name="overlay"></slot>
+			<AFK :effects="{ omoLurk: false }" contained />
 		</template>
 		<template #controls>
 			<button

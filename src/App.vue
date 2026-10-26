@@ -92,6 +92,18 @@ useHead({
 			type: 'application/opensearchdescription+xml',
 			title: 'Sphynx Bluesky',
 			href: '/opensearch.xml'
+		},
+		{
+			rel: 'alternate',
+			type: 'application/rss+xml',
+			title: 'gongo',
+			href: '/rss/xml'
+		},
+		{
+			rel: 'alternate',
+			type: 'application/rss+xml',
+			title: 'Stream RSS',
+			href: '/stream/rss'
 		}
 	]
 });

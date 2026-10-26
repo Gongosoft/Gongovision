@@ -2,7 +2,8 @@ import { env } from 'cloudflare:workers';
 import { writeM3U } from '@iptv/playlist';
 import { routeAgentRequest } from 'agents';
 import { getXMLTV } from '@/server/xmltv.ts';
-import { handleRssRequest } from '@/server/rss.ts';
+import { handleStreamRssRequest } from '@/server/rss.ts';
+import { handleFreshRssRequest } from '@/server/freshrss.ts';
 import { handleB2Request, listObjects } from '@/server/b2.ts';
 import { getOwncastLiveStatus, getOwncastStreamInfo } from '@/server/owncast.ts';
 import { getAngelThumpM3U8, getAngelThumpStreamInfo } from '@/server/angelthump.ts';
@@ -56,7 +57,7 @@ export default {
 		}
 
 		if (pathname.match(/\/rss\/(?:(?:html)|(?:opml)|(?:xml))/g)) {
-			return handleRssRequest(request);
+			return handleFreshRssRequest(request);
 		}
 
 		switch (pathname) {
@@ -94,6 +95,9 @@ export default {
 				return new Response(manifest, {
 					headers: { 'Content-Type': 'application/vnd.apple.mpegurl', 'Cache-Control': 'no-store' }
 				});
+			}
+			case '/stream/rss': {
+				return handleStreamRssRequest(request);
 			}
 			case '/stream/xmltv': {
 				return new Response(getXMLTV(), {

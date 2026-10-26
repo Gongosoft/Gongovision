@@ -7,3 +7,15 @@ export interface StreamInfoResponse {
 }
 
 export type StreamSource = 'owncast' | 'angelthump';
+
+export type StreamStatus = 'online' | 'offline';
+
+export type StreamEventSource = 'ws' | 'poll';
+
+/** one row of the `stream_events` [D1 table](../server/schema.sql) */
+export interface StreamEvent {
+	id: number;
+	status: StreamStatus;
+	source: StreamEventSource;
+	occurredAt: number;
+}

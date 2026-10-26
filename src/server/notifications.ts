@@ -4,6 +4,7 @@ import { getOwncastLiveStatus } from '@/server/owncast.ts';
 import { getAngelThumpLiveStatus } from '@/server/angelthump.ts';
 import { init as initPush, send as sendPush } from '@/server/webpush.ts';
 import { confirmationEmail, liveNotificationEmail, sendEmail } from '@/server/email.ts';
+import { recordStreamEvent } from '@/server/rss.ts';
 import type {
 	LiveBroadcastMessage,
 	NotificationPayload,
@@ -109,6 +110,7 @@ export class Notifications extends Agent<Env, NotificationState> {
 		}
 
 		await this.onLiveChange('poll');
+		await this.seedLiveFeed();
 	}
 
 	private async onLiveChange(source: 'ws' | 'poll'): Promise<void> {
@@ -125,9 +127,41 @@ export class Notifications extends Agent<Env, NotificationState> {
 			owncastLive: this.owncastLive
 		});
 		this.setState({ ...this.state, isLive: live });
+
+		await this.recordLiveFeedEvent(live, source);
+
 		if (live) {
 			await this.sendNotifications();
 			await this.sendEmailNotifications();
+		}
+	}
+
+	/** Gives the feed a baseline row before the stream ever changes state. */
+	private async seedLiveFeed(): Promise<void> {
+		if (this.angelthumpLive === null && this.owncastLive === null) {
+			return;
+		}
+
+		try {
+			await recordStreamEvent(this.env.DB, {
+				status: this.angelthumpLive === true || this.owncastLive === true ? 'online' : 'offline',
+				source: 'seed',
+				occurredAt: Date.now()
+			});
+		} catch (error) {
+			console.error('seedLiveFeed failed:', error);
+		}
+	}
+
+	private async recordLiveFeedEvent(live: boolean, source: 'ws' | 'poll'): Promise<void> {
+		try {
+			await recordStreamEvent(this.env.DB, {
+				status: live ? 'online' : 'offline',
+				source,
+				occurredAt: Date.now()
+			});
+		} catch (error) {
+			console.error('recordStreamEvent failed:', error);
 		}
 	}
 

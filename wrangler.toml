@@ -19,6 +19,7 @@ run_worker_first = [
 	'/stream/info',
 	'/stream/m3u',
 	'/stream/m3u8*',
+	'/stream/rss',
 	'/stream/xmltv',
 	'/vods/list',
 	'/.well-known/did.json',
@@ -32,6 +33,11 @@ remote = true
 
 [cache]
 enabled = true
+
+[[d1_databases]]
+binding = 'DB'
+database_name = 'gongo'
+database_id = '5f785c53-efe0-409f-b9ce-73b5a4493370'
 
 [durable_objects]
 bindings = [{ name = 'CALLOFTHEGONGO', class_name = 'Notifications' }]
@@ -113,6 +119,11 @@ VAPID_SUBJECT = 'https://gongo.tv/stream'
 
 [previews.browser]
 binding = 'BROWSER'
+
+[[previews.d1_databases]]
+binding = 'DB'
+database_name = 'gongo'
+database_id = '5f785c53-efe0-409f-b9ce-73b5a4493370'
 
 [previews.durable_objects]
 bindings = [{ name = 'CALLOFTHEGONGO', class_name = 'Notifications' }]

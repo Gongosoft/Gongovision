@@ -1,76 +1,103 @@
 import { env } from 'cloudflare:workers';
+import { Feed } from 'feed';
+import type { StreamEvent } from '@/types/stream.d.ts';
 
-function rewriteURL(raw: string, origin: string): string {
-	const decoded = raw.replaceAll('&amp;', '&');
-	const parsed = new URL(decoded, origin);
-	const format = parsed.searchParams.get('f') || 'html';
-	parsed.searchParams.delete('user');
-	parsed.searchParams.delete('t');
-	parsed.searchParams.delete('f');
+const FEED_ITEMS = 50;
 
-	const path = format === 'rss' ? '/rss/xml' : `/rss/${format}`;
-	const query = parsed.searchParams.toString();
-	return query ? `${origin}${path}?${query}` : `${origin}${path}`;
+export async function recordStreamEvent(db: D1Database, event: Omit<StreamEvent, 'id'>): Promise<boolean> {
+	const result = await db
+		.prepare(
+			`INSERT INTO stream_events (status, source, occurred_at)
+			SELECT ?1, ?2, ?3
+			WHERE (SELECT status FROM stream_events ORDER BY id DESC LIMIT 1) IS NOT ?1`
+		)
+		.bind(event.status, event.source, event.occurredAt)
+		.run();
+
+	return (result.meta.changes ?? 0) > 0;
 }
 
-async function rewriteRSS(response: Response, request: Request): Promise<Response> {
-	const { origin } = new URL(request.url);
-	const ct = response.headers.get('Content-Type') || '';
+async function getStreamEvents(db: D1Database, limit: number = FEED_ITEMS): Promise<StreamEvent[]> {
+	const { results } = await db
+		.prepare('SELECT id, status, source, occurred_at AS occurredAt FROM stream_events ORDER BY id DESC LIMIT ?')
+		.bind(limit)
+		.all<StreamEvent>();
 
-	if (ct.includes('html')) {
-		return new HTMLRewriter()
-			.on('a[href^="https://rss."], a[href*="user="]', {
-				element(element: {
-					getAttribute: (name: string) => string | null;
-					setAttribute: (name: string, value: string) => unknown;
-				}): void {
-					const href = element.getAttribute('href');
-					if (href) {
-						element.setAttribute('href', rewriteURL(href, origin));
-					}
-				}
-			})
-			.on('form[action^="https://rss."]', {
-				element(element: {
-					getAttribute: (name: string) => string | null;
-					setAttribute: (name: string, value: string) => unknown;
-				}): void {
-					const action = element.getAttribute('action');
-					if (action) {
-						element.setAttribute('action', rewriteURL(action, origin));
-					}
-				}
-			})
-			.transform(response);
+	return results;
+}
+
+async function getETag(body: string): Promise<string> {
+	const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(body));
+	const hex = Array.from(new Uint8Array(digest).slice(0, 12), (byte) => byte.toString(16).padStart(2, '0'));
+
+	return `W/"${hex.join('')}"`;
+}
+
+/** `If-None-Match` may carry a comma-separated list, and weak/strong forms are equal */
+function etagMatches(header: string | null, etag: string): boolean {
+	if (header === null) {
+		return false;
 	}
 
-	if (ct.includes('xml') || ct.includes('rss') || ct.includes('opml')) {
-		let text = await response.text();
-		text = text.replace(/https:\/\/rss\.[^\s"'<>]+?\/api\/query\.php\?[^\s"'<>]+/g, (match) =>
-			rewriteURL(match, origin)
-		);
-		if (ct.includes('opml')) {
-			text = text.replace(/http:\/\/[^/\s"'<>]+\//g, 'http://rss-bridge/');
-		}
-		return new Response(text, {
-			headers: { 'Content-Type': ct }
+	const bare = etag.replace(/^W\//, '');
+	return header.split(',').some((value) => value.trim() === '*' || value.trim().replace(/^W\//, '') === bare);
+}
+
+export function buildStreamFeed(events: StreamEvent[], origin: string): string {
+	const streamURL = `${origin}/stream`;
+
+	const feed = new Feed({
+		id: streamURL,
+		title: 'GreatSphynx Streams',
+		description: 'Live/offline notifications for streams on gongo.tv',
+		link: streamURL,
+		language: 'en',
+		ttl: 1,
+		updated: new Date(events[0]?.occurredAt ?? Date.now()),
+		generator: false,
+		feedLinks: { rss: `${streamURL}/rss` },
+		favicon: `${origin}/favicon/favicon.webp`
+	});
+
+	for (const event of events) {
+		feed.addItem({
+			title: `GreatSphynx has ${event.status === 'online' ? 'started' : 'stopped'} streaming!`,
+			id: `urn:gongo:stream:${event.id}`,
+			link: streamURL,
+			description: event.status === 'online' ? LIVE_NOTIFICATION.title : "gongo'd",
+			date: new Date(event.occurredAt),
+			category: [{ name: event.status }]
 		});
 	}
 
-	return response;
+	return feed.rss2();
 }
 
-export async function handleRssRequest(request: Request): Promise<Response> {
-	const incoming = new URL(request.url);
-	const format = incoming.pathname.split('/').pop()?.replace('xml', 'rss') || 'html';
-	const target = new URL(
-		`/api/query.php?user=${env.FRESHRSS_USERNAME}&t=${env.FRESHRSS_QUERY_TOKEN}&f=${format}`,
-		request.url
-	);
-	for (const [key, value] of incoming.searchParams) {
-		target.searchParams.append(key, value);
+export async function handleStreamRssRequest(request: Request): Promise<Response> {
+	try {
+		const events = await getStreamEvents(env.DB);
+		const body = buildStreamFeed(events, new URL(request.url).origin);
+		const etag = await getETag(body);
+
+		if (etagMatches(request.headers.get('If-None-Match'), etag)) {
+			return new Response(null, {
+				status: 304,
+				headers: { 'ETag': etag, 'Cache-Control': 'public, max-age=60' }
+			});
+		}
+
+		return new Response(body, {
+			headers: {
+				'Content-Type': 'application/rss+xml; charset=utf-8',
+				'Cache-Control': 'public, max-age=60',
+				'ETag': etag
+			}
+		});
+	} catch (error) {
+		console.error('handleStreamRssRequest failed:', error);
+		return new Response('stream status feed unavailable', {
+			status: 503,
+			headers: { 'Cache-Control': 'no-store', 'Retry-After': '60' }
+		});
 	}
-	target.protocol = 'http:';
-	const rss = await env.FRESHRSS.fetch(new Request(target, request));
-	return rewriteRSS(rss, request);
 }

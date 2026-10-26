@@ -8,8 +8,7 @@ import ChatReplay from '@/components/ChatReplay.vue';
 import SplitPaneEdges from '@/components/SplitPaneEdges.vue';
 import fallbackThumb from '@/assets/images/thumbnails/fallback.avif';
 import { useHead } from '@unhead/vue';
-import { useRoute } from 'vue-router';
-import { useRouteQuery } from '@vueuse/router';
+import { useRoute, useRouter } from 'vue-router';
 import { useVODs } from '@/composables/useVODs.ts';
 import { useChatReplay } from '@/composables/useChatReplay.ts';
 import { computed, ref, useTemplateRef, watchEffect } from 'vue';
@@ -19,13 +18,13 @@ import { get, useMediaControls, watchThrottled, whenever } from '@vueuse/core';
 
 const { vods, loading } = useVODs();
 const route = useRoute();
+const router = useRouter();
 const error = ref<string | null>(null);
 const basename = computed(() => decodeURIComponent(String(route.params.title)));
 const vod = computed(() => get(vods).find((v) => v.name === get(basename)));
 const video = useTemplateRef<HTMLVideoElement>('video');
 
-const t = useRouteQuery<string | undefined>('t');
-const startAt = parseTimestamp(get(t));
+const startAt = parseTimestamp(typeof route.query.t === 'string' ? route.query.t : undefined);
 const { currentTime, duration } = useMediaControls(video);
 
 const chatURL = computed(() => {
@@ -48,7 +47,13 @@ whenever(
 watchThrottled(
 	currentTime,
 	(seconds) => {
-		t.value = seconds >= 1 ? formatTimestamp(seconds, 'labeled') : undefined;
+		if (route.name !== 'VOD Player') {
+			return;
+		}
+		const time = seconds >= 1 ? formatTimestamp(seconds, 'labeled') : undefined;
+		if (time !== route.query.t) {
+			router.replace({ query: { ...route.query, t: time } });
+		}
 	},
 	{ throttle: 1000 }
 );

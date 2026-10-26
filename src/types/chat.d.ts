@@ -1,3 +1,5 @@
+import type { CSSProperties } from 'vue';
+
 export interface ChatBadge {
 	title: string;
 	url: string;
@@ -8,8 +10,26 @@ export type ChatBadges = Record<string, Record<string, ChatBadge>>;
 
 export type ChatPart =
 	| { type: 'text'; text: string }
-	| { type: 'emote'; name: string; url: string }
+	| ChatEmotePart
 	| { type: 'link' | 'mention'; text: string; href: string };
+
+/** a 7TV zero-width emote stacked on top of another emote */
+export interface ChatOverlay {
+	name: string;
+	url: string;
+}
+
+export interface ChatEmotePart {
+	type: 'emote';
+	name: string;
+	url: string;
+	/** zero-width emotes drawn over this one */
+	overlays?: ChatOverlay[];
+	/** styles for the box holding the emote and its overlays */
+	style?: CSSProperties;
+	/** styles for the base image alone, e.g. the wide modifier */
+	imgStyle?: CSSProperties;
+}
 
 /** a message prepared for rendering */
 export interface ChatLine {

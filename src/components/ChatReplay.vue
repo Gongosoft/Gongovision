@@ -51,11 +51,34 @@ watch(
 				</span>
 				<span class="chat-body">
 					<template v-for="(part, index) in line.parts" :key="index">
+						<span
+							v-if="part.type === 'emote' && (part.overlays || part.style)"
+							class="chat-emote-stack"
+							:style="part.style">
+							<img
+								:src="part.url"
+								:alt="part.name"
+								:title="part.name"
+								:style="part.imgStyle"
+								class="chat-emote"
+								loading="lazy"
+								decoding="async"
+								@load="pinned && scrollToBottom()" />
+							<img
+								v-for="overlay in part.overlays"
+								:key="overlay.url"
+								:src="overlay.url"
+								:alt="overlay.name"
+								class="chat-emote chat-emote-overlay"
+								loading="lazy"
+								decoding="async" />
+						</span>
 						<img
-							v-if="part.type === 'emote'"
+							v-else-if="part.type === 'emote'"
 							:src="part.url"
 							:alt="part.name"
 							:title="part.name"
+							:style="part.imgStyle"
 							class="chat-emote"
 							loading="lazy"
 							decoding="async"
@@ -154,6 +177,27 @@ watch(
 		height: 1.75rem;
 		margin: -0.3125rem 0;
 		vertical-align: middle;
+	}
+
+	/* zero-width emotes share a grid cell with the emote they stack on, so they never take up space */
+	& .chat-emote-stack {
+		display: inline-grid;
+		margin: -0.3125rem 0;
+		overflow: clip;
+		place-items: center;
+		vertical-align: middle;
+
+		& > * {
+			grid-area: 1 / 1;
+		}
+
+		& .chat-emote {
+			margin: 0;
+		}
+	}
+
+	& .chat-emote-overlay {
+		pointer-events: none;
 	}
 
 	& .chat-link,

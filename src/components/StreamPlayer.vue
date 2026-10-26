@@ -20,7 +20,7 @@ import {
 	useLocalStorage,
 	useTimestamp
 } from '@vueuse/core';
-import type { StreamSource } from '@/composables/usePlayerSettings.ts';
+import type { StreamSource } from '@/types/stream.d.ts';
 
 const SOURCES: Record<StreamSource, { label: string }> = {
 	owncast: { label: 'Owncast' },

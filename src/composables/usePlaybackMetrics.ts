@@ -2,7 +2,7 @@
 import { computed, onBeforeUnmount, toValue, watch } from 'vue';
 import { get, useEventListener, useIntervalFn } from '@vueuse/core';
 import type { MaybeRefOrGetter } from 'vue';
-import type { StreamSource } from '@/composables/usePlayerSettings.ts';
+import type { StreamSource } from '@/types/stream.d.ts';
 
 const REPORT_INTERVAL_MS = 10_000;
 const MAX_LATENCY_MS = 100_000;

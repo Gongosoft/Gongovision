@@ -5,3 +5,5 @@ export interface StreamInfoResponse {
 	owncast: OwncastStatus | null;
 	angelthump: AngelThumpStreamResponse | null;
 }
+
+export type StreamSource = 'owncast' | 'angelthump';

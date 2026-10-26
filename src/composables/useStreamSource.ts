@@ -4,8 +4,8 @@ import { get, useIntervalFn, useLocalStorage, useWebSocket } from '@vueuse/core'
 import type { ComputedRef, Ref } from 'vue';
 import type { RemovableRef } from '@vueuse/core';
 import type { Region } from '@/types/angelthump.d.ts';
+import type { StreamSource } from '@/types/stream.d.ts';
 import type { OwncastStatus } from '@/types/owncast.d.ts';
-import type { StreamSource } from '@/composables/usePlayerSettings.ts';
 
 export const REGIONS = {
 	auto: { label: 'Auto' },

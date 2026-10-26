@@ -2,7 +2,7 @@
 import { computed, toValue, watch } from 'vue';
 import { get, useEventListener, useFetch, useIntervalFn } from '@vueuse/core';
 import type { MaybeRefOrGetter } from 'vue';
-import type { StreamSource } from '@/composables/usePlayerSettings.ts';
+import type { StreamSource } from '@/types/stream.d.ts';
 
 const PING_INTERVAL_MS = 4000;
 

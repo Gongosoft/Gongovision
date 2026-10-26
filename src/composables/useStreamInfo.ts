@@ -2,8 +2,7 @@ import { computed, ref, toValue, watch } from 'vue';
 import { get, useIntervalFn, useTimestamp } from '@vueuse/core';
 import { useStreamSource } from '@/composables/useStreamSource.ts';
 import type { ComputedRef, MaybeRefOrGetter } from 'vue';
-import type { StreamInfoResponse } from '@/types/stream.d.ts';
-import type { StreamSource } from '@/composables/usePlayerSettings.ts';
+import type { StreamInfoResponse, StreamSource } from '@/types/stream.d.ts';
 
 const info = ref<StreamInfoResponse | null>(null);
 

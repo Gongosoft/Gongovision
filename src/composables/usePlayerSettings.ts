@@ -1,9 +1,8 @@
 import { useLocalStorage } from '@vueuse/core';
 import { computed, onMounted, onUnmounted, toValue } from 'vue';
 import type { VideoPlayerStore } from '@videojs/html';
+import type { StreamSource } from '@/types/stream.d.ts';
 import type { MaybeRefOrGetter, WritableComputedRef } from 'vue';
-
-export type StreamSource = 'owncast' | 'angelthump';
 
 interface PlayerSettings {
 	volume: number;
@@ -12,7 +11,7 @@ interface PlayerSettings {
 	source: StreamSource;
 }
 
-export interface PlayerElement {
+interface PlayerElement {
 	readonly store: VideoPlayerStore;
 }
 

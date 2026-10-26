@@ -41,6 +41,7 @@ export default defineConfig({
 		},
 		{
 			files: [
+				'src/components/DiscordWebhook.vue',
 				'src/components/Emails.vue',
 				'src/components/WebPush.vue',
 				'src/components/gongoizer/GongoizerControls.vue'

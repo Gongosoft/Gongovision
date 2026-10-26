@@ -21,6 +21,7 @@ import bullhornSVG from '@/assets/images/bullhorn.svg?raw';
 import downloadSVG from '@/assets/images/download.svg?raw';
 import playlistSVG from '@/assets/images/playlist.svg?raw';
 import radioSVG from '@/assets/images/cassette-tape.svg?raw';
+import DiscordWebhook from '@/components/DiscordWebhook.vue';
 import { computed } from 'vue';
 import { useRoute } from 'vue-router';
 import type { ComputedRef } from 'vue';
@@ -72,7 +73,6 @@ const MENUS: Record<MenuName, MenuItem[]> = {
 		{ icon: downloadSVG, label: 'Emotes', href: '/emotes' }
 	],
 	notifications: [
-		{ component: WebPush },
 		{
 			icon: discordSVG,
 			label: 'Discord',
@@ -80,7 +80,10 @@ const MENUS: Record<MenuName, MenuItem[]> = {
 			fill: '#5865f2',
 			href: 'https://discord.com/channels/847280020622671933/1158478340336914572'
 		},
-		{ component: Emails }
+		{ icon: rssSVG, label: 'RSS', fill: '#fc8900', href: '/stream/rss' },
+		{ component: WebPush },
+		{ component: Emails },
+		{ component: DiscordWebhook }
 	],
 	radio: [],
 	youtube: [

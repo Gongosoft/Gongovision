@@ -5,6 +5,14 @@ import { getAngelThumpLiveStatus } from '@/server/angelthump.ts';
 import { init as initPush, send as sendPush } from '@/server/webpush.ts';
 import { confirmationEmail, liveNotificationEmail, sendEmail } from '@/server/email.ts';
 import { recordStreamEvent } from '@/server/rss.ts';
+import {
+	countDiscordWebhooks,
+	deliverLiveNotification,
+	registerDiscordWebhook,
+	retryDiscordWebhook
+} from '@/server/discord.ts';
+import type { StreamStatus } from '@/types/stream.d.ts';
+import type { DiscordRetryPayload } from '@/types/discord.d.ts';
 import type {
 	LiveBroadcastMessage,
 	NotificationPayload,
@@ -37,6 +45,13 @@ export class Notifications extends Agent<Env, NotificationState> {
 	private reconnectTimer: ReturnType<typeof setTimeout> | null = null;
 	private angelthumpLive: boolean | null = null;
 	private owncastLive: boolean | null = null;
+
+	private get liveStatus(): StreamStatus | null {
+		if (this.angelthumpLive === null && this.owncastLive === null) {
+			return null;
+		}
+		return this.angelthumpLive === true || this.owncastLive === true ? 'online' : 'offline';
+	}
 
 	public override async onStart(): Promise<void> {
 		initPush();
@@ -110,15 +125,15 @@ export class Notifications extends Agent<Env, NotificationState> {
 		}
 
 		await this.onLiveChange('poll');
-		await this.seedLiveFeed();
 	}
 
 	private async onLiveChange(source: 'ws' | 'poll'): Promise<void> {
-		const live = this.angelthumpLive === true || this.owncastLive === true;
-		if (this.state.isLive === live) {
+		const status = this.liveStatus;
+		if (status === null || this.state.isLive === (status === 'online')) {
 			return;
 		}
 
+		const live = status === 'online';
 		console.info('onLiveChange:', {
 			from: this.state.isLive,
 			to: live,
@@ -128,40 +143,44 @@ export class Notifications extends Agent<Env, NotificationState> {
 		});
 		this.setState({ ...this.state, isLive: live });
 
-		await this.recordLiveFeedEvent(live, source);
+		await this.recordLiveFeedEvent(status, source);
 
 		if (live) {
-			await this.sendNotifications();
-			await this.sendEmailNotifications();
+			await Promise.allSettled([this.notifyDiscord(), this.sendNotifications(), this.sendEmailNotifications()]);
 		}
 	}
 
-	/** Gives the feed a baseline row before the stream ever changes state. */
-	private async seedLiveFeed(): Promise<void> {
-		if (this.angelthumpLive === null && this.owncastLive === null) {
+	private async recordLiveFeedEvent(status: StreamStatus, source: 'ws' | 'poll'): Promise<void> {
+		try {
+			await recordStreamEvent(this.env.DB, { status, source, occurredAt: Date.now() });
+		} catch (error) {
+			console.error('recordStreamEvent failed:', error);
+		}
+	}
+
+	private async notifyDiscord(): Promise<void> {
+		try {
+			const retries = await deliverLiveNotification(Date.now());
+			await Promise.all(
+				retries.map(
+					async (retry) =>
+						await this.schedule(retry.delay, 'retryDiscordNotification', retry, { idempotent: true })
+				)
+			);
+		} catch (error) {
+			console.error('notifyDiscord failed:', error);
+		}
+	}
+
+	public async retryDiscordNotification(retry: DiscordRetryPayload): Promise<void> {
+		if (!this.state.isLive) {
 			return;
 		}
 
 		try {
-			await recordStreamEvent(this.env.DB, {
-				status: this.angelthumpLive === true || this.owncastLive === true ? 'online' : 'offline',
-				source: 'seed',
-				occurredAt: Date.now()
-			});
+			await retryDiscordWebhook(retry);
 		} catch (error) {
-			console.error('seedLiveFeed failed:', error);
-		}
-	}
-
-	private async recordLiveFeedEvent(live: boolean, source: 'ws' | 'poll'): Promise<void> {
-		try {
-			await recordStreamEvent(this.env.DB, {
-				status: live ? 'online' : 'offline',
-				source,
-				occurredAt: Date.now()
-			});
-		} catch (error) {
-			console.error('recordStreamEvent failed:', error);
+			console.error('retryDiscordNotification failed:', error);
 		}
 	}
 
@@ -308,6 +327,12 @@ export class Notifications extends Agent<Env, NotificationState> {
 		const url = new URL(request.url);
 		const path = url.pathname;
 
+		if (request.method === 'POST' && path.endsWith('/discord/subscribe')) {
+			const { webhook } = await request.json<{ webhook?: string }>();
+			const result = await registerDiscordWebhook(webhook ?? '');
+			return Response.json(result, { status: result.ok ? 200 : 400 });
+		}
+
 		if (request.method === 'POST' && path.endsWith('/email/subscribe')) {
 			const { email } = await request.json<{ email: string }>();
 			if (!isEmail(email)) {
@@ -349,7 +374,7 @@ export class Notifications extends Agent<Env, NotificationState> {
 		}
 
 		if (request.method === 'GET' && path.endsWith('/stats')) {
-			return Response.json(this.getStats());
+			return Response.json(await this.getStats());
 		}
 
 		return new Response('daxMug', { status: 404 });
@@ -387,18 +412,25 @@ export class Notifications extends Agent<Env, NotificationState> {
 	}
 
 	@callable()
-	public getStats(): {
+	public async getStats(): Promise<{
 		isLive: boolean;
 		pushSubscriptions: number;
 		emailSubscriptions: number;
 		emailConfirmed: number;
+		discordWebhooks: number;
 		lastEmailsSentAt: number;
-	} {
+	}> {
+		const discordWebhooks = await countDiscordWebhooks().catch((error: unknown) => {
+			console.error('countDiscordWebhooks failed:', error);
+			return 0;
+		});
+
 		return {
 			isLive: this.state.isLive,
 			pushSubscriptions: this.state.subscriptions.length,
 			emailSubscriptions: this.state.emailSubs.length,
 			emailConfirmed: this.state.emailSubs.filter((s) => s.confirmed).length,
+			discordWebhooks,
 			lastEmailsSentAt: this.state.lastEmailsSentAt
 		};
 	}

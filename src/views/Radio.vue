@@ -91,10 +91,10 @@ useSeoMeta({
 		<div v-if="!offline && lineTexts.length" ref="lines" class="lines">
 			<Blotter
 				:text="lineTexts"
-				material="liquidDistort"
-				font-family="VCR OSD"
 				:font-size="lineSizes"
-				:material-uniforms="{ uSpeed: 0.16, uVolatility: 0.01 }"" />
+				:material-uniforms="{ uSpeed: 0.16, uVolatility: 0.01 }"
+				material="liquidDistort"
+				font-family="VCR OSD" />
 		</div>
 	</div>
 

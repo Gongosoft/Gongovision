@@ -6,20 +6,22 @@ import '@videojs/html/video/player';
 import SplitPane from '@/components/SplitPane.vue';
 import ChatReplay from '@/components/ChatReplay.vue';
 import SplitPaneEdges from '@/components/SplitPaneEdges.vue';
+import fallbackThumb from '@/assets/images/thumbnails/fallback.avif';
 import { useHead } from '@unhead/vue';
 import { useRoute } from 'vue-router';
 import { useRouteQuery } from '@vueuse/router';
 import { useVODs } from '@/composables/useVODs.ts';
 import { useChatReplay } from '@/composables/useChatReplay.ts';
 import { computed, ref, useTemplateRef, watchEffect } from 'vue';
+import { useMediaSession } from '@/composables/useMediaSession.ts';
 import { formatTimestamp, parseTimestamp } from '@/utils/format.ts';
 import { get, useMediaControls, watchThrottled, whenever } from '@vueuse/core';
 
 const { vods, loading } = useVODs();
 const route = useRoute();
 const error = ref<string | null>(null);
-const title = computed(() => decodeURIComponent(String(route.params.title)));
-const vod = computed(() => get(vods).find((v) => v.name === get(title)));
+const basename = computed(() => decodeURIComponent(String(route.params.title)));
+const vod = computed(() => get(vods).find((v) => v.name === get(basename)));
 const video = useTemplateRef<HTMLVideoElement>('video');
 
 const t = useRouteQuery<string | undefined>('t');
@@ -52,10 +54,26 @@ watchThrottled(
 );
 
 watchEffect(() => {
-	error.value = !get(loading) && !get(vod) ? `VOD not found: ${get(title)}` : null;
+	error.value = !get(loading) && !get(vod) ? `VOD not found: ${get(basename)}` : null;
 });
 
-useHead({ title: computed(() => get(title).replace(/^\[[^\]]*\]\s*/, '')) });
+const title = computed(() => get(basename).replace(/^\[[^\]]*\]\s*/, ''));
+
+const metadata = computed<MediaMetadataInit | null>(() => {
+	const current = get(vod);
+	if (!current) {
+		return null;
+	}
+	return {
+		title: get(basename),
+		artist: 'GreatSphynx',
+		album: 'gongo VODs',
+		artwork: current.thumbnail ? [{ src: current.thumbnail }] : [{ src: fallbackThumb }]
+	};
+});
+
+useHead({ title });
+useMediaSession(metadata);
 </script>
 
 <template>

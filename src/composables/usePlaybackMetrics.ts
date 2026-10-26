@@ -31,8 +31,8 @@ export interface MetricsMediaElement extends HTMLElement {
 export function usePlaybackMetrics(
 	element: MaybeRefOrGetter<MetricsMediaElement | null>,
 	source: MaybeRefOrGetter<StreamSource>
-): { sessionId: string } {
-	const sessionId = crypto.randomUUID();
+): { sessionID: string } {
+	const sessionID = crypto.randomUUID();
 	const active = computed(() => toValue(source) === 'owncast');
 
 	let hasStartedPlaying = false;
@@ -81,7 +81,7 @@ export function usePlaybackMetrics(
 	}
 
 	function commonKeys(): Record<string, unknown> {
-		const keys: Record<string, unknown> = { v: 2, sid: sessionId };
+		const keys: Record<string, unknown> = { v: 2, sid: sessionID };
 		const hls = toValue(element)?.engine ?? null;
 
 		const throughput = hls?.bandwidthEstimate;
@@ -213,5 +213,5 @@ export function usePlaybackMetrics(
 
 	onBeforeUnmount(stop);
 
-	return { sessionId };
+	return { sessionID };
 }

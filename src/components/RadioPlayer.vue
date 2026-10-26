@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import '@videojs/html/live-audio/player';
 import '@/components/videojs/live-audio/skin.ts';
-import { computed, nextTick, onMounted, onUnmounted, ref, useTemplateRef, watch } from 'vue';
-import { get, useEventListener, useLocalStorage } from '@vueuse/core';
 import { useVolumeWheel } from '@/composables/useVolumeWheel.ts';
+import { useMediaSession } from '@/composables/useMediaSession.ts';
+import { get, useEventListener, useLocalStorage } from '@vueuse/core';
+import { computed, nextTick, onMounted, onUnmounted, ref, useTemplateRef, watch } from 'vue';
 import type { LiveAudioPlayerElement } from '@videojs/html/live-audio';
 import type { ApiSong } from '@/types/azuracast.d.ts';
 
@@ -132,21 +133,19 @@ onUnmounted(() => {
 
 useVolumeWheel(container, player);
 
-watch(
-	() => song,
-	(current) => {
-		if (!('mediaSession' in navigator) || !current) {
-			return;
-		}
-		navigator.mediaSession.metadata = new MediaMetadata({
-			title: current.title ?? current.text ?? '',
-			artist: current.artist?.replaceAll(';', ',') ?? '',
-			album: current.album ?? '',
-			artwork: current.art ? [{ src: current.art }] : []
-		});
-	},
-	{ immediate: true }
-);
+const metadata = computed<MediaMetadataInit | null>(() => {
+	if (!song) {
+		return null;
+	}
+	return {
+		title: song.title ?? song.text ?? '',
+		artist: song.artist?.replaceAll(';', ',') ?? '',
+		album: song.album ?? '',
+		artwork: song.art ? [{ src: song.art }] : []
+	};
+});
+
+useMediaSession(metadata);
 </script>
 
 <template>

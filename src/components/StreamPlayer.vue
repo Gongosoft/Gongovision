@@ -5,12 +5,14 @@ import { useHead, useSeoMeta } from '@unhead/vue';
 import { computed, ref, useTemplateRef, watch } from 'vue';
 import { useStreamInfo } from '@/composables/useStreamInfo.ts';
 import { useClipRecorder } from '@/composables/useClipRecorder.ts';
+import { useMediaSession } from '@/composables/useMediaSession.ts';
 import { useWatchingStream } from '@/composables/useWatchingStream.ts';
 import { usePlaybackMetrics } from '@/composables/usePlaybackMetrics.ts';
 import { useStreamSourceSetting } from '@/composables/usePlayerSettings.ts';
 import { REGIONS, useStreamSource } from '@/composables/useStreamSource.ts';
 import { SLEEP_TIMERS, useSleepTimer } from '@/composables/useSleepTimer.ts';
 import type { Region } from '@/types/angelthump.d.ts';
+import type { StreamSource } from '@/types/stream.d.ts';
 import {
 	get,
 	useDateFormat,
@@ -20,22 +22,33 @@ import {
 	useLocalStorage,
 	useTimestamp
 } from '@vueuse/core';
-import type { StreamSource } from '@/types/stream.d.ts';
 
 const SOURCES: Record<StreamSource, { label: string }> = {
 	owncast: { label: 'Owncast' },
 	angelthump: { label: 'AngelThump' }
 };
 
-const sleeping = ref(false);
-const clipRecorder = useClipRecorder();
-const sourceSetting = useStreamSourceSetting();
+const LOW_LATENCY = {
+	lowLatencyMode: true,
+	liveSyncDurationCount: 2,
+	liveMaxLatencyDurationCount: 6,
+	maxLiveSyncPlaybackRate: 1.1
+};
+
 const stream = useTemplateRef<HTMLVideoElement>('stream');
 const sleepGroup = useTemplateRef<HTMLElement>('sleepGroup');
-const lowLatency = useLocalStorage('stream:lowLatency', true);
 const sourceGroup = useTemplateRef<HTMLElement>('sourceGroup');
 const regionGroup = useTemplateRef<HTMLElement>('regionGroup');
+
+const sleeping = ref(false);
+const lowLatency = useLocalStorage('stream:lowLatency', true);
+const sourceSetting = useStreamSourceSetting();
 const { angelthumpLive, owncastLive, effectiveSource, region, src } = useStreamSource();
+const { info, uptime } = useStreamInfo(effectiveSource);
+const { sessionID } = usePlaybackMetrics(stream, effectiveSource);
+const clipRecorder = useClipRecorder();
+
+useWatchingStream(stream, effectiveSource);
 
 const {
 	value: sleepValue,
@@ -51,21 +64,43 @@ function wake(): void {
 
 const sourceLabel = computed(() => SOURCES[get(sourceSetting)].label);
 const regionLabel = computed(() => REGIONS[get(region) ?? 'auto'].label);
+const showSource = computed(() => get(owncastLive) === true && get(angelthumpLive) === true);
 
-const live = { owncast: owncastLive, angelthump: angelthumpLive } as const;
+const title = computed(() => get(uptime));
 
-const { info, uptime } = useStreamInfo(effectiveSource);
-const { sessionId } = usePlaybackMetrics(stream, effectiveSource);
-useWatchingStream(stream, effectiveSource);
+const thumbnail = useTimestamp({
+	scheduler: (update) => useIntervalFn(update, 20_000)
+});
 
-const showSource = computed(() => get(live.owncast) === true && get(live.angelthump) === true);
+const poster = computed(() =>
+	get(effectiveSource) === 'owncast'
+		? `${OWNCAST.HOST}/thumbnail.jpg?${get(thumbnail)}=`
+		: `https://thumbnail.angelthump.com/thumbnails/${ANGELTHUMP.CHANNEL}.jpeg`
+);
 
-const LOW_LATENCY = {
-	lowLatencyMode: true,
-	liveSyncDurationCount: 2,
-	liveMaxLatencyDurationCount: 6,
-	maxLiveSyncPlaybackRate: 1.1
-};
+const favicon = computed(() =>
+	get(effectiveSource) === 'owncast'
+		? `${OWNCAST.HOST}/favicon.ico`
+		: (get(info)?.angelthump?.user?.profile_logo_url ?? null)
+);
+
+const metadata = computed<MediaMetadataInit>(() => ({
+	title: get(title) ?? '',
+	artist: 'GreatSphynx',
+	album: 'gongo',
+	artwork: [{ src: get(poster) }]
+}));
+
+useHead({ title });
+useFavicon(favicon);
+useMediaSession(metadata);
+useSeoMeta({
+	ogType: 'video.other',
+	ogImage: poster,
+	ogImageType: 'image/jpeg',
+	ogImageWidth: '1920',
+	ogImageHeight: '1080'
+});
 
 const source = computed(() => ({
 	src: src.value,
@@ -75,12 +110,29 @@ const source = computed(() => ({
 			startLevel: -1,
 			fLoader: clipRecorder.fLoader,
 			...(get(lowLatency) ? LOW_LATENCY : { lowLatencyMode: false }),
-			...(get(effectiveSource) === 'owncast' ? { cmcd: { sessionId } } : {})
+			...(get(effectiveSource) === 'owncast' ? { cmcd: { sessionId: sessionID } } : {})
 		}
 	}
 }));
 
 watch(src, clipRecorder.clear);
+
+const autoplayed = new WeakSet<Element>();
+
+useEventListener(stream, 'canplay', async () => {
+	const video = get(stream);
+	if (!video || autoplayed.has(video)) {
+		return;
+	}
+	autoplayed.add(video);
+	try {
+		await video.play();
+	} catch {
+		/*_*/
+	}
+});
+
+useEventListener(stream, 'error', (e) => console.error('video.js', e.message));
 
 async function saveClip(): Promise<void> {
 	const video = get(stream);
@@ -94,16 +146,6 @@ async function saveClip(): Promise<void> {
 		console.error('clip', error);
 	}
 }
-
-const thumbnail = useTimestamp({
-	scheduler: (update) => useIntervalFn(update, 20_000)
-});
-
-const poster = computed(() =>
-	get(effectiveSource) === 'owncast'
-		? `${OWNCAST.HOST}/thumbnail.jpg?${get(thumbnail)}=`
-		: `https://thumbnail.angelthump.com/thumbnails/${ANGELTHUMP.CHANNEL}.jpeg`
-);
 
 function setLowLatency(event: CustomEvent<{ checked: boolean }>): void {
 	lowLatency.value = event.detail.checked;
@@ -127,41 +169,6 @@ useEventListener(regionGroup, 'value-change', (event: CustomEvent<{ value: strin
 	if (value in REGIONS) {
 		region.value = value as Region;
 	}
-});
-
-const autoplayed = new WeakSet<Element>();
-
-useEventListener(stream, 'canplay', async () => {
-	const video = get(stream);
-	if (!video || autoplayed.has(video)) {
-		return;
-	}
-	autoplayed.add(video);
-	try {
-		await video.play();
-	} catch {
-		/*_*/
-	}
-});
-
-useEventListener(stream, 'error', (e) => console.error('video.js', e.message));
-
-useFavicon(
-	computed(() =>
-		get(effectiveSource) === 'owncast'
-			? `${OWNCAST.HOST}/favicon.ico`
-			: (get(info)?.angelthump?.user?.profile_logo_url ?? null)
-	)
-);
-
-useHead({ title: computed(() => get(uptime)) });
-
-useSeoMeta({
-	ogType: 'video.other',
-	ogImage: poster,
-	ogImageType: 'image/jpeg',
-	ogImageWidth: '1920',
-	ogImageHeight: '1080'
 });
 </script>
 

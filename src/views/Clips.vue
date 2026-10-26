@@ -3,10 +3,12 @@ import '@/styles/scene.css';
 import '@/styles/status.css';
 import '@videojs/html/video/skin';
 import '@videojs/html/video/player';
+import mediaImage from '@/assets/images/offline-background.avif';
 import { useHead } from '@unhead/vue';
 import { useRoute, useRouter } from 'vue-router';
 import { get, useLocalStorage } from '@vueuse/core';
 import { useClips } from '@/composables/useClips.ts';
+import { useMediaSession } from '@/composables/useMediaSession.ts';
 import { computed, ref, useTemplateRef, watch, watchEffect } from 'vue';
 
 const route = useRoute();
@@ -146,7 +148,18 @@ watchEffect(
 	{ flush: 'post' }
 );
 
-useHead({ title: computed(() => get(clip)?.name.replace(/^\[[^\]]*\]\s*|\s*\[[^\]]*\]$/g, '') ?? 'clips') });
+const title = computed(() => get(clip)?.name.replace(/^\[[^\]]*\]\s*|\s*\[[^\]]*\]$/g, '') ?? 'clips');
+const clipper = computed(() => {
+	const name = get(clip)?.name.replace(/^\[[^\]]*\]\s*/, '') ?? '';
+	return name.match(/\[(?<artist>[^\]]+)\]\s*$/)?.groups?.artist?.trim() || 'GreatSphynx';
+});
+
+const metadata = computed<MediaMetadataInit | null>(() =>
+	get(clip) ? { title: get(title), artist: get(clipper), album: 'gongo clips', artwork: [{ src: mediaImage }] } : null
+);
+
+useHead({ title });
+useMediaSession(metadata);
 </script>
 
 <template>

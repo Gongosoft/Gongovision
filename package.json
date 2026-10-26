@@ -71,6 +71,7 @@
 		"@vite-pwa/assets-generator": "^2.0.0",
 		"@vitejs/plugin-vue": "^6.0.10",
 		"@vue/tsconfig": "^0.9.1",
+		"discord-api-types": "^0.38.57",
 		"husky": "^9.1.7",
 		"lint-staged": "^17.6.0",
 		"oxfmt": "^0.70.0",

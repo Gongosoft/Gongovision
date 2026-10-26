@@ -2,13 +2,14 @@
 import '@videojs/html/media/hlsjs-video';
 import VideoJS from '@/components/VideoJS.vue';
 import { useHead, useSeoMeta } from '@unhead/vue';
-import { computed, useTemplateRef, watch } from 'vue';
+import { computed, ref, useTemplateRef, watch } from 'vue';
 import { useStreamInfo } from '@/composables/useStreamInfo.ts';
 import { useClipRecorder } from '@/composables/useClipRecorder.ts';
 import { useWatchingStream } from '@/composables/useWatchingStream.ts';
 import { usePlaybackMetrics } from '@/composables/usePlaybackMetrics.ts';
 import { useStreamSourceSetting } from '@/composables/usePlayerSettings.ts';
 import { REGIONS, useStreamSource } from '@/composables/useStreamSource.ts';
+import { SLEEP_TIMERS, useSleepTimer } from '@/composables/useSleepTimer.ts';
 import type { Region } from '@/types/angelthump.d.ts';
 import {
 	get,
@@ -26,13 +27,27 @@ const SOURCES: Record<StreamSource, { label: string }> = {
 	angelthump: { label: 'AngelThump' }
 };
 
+const sleeping = ref(false);
 const clipRecorder = useClipRecorder();
 const sourceSetting = useStreamSourceSetting();
 const stream = useTemplateRef<HTMLVideoElement>('stream');
+const sleepGroup = useTemplateRef<HTMLElement>('sleepGroup');
 const lowLatency = useLocalStorage('stream:lowLatency', true);
 const sourceGroup = useTemplateRef<HTMLElement>('sourceGroup');
 const regionGroup = useTemplateRef<HTMLElement>('regionGroup');
 const { angelthumpLive, owncastLive, effectiveSource, region, src } = useStreamSource();
+
+const {
+	value: sleepValue,
+	label: sleepLabel,
+	select: selectSleep
+} = useSleepTimer(stream, () => {
+	sleeping.value = true;
+});
+
+function wake(): void {
+	sleeping.value = false;
+}
 
 const sourceLabel = computed(() => SOURCES[get(sourceSetting)].label);
 const regionLabel = computed(() => REGIONS[get(region) ?? 'auto'].label);
@@ -103,6 +118,10 @@ function setSource(event: CustomEvent<{ value: StreamSource }>): void {
 
 useEventListener(sourceGroup, 'value-change', setSource);
 
+useEventListener(sleepGroup, 'value-change', (event: CustomEvent<{ value: string }>) => {
+	selectSleep(event.detail.value);
+});
+
 useEventListener(regionGroup, 'value-change', (event: CustomEvent<{ value: string }>) => {
 	const { value } = event.detail;
 	if (value in REGIONS) {
@@ -110,9 +129,16 @@ useEventListener(regionGroup, 'value-change', (event: CustomEvent<{ value: strin
 	}
 });
 
+const autoplayed = new WeakSet<Element>();
+
 useEventListener(stream, 'canplay', async () => {
+	const video = get(stream);
+	if (!video || autoplayed.has(video)) {
+		return;
+	}
+	autoplayed.add(video);
 	try {
-		await get(stream)?.play();
+		await video.play();
 	} catch {
 		/*_*/
 	}
@@ -140,9 +166,15 @@ useSeoMeta({
 </script>
 
 <template>
-	<VideoJS :show-playback-rate="false" :uptime="uptime">
+	<VideoJS :show-playback-rate="false" :uptime="uptime" @click="wake">
 		<template #media>
-			<hlsjs-video ref="stream" :source.prop="source" stream-type="live" playsinline autoplay />
+			<hlsjs-video
+				v-if="!sleeping"
+				:key="src"
+				:source.prop="source"
+				stream-type="live"
+				ref="stream"
+				playsinline />
 		</template>
 		<template #overlay>
 			<slot name="overlay"></slot>
@@ -173,6 +205,14 @@ useSeoMeta({
 					<media-icon name="check" class="media-menu-radio-item-icon"></media-icon>
 				</media-menu-item-indicator>
 			</media-menu-checkbox-item>
+			<media-menu-item commandfor="settings-sleep-content" class="media-menu-trigger-item">
+				<media-icon name="sleep" class="media-menu-trigger-item-icon"></media-icon>
+				Sleep Timer
+				<span class="media-menu-hint">
+					<span class="media-menu-hint-label">{{ sleepLabel }}</span>
+					<media-icon name="chevron" class="media-menu-forward-chevron"></media-icon>
+				</span>
+			</media-menu-item>
 			<media-menu-item v-if="showSource" commandfor="settings-source-content" class="media-menu-trigger-item">
 				<media-icon name="globe" class="media-menu-trigger-item-icon"></media-icon>
 				Source
@@ -194,6 +234,25 @@ useSeoMeta({
 			</media-menu-item>
 		</template>
 		<template #settings-menu>
+			<media-menu-content id="settings-sleep-content" class="media-menu-content">
+				<media-menu-item class="media-menu-back-item">
+					<media-icon name="chevron" class="media-menu-back-chevron"></media-icon>
+					Sleep Timer
+				</media-menu-item>
+				<media-menu-separator class="media-menu-separator"></media-menu-separator>
+				<media-menu-radio-group ref="sleepGroup" :value="sleepValue" class="media-menu-radio-group">
+					<media-menu-radio-item
+						v-for="option in SLEEP_TIMERS"
+						:key="option.value"
+						:value="option.value"
+						class="media-menu-radio-item">
+						<span data-part="label">{{ option.label }}</span>
+						<media-menu-item-indicator force-mount class="media-menu-item-indicator">
+							<media-icon name="check" class="media-menu-radio-item-icon"></media-icon>
+						</media-menu-item-indicator>
+					</media-menu-radio-item>
+				</media-menu-radio-group>
+			</media-menu-content>
 			<media-menu-content v-if="showSource" id="settings-source-content" class="media-menu-content">
 				<media-menu-item class="media-menu-back-item">
 					<media-icon name="chevron" class="media-menu-back-chevron"></media-icon>

@@ -84,6 +84,7 @@ import {
 
 import clipIcon from '@/assets/images/clip.svg?raw';
 import globeIcon from '@/assets/images/globe.svg?raw';
+import sleepIcon from '@/assets/images/sleep.svg?raw';
 
 registerIcons('default', {
 	'airplay-enter': airPlayEnterIcon,
@@ -105,6 +106,7 @@ registerIcons('default', {
 	'play': playIcon,
 	'quality': qualityIcon,
 	'restart': restartIcon,
+	'sleep': sleepIcon,
 	'speech': speechIcon,
 	'speed': speedIcon,
 	'spinner': spinnerIcon,

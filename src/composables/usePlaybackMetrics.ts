@@ -183,10 +183,11 @@ export function usePlaybackMetrics(
 	});
 
 	useIntervalFn(() => {
-		if (!get(active) || !hasStartedPlaying) {
+		const media = toValue(element);
+		if (!get(active) || !hasStartedPlaying || !media) {
 			return;
 		}
-		if (toValue(element)?.paused) {
+		if (media.paused) {
 			void sendReport('t', { sta: 'a' });
 			return;
 		}

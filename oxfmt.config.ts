@@ -8,7 +8,7 @@ baseConfig.overrides![0]!.files = ['*.yml'];
 export default defineConfig({
 	...(baseConfig as OxfmtConfig),
 	bracketSameLine: true,
-	ignorePatterns: ['/public/scripts/main.js', '/src/lib/*/', '!/src/lib/gongoizer/'],
+	ignorePatterns: ['/public/scripts/main.js'],
 	jsdoc: {
 		bracketSpacing: false,
 		capitalizeDescriptions: false,

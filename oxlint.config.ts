@@ -13,7 +13,7 @@ export default defineConfig({
 		browser: true,
 		vue: true
 	},
-	ignorePatterns: ['**/*.js', '**/*.jsx', '**/*.mjs', '/public/', '/src/lib/*/', '!/src/lib/gongoizer/'],
+	ignorePatterns: ['**/*.js', '**/*.jsx', '**/*.mjs', '/public/'],
 	options: {
 		maxWarnings: 42,
 		typeAware: true,

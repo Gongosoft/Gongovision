@@ -29,6 +29,8 @@
 		"@iptv/playlist": "^1.2.1",
 		"@iptv/xmltv": "^1.0.1",
 		"@tweakpane/plugin-essentials": "^0.2.1",
+		"@twurple/auth": "^8.2.0",
+		"@twurple/chat": "^8.2.0",
 		"@unhead/vue": "^3.4.3",
 		"@videojs/hlsjs-video": "10.2.0",
 		"@videojs/html": "10.2.0",

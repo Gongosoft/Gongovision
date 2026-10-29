@@ -450,5 +450,11 @@ gongo-player {
 			visibility: hidden;
 		}
 	}
+
+	@scope (.media-skin[data-theme="default"]) {
+		.media-live-button {
+			padding-inline: 0 calc(var(--media-spacing) * 3);
+		}
+	}
 }
 </style>

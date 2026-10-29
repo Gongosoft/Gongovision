@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import '@videojs/html/global.css';
-import '@videojs/html/ui/menu-radio-group';
 import '@/components/videojs/player.ts';
+import '@videojs/html/ui/menu-radio-group';
 import '@/components/videojs/video/skin.ts';
 import LiveTimeSlider from '@/components/videojs/LiveTimeSlider.vue';
 import { ref, useTemplateRef } from 'vue';
@@ -439,5 +439,16 @@ const vSkinTemplates = {
 <style>
 gongo-player {
 	display: contents;
+}
+
+@layer components {
+	@supports selector(:popover-open) {
+		.media-menu-popup:not(:popover-open) {
+			display: block;
+			pointer-events: none;
+			position: fixed;
+			visibility: hidden;
+		}
+	}
 }
 </style>

@@ -10,6 +10,7 @@ import { getAngelThumpM3U8, getAngelThumpStreamInfo } from '@/server/angelthump.
 import type { StreamInfoResponse } from '@/types/stream.d.ts';
 
 export { Notifications } from '@/server/notifications.ts';
+export { EmoteWall } from '@/server/emotewall.ts';
 
 const osmos = Object.values(
 	import.meta.glob<string>('@osmo/*', {
@@ -30,6 +31,21 @@ export default {
 		if (pathname === '/clips/list') {
 			const objects = await listObjects('clips/');
 			return Response.json(objects ?? [], { status: objects ? 200 : 502 });
+		}
+
+		if (pathname === '/emotes/list') {
+			return env.EMOTEWALL.getByName('singleton').fetch(request);
+		}
+
+		if (pathname === '/emotewall/settings') {
+			return env.EMOTEWALL.getByName('singleton').fetch(request);
+		}
+
+		if (pathname === '/emotewall/ws') {
+			if (request.headers.get('Upgrade') !== 'websocket') {
+				return new Response('Expected Upgrade: websocket', { status: 426 });
+			}
+			return env.EMOTEWALL.getByName('singleton').fetch(request);
 		}
 
 		if (pathname.startsWith('/notification/')) {

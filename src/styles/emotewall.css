@@ -1,0 +1,178 @@
+#emote-wall {
+	contain: strict;
+	inset: 0;
+	overflow: clip;
+	pointer-events: none;
+	position: fixed;
+	z-index: 2;
+
+	&.shadow {
+		filter: drop-shadow(0 0 2px #000);
+	}
+
+	& .wall-copy {
+		inset: 0;
+		pointer-events: none;
+		position: absolute;
+	}
+
+	& .wall-emote {
+		box-sizing: border-box;
+		display: grid;
+		grid-template: 100% / 100%;
+		height: var(--emote-height);
+		left: 0;
+		place-items: center;
+		position: absolute;
+		top: 0;
+		width: var(--emote-width);
+	}
+
+	& .wall-emote img {
+		box-sizing: border-box;
+		grid-area: 1 / 1;
+		height: var(--emote-height);
+		max-height: 100%;
+		max-width: 100%;
+		object-fit: contain;
+		object-position: 50% 50%;
+		width: var(--emote-width);
+	}
+
+	& img.zweHat,
+	& img.zweLPad {
+		border-color: transparent;
+		border-style: solid;
+	}
+
+	& img.zweHat {
+		border-width: calc(var(--emote-height) * 0.35) 0 0 0;
+	}
+
+	& img.zweLPad {
+		border-width: 0 0 0 calc(var(--emote-width) * 0.1);
+	}
+
+	& img.zweLPad.zweHat {
+		border-width: calc(var(--emote-height) * 0.35) 0 0 calc(var(--emote-width) * 0.15);
+	}
+
+	& .cube {
+		height: 100%;
+		position: relative;
+		transform-style: preserve-3d;
+		width: 100%;
+	}
+
+	& .cube [data-face] {
+		background-color: rgb(255 255 255 / 20%);
+		display: grid;
+		height: 100%;
+		place-items: center;
+		position: absolute;
+		width: 100%;
+	}
+
+	&.shadow .cube [data-face] {
+		background-color: transparent;
+	}
+
+	& .cube [data-face='front'] {
+		transform: translateZ(var(--cube-depth));
+	}
+
+	& .cube [data-face='back'] {
+		transform: rotateY(90deg) translateZ(var(--cube-depth));
+	}
+
+	& .cube [data-face='right'] {
+		transform: rotateY(180deg) translateZ(var(--cube-depth));
+	}
+
+	& .cube [data-face='left'] {
+		transform: rotateY(-90deg) translateZ(var(--cube-depth));
+	}
+
+	& .cube [data-face='top'] {
+		transform: rotateX(90deg) translateZ(var(--cube-depth));
+	}
+
+	& .cube [data-face='bottom'] {
+		transform: rotateX(-90deg) translateZ(var(--cube-depth));
+	}
+
+	& img.dancer {
+		animation: emotewallDance 4s linear infinite;
+		position: relative;
+	}
+}
+
+@keyframes emotewallDance {
+	0% {
+		transform: translate(80%, 40%) rotate(30deg);
+	}
+
+	6% {
+		transform: translate(50%, 10%) rotate(0deg);
+	}
+
+	13% {
+		transform: translate(20%, 40%) rotate(-30deg);
+	}
+
+	19% {
+		transform: translate(50%, 10%) rotate(0deg);
+	}
+
+	25% {
+		transform: translate(80%, 40%) rotate(30deg);
+	}
+
+	31% {
+		transform: translate(50%, 10%) rotate(0deg);
+	}
+
+	38% {
+		transform: translate(20%, 40%) rotate(-30deg);
+	}
+
+	44% {
+		transform: translate(20%, 10%) rotate(-30deg);
+	}
+
+	50% {
+		transform: translate(20%, 40%) rotate(-30deg);
+	}
+
+	56% {
+		transform: translate(50%, 10%) rotate(0deg);
+	}
+
+	63% {
+		transform: translate(80%, 40%) rotate(30deg);
+	}
+
+	69% {
+		transform: translate(50%, 10%) rotate(0deg);
+	}
+
+	75% {
+		transform: translate(20%, 40%) rotate(-30deg);
+	}
+
+	81% {
+		transform: translate(50%, 10%) rotate(0deg);
+	}
+
+	88% {
+		transform: translate(80%, 40%) rotate(30deg);
+	}
+
+	94% {
+		transform: translate(80%, 10%) rotate(30deg);
+	}
+
+	100% {
+		transform: translate(80%, 40%) rotate(30deg);
+	}
+}

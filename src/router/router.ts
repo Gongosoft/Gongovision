@@ -48,6 +48,12 @@ const router = createRouter({
 			meta: { menu: 'youtube' }
 		},
 		{
+			name: 'Emote Wall Settings',
+			path: '/emotewall',
+			component: async () => import('@/views/EmoteWallSettings.vue'),
+			meta: { fullscreen: true }
+		},
+		{
 			name: 'Fingal',
 			path: '/fingal',
 			alias: '/fingalfunny',

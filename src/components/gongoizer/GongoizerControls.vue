@@ -1,17 +1,16 @@
 <script setup lang="ts">
-import { Pane } from 'tweakpane';
 import { parsePreset } from '@/lib/gongoizer/validate.ts';
 import { PALETTE_OPTIONS } from '@/lib/gongoizer/palettes.ts';
 import { GROUPS, NO_RANDOM } from '@/lib/gongoizer/schema.ts';
-import { presetIcons, presetKeys } from '@/lib/gongoizer/presets.ts';
+import { createPane, flashTitle, hint } from '@/utils/tweakpane.ts';
 import { useTweakpaneDrag } from '@/composables/useTweakpaneDrag.ts';
+import { presetIcons, presetKeys } from '@/lib/gongoizer/presets.ts';
 import { onBeforeUnmount, onMounted, ref, shallowRef, watch } from 'vue';
-import { css, plugins as essentialsPlugins, id } from '@tweakpane/plugin-essentials';
 import { get, useClipboard, useFps, useIdle, useRafFn, useThrottleFn } from '@vueuse/core';
 import type { ListItem } from '@tweakpane/core';
 import type { ParamDef } from '@/types/gongoizer.d.ts';
-import type { FolderApi, ListInputBindingApi } from 'tweakpane';
 import type { FpsGraphBladeApi } from '@tweakpane/plugin-essentials';
+import type { FolderApi, ListInputBindingApi, Pane } from 'tweakpane';
 import type { UseGongoizerReturn } from '@/composables/useGongoizer.ts';
 
 const { gongoizer } = defineProps<{
@@ -76,16 +75,10 @@ function presetOptions(): ListItem<string>[] {
 	return [{ text: '', value: '' }, ...presetKeys().map((key) => ({ text: `${key}${presetIcons(key)}`, value: key }))];
 }
 
-function tooltip(element: HTMLElement | undefined, hint: string): void {
-	if (element) {
-		element.title = hint;
-	}
-}
-
 function addRow(folder: FolderApi, def: ParamDef): void {
 	if (def.key === 'palette' || def.key === 'palette2') {
 		const binding = folder.addBinding(params, def.key, { options: PALETTE_ITEMS, label: def.label });
-		tooltip(binding.element, def.hint);
+		hint(binding, def.hint);
 		return;
 	}
 	if ('options' in def) {
@@ -93,7 +86,7 @@ function addRow(folder: FolderApi, def: ParamDef): void {
 			options: def.options.map((text, value) => ({ text, value })),
 			label: def.label
 		});
-		tooltip(binding.element, def.hint);
+		hint(binding, def.hint);
 		return;
 	}
 	const binding = folder.addBinding(params, def.key, {
@@ -102,25 +95,7 @@ function addRow(folder: FolderApi, def: ParamDef): void {
 		step: def.step,
 		label: def.label
 	});
-	tooltip(binding.element, def.hint);
-}
-
-/** flash a message in a button's tooltip, then put the original back */
-const flashState = new WeakMap<{ title: string }, { original: string; timer?: ReturnType<typeof setTimeout> }>();
-function flashTitle(target: { title: string } | null, text: string): void {
-	if (!target) {
-		return;
-	}
-	const state = flashState.get(target) ?? { original: target.title };
-	if (state.timer !== undefined) {
-		clearTimeout(state.timer);
-	}
-	target.title = text;
-	state.timer = setTimeout(() => {
-		target.title = state.original;
-		flashState.delete(target);
-	}, 1200);
-	flashState.set(target, state);
+	hint(binding, def.hint);
 }
 
 watch(copied, (value) => {
@@ -173,10 +148,10 @@ onMounted(() => {
 	if (!container.value) {
 		return;
 	}
-	pane = new Pane({ container: container.value, title: 'Gongoizer' });
-	pane.registerPlugin({ id, css, plugins: essentialsPlugins });
+	const { pane: gongoPane, handle } = createPane(container.value, 'Gongoizer');
+	pane = gongoPane;
+	dragHandle.value = handle;
 
-	dragHandle.value = pane.element.querySelector<HTMLElement>('.tp-rotv_b');
 	const titleEl = pane.element.querySelector<HTMLElement>('.tp-rotv_t');
 	if (titleEl) {
 		const grid = document.createElement('span');
@@ -326,14 +301,14 @@ onBeforeUnmount(() => {
 	<div
 		v-show="visible"
 		ref="container"
-		class="gongoizer-panel"
+		id="gongoizer-panel"
 		:style="dragStyle"
 		@pointerdown.capture="onPointerDownCapture"
 		@click.capture="onClickCapture" />
 </template>
 
 <style scoped>
-.gongoizer-panel {
+#gongoizer-panel {
 	/* useDraggable writes left/top - width must match PANEL_WIDTH */
 	position: fixed;
 	z-index: 1;

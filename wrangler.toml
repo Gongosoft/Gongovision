@@ -11,6 +11,8 @@ not_found_handling = 'single-page-application'
 run_worker_first = [
 	'/b2/*',
 	'/clips/list',
+	'/emotes/list',
+	'/emotewall/*',
 	'/notification/*',
 	'/osmo',
 	'/r2/*',
@@ -24,7 +26,7 @@ run_worker_first = [
 	'/vods/list',
 	'/.well-known/did.json',
 	'/xrpc/app.bsky.feed.describeFeedGenerator',
-	'/xrpc/app.bsky.feed.getFeedSkeleton'
+	'/xrpc/app.bsky.feed.getFeedSkeleton',
 ]
 
 [browser]
@@ -40,10 +42,14 @@ database_name = 'gongo'
 database_id = '5f785c53-efe0-409f-b9ce-73b5a4493370'
 
 [durable_objects]
-bindings = [{ name = 'CALLOFTHEGONGO', class_name = 'Notifications' }]
+bindings = [
+	{ name = 'CALLOFTHEGONGO', class_name = 'Notifications' },
+	{ name = 'EMOTEWALL', class_name = 'EmoteWall' },
+]
 
 [exports]
 Notifications = { type = 'durable-object', storage = 'sqlite' }
+EmoteWall = { type = 'durable-object', storage = 'sqlite' }
 
 [[kv_namespaces]]
 binding = 'KV'
@@ -76,7 +82,7 @@ required = [
 	'B2_APPLICATION_KEY',
 	'B2_APPLICATION_KEY_ID',
 	'TWITCH_CLIENT_SECRET',
-	'VAPID_PRIVATE_KEY'
+	'VAPID_PRIVATE_KEY',
 ]
 
 [[send_email]]
@@ -126,7 +132,10 @@ database_name = 'gongo'
 database_id = '5f785c53-efe0-409f-b9ce-73b5a4493370'
 
 [previews.durable_objects]
-bindings = [{ name = 'CALLOFTHEGONGO', class_name = 'Notifications' }]
+bindings = [
+	{ name = 'CALLOFTHEGONGO', class_name = 'Notifications' },
+	{ name = 'EMOTEWALL', class_name = 'EmoteWall' },
+]
 
 [[previews.kv_namespaces]]
 binding = 'KV'

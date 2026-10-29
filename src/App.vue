@@ -7,6 +7,7 @@ import AFK from '@/components/AFK.vue';
 import Cursor from '@/components/Cursor.vue';
 import Diamond from '@/components/Diamond.vue';
 import Gohu from '@/assets/fonts/gohu.woff2?url';
+import EmoteWall from '@/components/EmoteWall.vue';
 import Background from '@/components/Background.vue';
 import Gongoverlay from '@/components/Gongoverlay.vue';
 import ServiceWorker from '@/components/ServiceWorker.vue';
@@ -140,6 +141,7 @@ useKonamiCode({
 		</header>
 		<main>
 			<Background />
+			<EmoteWall />
 			<Diamond v-if="showDiamond" />
 			<RouterView />
 			<Cursor />

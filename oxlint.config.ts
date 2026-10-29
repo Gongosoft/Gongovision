@@ -57,6 +57,12 @@ export default defineConfig({
 			}
 		},
 		{
+			files: ['src/lib/emotewall/config.ts'],
+			rules: {
+				'promise/prefer-await-to-then': 'off'
+			}
+		},
+		{
 			files: ['src/lib/gongoizer/palettes.ts', 'src/lib/gongoizer/presets.ts'],
 			rules: {
 				'unicorn/no-zero-fractions': 'off'

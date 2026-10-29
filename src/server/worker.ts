@@ -37,7 +37,7 @@ export default {
 			return env.EMOTEWALL.getByName('singleton').fetch(request);
 		}
 
-		if (pathname === '/emotewall/settings') {
+		if (pathname.startsWith('/emotewall/settings')) {
 			return env.EMOTEWALL.getByName('singleton').fetch(request);
 		}
 

@@ -49,6 +49,7 @@ const { dragStyle, onPointerDownCapture, onClickCapture } = useTweakpaneDrag({
 let pane: Pane | null = null;
 let saveButton: ReturnType<Pane['addButton']> | null = null;
 let saveButtonInner: HTMLElement | null = null;
+let needsAuth = false;
 let settled = false;
 
 watch(idle, () => {
@@ -201,6 +202,21 @@ async function requestSettings(init?: RequestInit): Promise<WallSettings> {
 	return sanitizeSettings(await response.json());
 }
 
+/** re-applies edits stashed before a sign-in navigation, as unsaved so the next save publishes them */
+function restoreDraft(): void {
+	const draft = sessionStorage.getItem('emotewall:draft');
+	if (!draft) {
+		return;
+	}
+	sessionStorage.removeItem('emotewall:draft');
+	const { styles, kappaStyles, ...rest } = toForm(sanitizeSettings(JSON.parse(draft)));
+	Object.assign(form.styles, styles);
+	Object.assign(form.kappaStyles, kappaStyles);
+	Object.assign(form, rest);
+	pane?.refresh();
+	push();
+}
+
 async function load(): Promise<void> {
 	try {
 		adopt(await requestSettings());
@@ -209,12 +225,33 @@ async function load(): Promise<void> {
 		flashTitle(saveButton, 'load failed');
 		console.error('emote wall settings:', error);
 	}
+	restoreDraft();
 }
 
 async function save(): Promise<void> {
+	if (needsAuth) {
+		sessionStorage.setItem('emotewall:draft', JSON.stringify(toSettings(form)));
+		location.assign('/emotewall/settings/edit');
+		return;
+	}
 	const body = JSON.stringify(toSettings(form));
 	try {
-		adopt(await requestSettings({ method: 'PUT', headers: { 'Content-Type': 'application/json' }, body }));
+		const response = await fetch('/emotewall/settings/edit', {
+			method: 'PUT',
+			headers: { 'Content-Type': 'application/json' },
+			body,
+			cache: 'no-store',
+			redirect: 'manual'
+		});
+		if (response.type === 'opaqueredirect' || response.status === 401 || response.status === 403) {
+			needsAuth = true;
+			flashTitle(saveButton, 'sign in');
+			return;
+		}
+		if (!response.ok) {
+			throw new Error(`${response.status} ${response.statusText}`);
+		}
+		adopt(sanitizeSettings(await response.json()));
 		settled = true;
 		flashTitle(saveButton, 'saved');
 	} catch (error) {

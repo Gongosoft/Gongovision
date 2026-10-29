@@ -91,6 +91,8 @@ allowed_sender_addresses = ['notifications@gongo.tv']
 remote = true
 
 [vars]
+ACCESS_AUD = '2842c91a25967877828a9aa9859912de24a32b2de792fb69860e4add3870b054'
+ACCESS_TEAM_DOMAIN = 'https://greatsphynx.cloudflareaccess.com'
 B2_ENDPOINT = 's3.us-west-004.backblazeb2.com'
 FRESHRSS_USERNAME = 'root'
 FRESHRSS_QUERY_TOKEN = '3I0QvV6LCOaYmkf8WKgFpr'
@@ -115,6 +117,8 @@ service_id = '01a13916-698d-7e02-a9c2-902b92091d7b'
 remote = true
 
 [previews.vars]
+ACCESS_AUD = '2842c91a25967877828a9aa9859912de24a32b2de792fb69860e4add3870b054'
+ACCESS_TEAM_DOMAIN = 'https://greatsphynx.cloudflareaccess.com'
 B2_ENDPOINT = 's3.us-west-004.backblazeb2.com'
 FRESHRSS_USERNAME = 'root'
 FRESHRSS_QUERY_TOKEN = '3I0QvV6LCOaYmkf8WKgFpr'

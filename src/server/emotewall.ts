@@ -1,5 +1,6 @@
 import { ChatClient } from '@twurple/chat';
 import { DurableObject } from 'cloudflare:workers';
+import { verifyAccessToken } from '@/server/access.ts';
 import { WallScheduler } from '@/lib/emotewall/scheduler.ts';
 import { emptyCatalog, listEmotes, loadCatalog } from '@/lib/emotewall/catalog.ts';
 import { parseEmotes, parseKappagenCommand, withHolidayZWE } from '@/lib/emotewall/parse.ts';
@@ -45,6 +46,9 @@ export class EmoteWall extends DurableObject<Env> {
 		}
 		if (pathname === '/emotewall/settings') {
 			return this.settingsRequest(request);
+		}
+		if (pathname === '/emotewall/settings/edit') {
+			return this.editRequest(request);
 		}
 		if (pathname !== '/emotewall/ws') {
 			return new Response('Not Found', { status: 404 });
@@ -116,10 +120,21 @@ export class EmoteWall extends DurableObject<Env> {
 		await this.loading;
 	}
 
-	/** `/emotewall/settings`: read or replace the wall settings */
-	private async settingsRequest(request: Request): Promise<Response> {
+	/** `/emotewall/settings`: read the wall settings */
+	private settingsRequest(request: Request): Response {
+		if (request.method !== 'GET') {
+			return new Response('Method Not Allowed', { status: 405, headers: { Allow: 'GET' } });
+		}
+		return Response.json(this.settings, { headers: { 'Cache-Control': 'no-store' } });
+	}
+
+	/** `/emotewall/settings/edit`: replace the wall settings, gated with Access */
+	private async editRequest(request: Request): Promise<Response> {
+		if (!(await this.isEditor(request))) {
+			return Response.json({ error: 'InsufficientPermissions' }, { status: 403 });
+		}
 		if (request.method === 'GET') {
-			return Response.json(this.settings, { headers: { 'Cache-Control': 'no-store' } });
+			return Response.redirect(new URL('/emotewall', request.url).toString(), 302);
 		}
 		if (request.method !== 'PUT') {
 			return new Response('Method Not Allowed', { status: 405, headers: { Allow: 'GET, PUT' } });
@@ -155,6 +170,20 @@ export class EmoteWall extends DurableObject<Env> {
 
 	private viewers(): number {
 		return this.ctx.getWebSockets().length;
+	}
+
+	private async isEditor(request: Request): Promise<boolean> {
+		const { hostname } = new URL(request.url);
+		if (hostname === 'localhost' || hostname === '127.0.0.1') {
+			return true;
+		}
+		const token = request.headers.get('Cf-Access-Jwt-Assertion');
+		const teamDomain = this.env.ACCESS_TEAM_DOMAIN;
+		const audience = this.env.ACCESS_AUD;
+		if (!token || !teamDomain || !audience) {
+			return false;
+		}
+		return verifyAccessToken(token, { teamDomain, audience });
 	}
 
 	private connectChat(): void {

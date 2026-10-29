@@ -1,10 +1,10 @@
-import { useIntervalFn } from '@vueuse/core';
+import { get, useIntervalFn } from '@vueuse/core';
 import { computed, onScopeDispose, ref, toValue } from 'vue';
 import { formatTimestamp, parseTimestamp } from '@/utils/format.ts';
 import type { ComputedRef, MaybeRefOrGetter } from 'vue';
 
 export const SLEEP_TIMERS = [
-	{ value: '3s', label: '3 seconds' },
+	{ value: '5m', label: '5 minutes' },
 	{ value: '10m', label: '10 minutes' },
 	{ value: '15m', label: '15 minutes' },
 	{ value: '20m', label: '20 minutes' },
@@ -37,7 +37,7 @@ export function useSleepTimer(
 
 	const { pause, resume } = useIntervalFn(
 		() => {
-			if (remaining.value > 1) {
+			if (get(remaining) > 1) {
 				remaining.value -= 1;
 				return;
 			}
@@ -62,7 +62,7 @@ export function useSleepTimer(
 	}
 
 	function select(value: string): void {
-		if (selected.value === value) {
+		if (get(selected) === value) {
 			stop();
 			return;
 		}
@@ -75,8 +75,8 @@ export function useSleepTimer(
 	onScopeDispose(pause);
 
 	return {
-		value: computed(() => selected.value),
-		label: computed(() => (selected.value ? formatTimestamp(remaining.value) : '')),
+		value: computed(() => get(selected)),
+		label: computed(() => (get(selected) ? formatTimestamp(get(remaining)) : '')),
 		select
 	};
 }

@@ -51,9 +51,9 @@ function message(embed: APIEmbed): RESTPostAPIWebhookWithTokenJSONBody {
 
 function liveMessage(occurredAt: number): RESTPostAPIWebhookWithTokenJSONBody {
 	return message({
-		title: 'gongo is live',
-		url: `${BASE_URL}/stream`,
-		description: 'GreatSphynx started streaming.',
+		title: LIVE_NOTIFICATION.title,
+		url: `${BASE_URL}/${LIVE_NOTIFICATION.data.url}`,
+		description: LIVE_NOTIFICATION.body,
 		color: LIVE_COLOR,
 		timestamp: new Date(occurredAt).toISOString()
 	});
@@ -62,7 +62,7 @@ function liveMessage(occurredAt: number): RESTPostAPIWebhookWithTokenJSONBody {
 function confirmationMessage(): RESTPostAPIWebhookWithTokenJSONBody {
 	return message({
 		title: 'notifications enabled',
-		url: `${BASE_URL}/stream`,
+		url: `${BASE_URL}/${LIVE_NOTIFICATION.data.url}`,
 		description: 'yay',
 		color: LIVE_COLOR,
 		timestamp: new Date().toISOString()
@@ -182,16 +182,16 @@ export async function countDiscordWebhooks(): Promise<number> {
 export async function registerDiscordWebhook(raw: string): Promise<DiscordResult> {
 	const url = parseWebhookUrl(raw);
 	if (!url) {
-		return { ok: false, message: 'invalid Discord webhook URL.' };
+		return { ok: false, message: 'invalid Discord webhook URL' };
 	}
 
 	if ((await countDiscordWebhooks()) >= MAX_WEBHOOKS) {
-		return { ok: false, message: 'too many Discord webhooks subscribed. try again later.' };
+		return { ok: false, message: 'too many Discord webhooks subscribed, try again later' };
 	}
 
 	const inserted = await insertWebhook(url);
 	if (!inserted) {
-		return { ok: true, message: 'this webhook is already subscribed.' };
+		return { ok: true, message: 'this webhook is already subscribed' };
 	}
 
 	const test = await send(inserted.url, confirmationMessage());
@@ -202,12 +202,12 @@ export async function registerDiscordWebhook(raw: string): Promise<DiscordResult
 			ok: false,
 			message:
 				test.status !== null && GONE_STATUSES.has(test.status)
-					? 'Discord did not recognise that webhook.'
-					: `Discord rejected the test message (${failureReason(test)}).`
+					? 'Discord did not recognise that webhook'
+					: `Discord rejected the test message (${failureReason(test)})`
 		};
 	}
 
-	return { ok: true, message: 'Discord webhook subscribed! you will be notified when gongo goes live.' };
+	return { ok: true, message: 'Discord webhook registered!' };
 }
 
 async function attemptDelivery(

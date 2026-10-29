@@ -47,16 +47,16 @@ const iconFill = computed(() => {
 
 const iconTitle = computed(() => {
 	if (get(permissionState) === 'unsupported') {
-		return 'Notifications unsupported.';
+		return 'Notifications unsupported';
 	}
 	if (get(permissionState) === 'denied') {
-		return 'Notifications blocked.';
+		return 'Notifications blocked';
 	}
 	if (!get(isSubscribed)) {
-		return 'Click to enable push notifications.';
+		return 'Click to enable push notifications';
 	}
 	if (get(isHovered)) {
-		return 'Click to disable push notifications.';
+		return 'Click to disable push notifications';
 	}
 	return 'Push notifications active.';
 });

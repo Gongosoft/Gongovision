@@ -43,8 +43,8 @@ export default defineConfig({
 			files: [
 				'src/components/DiscordWebhook.vue',
 				'src/components/Emails.vue',
-				'src/components/WebPush.vue',
-				'src/components/gongoizer/GongoizerControls.vue'
+				'src/components/GongoizerControls.vue',
+				'src/components/WebPush.vue'
 			],
 			rules: {
 				'eslint/no-alert': 'off'

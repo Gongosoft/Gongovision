@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import favicon from '@/assets/images/osmo/OSMOPOTENT.avif';
-import GongoizerCanvas from '@/components/gongoizer/GongoizerCanvas.vue';
-import GongoizerControls from '@/components/gongoizer/GongoizerControls.vue';
+import GongoizerCanvas from '@/components/GongoizerCanvas.vue';
+import GongoizerControls from '@/components/GongoizerControls.vue';
 import { useHead } from '@unhead/vue';
 import { useFavicon } from '@vueuse/core';
 import { computed, useTemplateRef } from 'vue';

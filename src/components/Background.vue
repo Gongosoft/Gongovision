@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import frame1 from '@/assets/images/background.avif';
-import GongoizerCanvas from '@/components/gongoizer/GongoizerCanvas.vue';
+import GongoizerCanvas from '@/components/GongoizerCanvas.vue';
 import { computed, useTemplateRef } from 'vue';
 import { useGongoizer } from '@/composables/useGongoizer.ts';
 import { useBackgroundPreset } from '@/composables/useBackgroundPreset.ts';

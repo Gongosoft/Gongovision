@@ -71,7 +71,7 @@ export function useSplitPane(): UseSplitPaneReturn {
 
 	const dividerStyle = computed(() => {
 		const percentage = get(chatRatio) * 100;
-		const offset = `calc(${percentage}% - 6px)`;
+		const offset = `calc(${percentage}%)`;
 		const style: Record<string, string> = {};
 		if (get(isMobile)) {
 			style[get(side) === 'start' ? 'top' : 'bottom'] = offset;

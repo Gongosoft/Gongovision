@@ -72,6 +72,7 @@ usePointerSwipe(useTemplateRef('edgeEnd'), { onSwipeEnd: () => showEdge('end') }
 		}
 		&.edge-end {
 			bottom: 0;
+			height: calc(50px + var(--media-spacing, 4px) * 14);
 		}
 	}
 }

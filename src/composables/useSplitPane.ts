@@ -40,23 +40,18 @@ export function useSplitPane(): UseSplitPaneReturn {
 	const desktopSide = useLocalStorage<'start' | 'end'>('chat:desktop', 'end');
 	const mobileSide = useLocalStorage<'start' | 'end'>('chat:mobile', 'end');
 
-	const storedRatio = useLocalStorage<number | null>('chat:size', null);
-
 	function currentSide(): Ref<'start' | 'end'> {
 		return get(isMobile) ? mobileSide : desktopSide;
 	}
 
+	const ideal = computed(() => chatRatioFor16ᱺ9(get(viewW), get(viewH), get(isMobile)));
+	const ceiling = computed(() => (get(ideal) >= CHAT_MIN ? get(ideal) : CHAT_MAX));
+	const ratio = ref<number | null>(null);
+
 	const chatRatio = computed({
-		get: (): number => {
-			const stored = get(storedRatio);
-			if (typeof stored === 'number' && stored >= CHAT_MIN && stored <= CHAT_MAX) {
-				return stored;
-			}
-			const ideal = chatRatioFor16ᱺ9(get(viewW), get(viewH), get(isMobile));
-			return ideal >= CHAT_MIN ? ideal : 0.25;
-		},
+		get: (): number => get(ratio) ?? (get(ideal) >= CHAT_MIN ? get(ideal) : 0.25),
 		set: (value: number): void => {
-			storedRatio.value = value;
+			ratio.value = value;
 		}
 	});
 
@@ -64,8 +59,6 @@ export function useSplitPane(): UseSplitPaneReturn {
 	const dragging = ref(false);
 
 	const side = computed<'start' | 'end'>(() => get(currentSide()));
-	const ideal = computed(() => chatRatioFor16ᱺ9(get(viewW), get(viewH), get(isMobile)));
-	const ceiling = computed(() => (get(ideal) >= CHAT_MIN ? get(ideal) : CHAT_MAX));
 
 	const chatStyle = computed(() => ({ flexBasis: `${get(chatRatio) * 100}%` }));
 
@@ -130,7 +123,7 @@ export function useSplitPane(): UseSplitPaneReturn {
 	}
 
 	function snapTo16ᱺ9(): void {
-		chatRatio.value = clamp(chatRatioFor16ᱺ9(get(viewW), get(viewH), get(isMobile)), CHAT_MIN, 1);
+		ratio.value = null;
 		hidden.value = false;
 	}
 

@@ -10,6 +10,7 @@ import floppySVG from '@/assets/images/floppy.svg?raw';
 import folderSVG from '@/assets/images/folder.svg?raw';
 import githubSVG from '@/assets/images/github.svg?raw';
 import peopleSVG from '@/assets/images/people.svg?raw';
+import twitchSVG from '@/assets/images/twitch.svg?raw';
 import blueskySVG from '@/assets/images/bluesky.svg?raw';
 import commentSVG from '@/assets/images/comment.svg?raw';
 import discordSVG from '@/assets/images/discord.svg?raw';
@@ -81,6 +82,7 @@ const MENUS: Record<MenuName, MenuItem[]> = {
 			href: 'https://discord.com/channels/847280020622671933/1158478340336914572'
 		},
 		{ icon: rssSVG, label: 'RSS', fill: '#fc8900', href: '/stream/rss' },
+		{ icon: twitchSVG, label: 'Userscript', fill: '#a970ff', href: '/userscripts/gongo-twitch.user.js' },
 		{ component: WebPush },
 		{ component: Emails },
 		{ component: DiscordWebhook }

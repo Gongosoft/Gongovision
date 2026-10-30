@@ -81,6 +81,12 @@ export default defineConfig({
 			}
 		},
 		{
+			files: ['src/scripts/userscripts/twitch.user.ts'],
+			rules: {
+				'unicorn/prefer-modern-dom-apis': 'off'
+			}
+		},
+		{
 			files: ['src/server/notifications.ts', 'src/server/worker.ts'],
 			rules: {
 				'eslint/complexity': 'off'
@@ -101,7 +107,7 @@ export default defineConfig({
 		'eslint/id-length': 'off',
 		'eslint/max-params': 'off',
 		'eslint/max-statements': 'off',
-		'eslint/new-cap': ['warn', { capIsNewExceptions: ['Gongify'] }],
+		'eslint/new-cap': ['warn', { capIsNewExceptions: ['Gongify', 'GM_xmlhttpRequest'] }],
 		'eslint/no-console': 'off',
 		'eslint/no-continue': 'off',
 		'eslint/no-duplicate-imports': ['warn', { allowSeparateTypeImports: true }],

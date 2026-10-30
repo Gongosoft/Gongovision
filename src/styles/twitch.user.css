@@ -1,0 +1,162 @@
+#gongo-live-icon {
+	container-type: inline-size;
+}
+
+#gongo-live-icon a {
+	display: flex;
+	align-items: center;
+	padding: 5px 8px;
+	text-decoration: none;
+}
+
+#gongo-live-icon img {
+	flex: 0 0 auto;
+	width: 30px;
+	max-width: none;
+	height: 30px;
+	border-radius: 50%;
+}
+
+#gongo-live-icon .gongo-live-info {
+	min-width: 0;
+	margin-inline-start: 8px;
+}
+
+#gongo-live-icon .gongo-live-streamer,
+#gongo-live-icon .gongo-live-category {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+#gongo-live-icon .gongo-live-streamer {
+	color: var(--color-text-base);
+	font-weight: 600;
+	font-size: 1.4rem;
+	line-height: 1.1;
+}
+
+#gongo-live-icon .gongo-live-category {
+	color: var(--color-text-alt-2);
+	font-size: 1.4rem;
+	line-height: 1.4;
+}
+
+#gongo-live-icon a:hover,
+#gongo-live-icon a:focus-visible {
+	background: var(--color-background-alt-2, #26262c);
+}
+
+@container (max-width: 120px) {
+	#gongo-live-icon .gongo-live-info {
+		display: none;
+	}
+
+	#gongo-live-icon a {
+		justify-content: center;
+		padding: 4px 0 4px 5px;
+	}
+}
+
+#gongo-live-card .gongo-live-thumb {
+	position: relative;
+	overflow: hidden;
+	aspect-ratio: 16 / 9;
+	border-radius: var(--border-radius-medium, 0.4rem);
+}
+
+#gongo-live-card .gongo-live-thumb a {
+	display: block;
+	height: 100%;
+}
+
+#gongo-live-card .gongo-live-thumb img {
+	display: block;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+#gongo-live-card .gongo-live-badge {
+	position: absolute;
+	top: 1rem;
+	left: 0.5rem;
+	padding: 0.1rem 0.5rem;
+	border-radius: 0.4rem;
+	background: var(--color-fill-live);
+	color: #fff;
+	font-weight: 700;
+	font-size: 1.2rem;
+}
+
+#gongo-live-card .gongo-live-meta {
+	display: flex;
+	margin-top: 0.8rem;
+}
+
+#gongo-live-card .gongo-live-avatar {
+	flex-shrink: 0;
+	width: 4rem;
+	height: 4rem;
+	margin-right: 1rem;
+}
+
+#gongo-live-card .gongo-live-avatar img {
+	width: 100%;
+	height: 100%;
+	border-radius: 50%;
+}
+
+#gongo-live-card .gongo-live-info {
+	flex-grow: 1;
+	min-width: 0;
+}
+
+#gongo-live-card .gongo-live-title {
+	display: block;
+	overflow: hidden;
+	color: var(--color-text-base);
+	font-weight: 700;
+	text-decoration: none;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+#gongo-live-card .gongo-live-streamer {
+	margin: 0.2rem 0 0;
+	font-size: 1.4rem;
+}
+
+#gongo-live-card .gongo-live-streamer a,
+#gongo-live-card .gongo-live-category {
+	color: var(--color-text-alt-2);
+	font-size: 1.4rem;
+	text-decoration: none;
+}
+
+#gongo-live-card .gongo-live-title:hover,
+#gongo-live-card .gongo-live-streamer a:hover,
+#gongo-live-card .gongo-live-category:hover {
+	color: var(--color-text-link);
+}
+
+#gongo-live-icon a:focus-visible,
+#gongo-live-card a:focus-visible {
+	outline: 2px solid var(--color-border-focus, #a970ff);
+	outline-offset: 2px;
+}
+
+#gongo-live-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(30rem, 1fr));
+	gap: 1rem;
+	margin-bottom: 1rem;
+}
+
+#directory-game-main-content:has(#gongo-live-grid) > [aria-live] {
+	display: none;
+}
+
+#directory-game-main-content:has(#gongo-live-grid) #browse-root-filter-sort-options ~ div:has(h3) {
+	display: none;
+}

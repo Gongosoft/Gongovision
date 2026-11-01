@@ -83,7 +83,7 @@
 		"lint-staged": "^17.6.0",
 		"oxfmt": "^0.70.0",
 		"oxlint": "~1.74.0",
-		"oxlint-tsgolint": "^7.0.2001",
+		"oxlint-tsgolint": "^7.0.2005",
 		"typescript": "~6.0.0",
 		"unplugin-fonts": "^2.0.0",
 		"vite": "^8.3.4",

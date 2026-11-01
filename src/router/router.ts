@@ -34,20 +34,6 @@ const router = createRouter({
 			meta: { menu: 'content' }
 		},
 		{
-			name: 'Radio',
-			path: '/content/radio',
-			alias: '/radio',
-			component: async () => import('@/views/Radio.vue'),
-			meta: { menu: 'radio', muted: true }
-		},
-		{
-			name: 'YouTube Links',
-			path: '/content/youtube',
-			alias: '/youtube',
-			component: async () => import('@/views/Menu.vue'),
-			meta: { menu: 'youtube' }
-		},
-		{
 			name: 'Emote Wall Settings',
 			path: '/emotewall',
 			component: async () => import('@/views/EmoteWallSettings.vue'),
@@ -58,6 +44,13 @@ const router = createRouter({
 			path: '/fingal',
 			alias: '/fingalfunny',
 			component: async () => import('@/views/Fingal.vue')
+		},
+		{
+			name: 'Game Links',
+			path: '/content/games',
+			alias: '/games',
+			component: async () => import('@/views/Menu.vue'),
+			meta: { menu: 'games' }
 		},
 		{
 			name: 'Gongo (real)',
@@ -74,6 +67,20 @@ const router = createRouter({
 			name: 'Holomatch',
 			path: '/holomatch',
 			component: async () => import('@/views/Holomatch.vue')
+		},
+		{
+			name: 'Music Links',
+			path: '/content/music',
+			alias: '/music',
+			component: async () => import('@/views/Menu.vue'),
+			meta: { menu: 'music' }
+		},
+		{
+			name: 'Radio',
+			path: '/content/music/radio',
+			alias: ['/music/radio', '/radio'],
+			component: async () => import('@/views/Radio.vue'),
+			meta: { menu: 'radio', muted: true }
 		},
 		{
 			name: 'Neo Turf Masters',
@@ -109,6 +116,13 @@ const router = createRouter({
 			path: '/vods/:title',
 			component: async () => import('@/views/VODPlayer.vue'),
 			meta: { fullscreen: true }
+		},
+		{
+			name: 'YouTube Links',
+			path: '/content/youtube',
+			alias: '/youtube',
+			component: async () => import('@/views/Menu.vue'),
+			meta: { menu: 'youtube' }
 		},
 		{
 			name: 'Not Found',

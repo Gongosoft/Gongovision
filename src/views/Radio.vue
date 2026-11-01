@@ -66,7 +66,7 @@ useHead({ title: computed(() => get(song)?.text || 'gongo.fm') });
 
 useSeoMeta({
 	description: 'gongo.fm',
-	ogUrl: '/content/radio',
+	ogUrl: '/music/radio',
 	ogAudio: computed(() => get(streamUrl) ?? undefined)
 });
 </script>

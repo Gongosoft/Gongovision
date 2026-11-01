@@ -5,7 +5,7 @@ import { computed } from 'vue';
 import { get } from '@vueuse/core';
 import { useMenu } from '@/composables/useMenu.ts';
 
-const { items, back } = useMenu();
+const { items, canGoBack, back } = useMenu();
 
 const columns = computed(() => ([2, 4].includes(get(items).length) ? 2 : 3));
 const shortRow = computed(() => get(items).length % get(columns));
@@ -28,11 +28,11 @@ function gridColumn(index: number): string | undefined {
 			<MenuTile v-else v-bind="item" :style="{ gridColumn: gridColumn(index) }" />
 		</template>
 		<MenuTile
-			v-if="back"
+			v-if="canGoBack"
 			id="menu-back"
 			:icon="backSVG"
 			label="Back"
-			:to="back"
+			@click="back"
 			:style="{ gridColumn: `${columns} / span 2` }" />
 	</nav>
 </template>

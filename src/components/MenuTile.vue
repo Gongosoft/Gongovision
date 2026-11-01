@@ -22,6 +22,8 @@ const attributes = computed(() => {
 	return { type: 'button' };
 });
 
+const isSVG = computed(() => icon?.trimStart().startsWith('<') ?? false);
+
 /** each icon starts its colour cycle at a random point the first time it's hovered */
 const hueDelay = ref<string>();
 
@@ -40,12 +42,13 @@ watch(
 <template>
 	<component :is="tag" v-bind="attributes" class="menu-tile" :title="title ?? label" @mouseenter="onHover">
 		<span
-			v-if="icon"
+			v-if="isSVG"
 			class="icon"
 			:class="{ 'icon-animated': animated }"
 			:style="{ '--icon-fill': fill, '--hue-delay': hueDelay }"
 			v-html="icon" />
-		<span class="label">{{ label }}</span>
+		<img v-else-if="icon" class="icon-image" :src="icon" />
+		<span class="label" :style="{ '--menu-label-chars': label.length }">{{ label }}</span>
 	</component>
 </template>
 
@@ -69,7 +72,8 @@ watch(
 	}
 
 	/* --px is one icon pixel, so the hard shadow stays on the icon's pixel grid */
-	& .icon {
+	& .icon,
+	& .icon-image {
 		--px: calc(var(--menu-icon-size) / 24);
 		--shadow: drop-shadow(calc(var(--px) * 2) calc(var(--px) * 2) 0 #000);
 		display: block;
@@ -77,6 +81,10 @@ watch(
 		height: var(--menu-icon-size);
 		transition: filter 0.25s ease-out;
 		width: var(--menu-icon-size);
+	}
+
+	& .icon-image {
+		object-fit: contain;
 	}
 
 	& .icon :deep(svg) {
@@ -91,7 +99,8 @@ watch(
 		}
 	}
 
-	&:hover .icon {
+	&:hover .icon,
+	&:hover .icon-image {
 		filter: var(--shadow) drop-shadow(0 0 2px #fff) drop-shadow(0 0 6px rgb(255 255 255 / 0.8))
 			drop-shadow(0 0 14px rgb(255 255 255 / 0.45));
 	}
@@ -100,14 +109,16 @@ watch(
 		animation-play-state: running;
 	}
 
-	/* the eight hard shadows make a one-pixel outline, using one font pixel (`--px`) */
 	& .label {
 		--px: 0.09765625em;
 		background: rgb(0 0 0 / 0.55);
 		border-radius: 0.25rem;
 		font-family: 'VCR OSD';
-		font-size: var(--menu-label-size);
-		line-height: 1.2;
+		font-size: min(
+			var(--menu-label-size),
+			calc((var(--menu-half-column) * 2 - var(--menu-label-size) * 0.7) / (0.586 * var(--menu-label-chars)))
+		);
+		line-height: calc(var(--menu-label-size) * 1.2);
 		padding: var(--menu-label-padding) calc(var(--menu-label-size) * 0.35);
 		text-shadow:
 			var(--px) 0 #000,

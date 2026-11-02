@@ -2585,6 +2585,24 @@
 			"id": "01M6B1ZKHJQ4NVB733DRZGGDZ3",
 			"url": "https://cdn.7tv.app/emote/01M6B1ZKHJQ4NVB733DRZGGDZ3/4x.avif",
 			"ext": ".avif"
+		},
+		{
+			"name": "STATIC",
+			"id": "01M6CWX2A1MFYYQGD5TZH6ZBJE",
+			"url": "https://cdn.7tv.app/emote/01M6CWX2A1MFYYQGD5TZH6ZBJE/4x.avif",
+			"ext": ".avif"
+		},
+		{
+			"name": "wideSTATIC",
+			"id": "01M6CXZDBG7D3738HE2PFV4SF9",
+			"url": "https://cdn.7tv.app/emote/01M6CXZDBG7D3738HE2PFV4SF9/4x.avif",
+			"ext": ".avif"
+		},
+		{
+			"name": "awoo",
+			"id": "01HSPH80X00005YGAS2SZWDJ88",
+			"url": "https://cdn.7tv.app/emote/01HSPH80X00005YGAS2SZWDJ88/4x.avif",
+			"ext": ".avif"
 		}
 	],
 	"bttv": [

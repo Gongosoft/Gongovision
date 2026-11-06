@@ -40,7 +40,7 @@
 		"@videojs/html": "10.2.0",
 		"@vueuse/core": "^15.0.0",
 		"@vueuse/router": "^15.0.0",
-		"agents": "^0.28.1",
+		"agents": "^0.31.0",
 		"animejs": "^4.5.0",
 		"aws4fetch": "^1.0.20",
 		"blotter.js": "^0.1.0",

@@ -48,7 +48,7 @@
 		"cursor-effects": "^1.0.18",
 		"fast-xml-parser": "^5.11.2",
 		"feed": "^6.0.0",
-		"hls.js": "^1.7.3",
+		"hls.js": "^1.7.4",
 		"howler": "^2.2.4",
 		"jose": "^6.2.14",
 		"konami-code-js": "^0.8.3",

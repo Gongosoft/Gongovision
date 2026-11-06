@@ -85,7 +85,7 @@
 		"oxlint": "~1.74.0",
 		"oxlint-tsgolint": "^7.0.2005",
 		"typescript": "~6.0.0",
-		"unplugin-fonts": "^2.0.0",
+		"unplugin-fonts": "^2.1.0",
 		"vite": "^8.3.4",
 		"vite-plugin-cloudflare-redirect": "^1.0.3",
 		"vite-plugin-fflate-zip": "^0.0.4",
